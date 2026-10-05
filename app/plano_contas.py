@@ -24,6 +24,9 @@ SINTETICAS = {
     "1.01.15.01.01": "Estoque de Mercadorias",
     "1.01.15.01.02": "Estoque de Matérias-Primas e Materiais",
     "1.01.15.03": "Custos Indiretos de Fabricação a Apropriar",
+    "1.01.15.04": "Mão de Obra Direta a Apropriar",
+    "1.01.15.05": "Produtos em Elaboração",
+    "1.01.15.07": "Produtos Acabados",
     "1.01.17": "Despesas Antecipadas do Exercício Vigente",
     "1.01.17.01.01": "Despesas Antecipadas",
     "1.07": "Ativo não Circulante",
@@ -65,6 +68,7 @@ SINTETICAS = {
     "3.01.01.01.01": "Receita Bruta",
     "3.01.01.01.03": "(-) Deduções da Receita Bruta",
     "3.01.01.03": "Custo dos Bens e Serviços Vendidos",
+    "3.01.01.03.01": "Custo dos Produtos Vendidos",
     "3.01.01.07": "Despesas Operacionais",
     "3.01.01.07.01": "Despesas Administrativas",
     "3.01.01.07.02": "Despesas de Vendas",
@@ -94,9 +98,24 @@ ANALITICAS: list[tuple[str, str, str, float]] = [
     ("1.01.05.01.07.0004-0", "Vale-Alimentação", "D", 1773.00),
     ("1.01.15.01.01.0001-5", "Mercadorias para Revenda - ALPHA", "D", 8680.00),
     ("1.01.15.01.02.0001", "Matéria-Prima A (MP-A)", "D", 0),
+    ("1.01.15.01.02.0002", "Matéria-Prima B (MP-B)", "D", 0),
+    ("1.01.15.01.02.0003", "Material Secundário Z (MS-Z)", "D", 0),
+    ("1.01.15.01.02.0004", "Material Secundário Q (MS-Q)", "D", 0),
+    ("1.01.15.01.02.0005", "Material Secundário R (MS-R)", "D", 0),
+    ("1.01.15.01.02.0006", "Material Secundário K (MS-K)", "D", 0),
+    ("1.01.15.01.02.0007", "Material de Embalagem H (ME-H)", "D", 0),
     ("1.01.15.03.0001", "Energia Elétrica - CIF", "D", 0),
     ("1.01.15.03.0002", "Água e Esgoto - CIF", "D", 0),
     ("1.01.15.03.0003", "Telefones e Internet - CIF", "D", 0),
+    ("1.01.15.03.0004", "Mão de Obra Indireta - CIF", "D", 0),
+    ("1.01.15.03.0005", "Pró-labore do Sócio Industrial - CIF", "D", 0),
+    ("1.01.15.03.0006", "Depreciação - CIF", "D", 0),
+    ("1.01.15.04.0001", "Mão de Obra Direta - Produto X", "D", 0),
+    ("1.01.15.04.0002", "Mão de Obra Direta - Produto Y", "D", 0),
+    ("1.01.15.05.0001", "Produtos em Elaboração - Produto X", "D", 0),
+    ("1.01.15.05.0002", "Produtos em Elaboração - Produto Y", "D", 0),
+    ("1.01.15.07.0001", "Produtos Acabados - Produto X", "D", 0),
+    ("1.01.15.07.0002", "Produtos Acabados - Produto Y", "D", 0),
     ("1.01.17.01.01.0001-1", "Prêmios de Seguros a Apropriar", "D", 5250.00),
     # ----- Realizável a longo prazo
     ("1.07.01.03.0001", "Mútuo a Receber - Cassilda Apedeuta (sócia)", "D", 0),
@@ -116,6 +135,9 @@ ANALITICAS: list[tuple[str, str, str, float]] = [
     ("2.01.01.01.01.0001", "Comercial Elegante Ltda.", "C", 0),
     ("2.01.01.01.01.0002", "Indústria Sofisticada Ltda.", "C", 0),
     ("2.01.01.01.01.0003", "Ar Frio Ltda.", "C", 0),
+    ("2.01.01.01.01.0004", "Indústria Zalego Ltda.", "C", 0),
+    ("2.01.01.01.01.0005", "Distribuidor Verde Oliva Ltda.", "C", 0),
+    ("2.01.01.01.01.0006", "Embalagens Comerciais Ltda.", "C", 0),
     ("2.01.01.01.02.0003-0", "Seguro Verdade Ltda.", "C", 2100.00),
     ("2.01.01.01.02.0005-6", "Contador Formado S/S", "C", 5161.75),
     ("2.01.01.01.02.0006-7", "Internet & Comunicação Ltda.", "C", 410.00),
@@ -140,6 +162,7 @@ ANALITICAS: list[tuple[str, str, str, float]] = [
     ("2.01.01.03.03.0014-6", "IRPJ por Estimativa a Recolher", "C", 33198.47),
     ("2.01.01.03.03.0015-4", "CSLL por Estimativa a Recolher", "C", 12671.45),
     ("2.01.01.03.03.0016", "Auto de Infração ICMS a Pagar", "C", 0),
+    ("2.01.01.03.03.0017", "ICMS DIFAL a Recolher - MA (venda a consumidor final)", "C", 0),
     ("2.01.01.05.0001", "Conta Garantida - Banco Rico", "C", 0),
     ("2.01.01.05.0002", "Arrendamento Financeiro a Pagar - Curto Prazo", "C", 0),
     ("2.01.01.17.01.0002-6", "Telefone a Pagar", "C", 350.00),
@@ -168,12 +191,16 @@ ANALITICAS: list[tuple[str, str, str, float]] = [
     ("2.07.04.0002", "Reserva Estatutária", "C", 0),
     ("2.07.07.01.01.0001-7", "Lucros Acumulados", "C", 94923.97),
     # ----- Resultado
+    ("3.01.01.01.01.0001", "Receita da Venda de Produtos de Fabricação Própria", "C", 0),
     ("3.01.01.01.01.0005-7", "Receita da Revenda de Mercadorias - Mercado Interno", "C", 0),
     ("3.01.01.01.01.0006-5", "Receita da Prestação de Serviços - Mercado Interno", "C", 0),
+    ("3.01.01.01.03.0001", "(-) Devoluções de Vendas", "D", 0),
     ("3.01.01.01.03.0002-1", "(-) ICMS sobre Vendas", "D", 0),
     ("3.01.01.01.03.0003-0", "(-) COFINS", "D", 0),
     ("3.01.01.01.03.0004-8", "(-) PIS/PASEP", "D", 0),
     ("3.01.01.01.03.0005-6", "(-) ISS", "D", 0),
+    ("3.01.01.01.03.0007", "(-) ICMS DIFAL sobre Vendas (UF de destino)", "D", 0),
+    ("3.01.01.03.01.0001", "Custo dos Produtos Vendidos", "D", 0),
     ("3.01.01.03.03.0001-9", "Custo das Mercadorias Revendidas", "D", 0),
     ("3.01.01.07.01.0003-7", "Ordenados, Salários e Horas Extras - Adm.", "D", 0),
     ("3.01.01.07.01.0009-6", "Serviços Prestados por Pessoa Jurídica", "D", 0),
@@ -207,8 +234,10 @@ ANALITICAS: list[tuple[str, str, str, float]] = [
     ("3.01.01.07.03.0002", "Multas Fiscais (indedutíveis)", "D", 0),
     ("3.01.01.09.01.0001", "Rendimentos de Aplicações Financeiras", "C", 0),
     ("3.01.01.09.01.0002", "Juros Ativos - Mútuo com Sócia", "C", 0),
+    ("3.01.01.09.01.0003", "Descontos Financeiros Obtidos", "C", 0),
     ("3.01.01.09.02.0001", "Juros - Conta Garantida", "D", 0),
     ("3.01.01.09.02.0002", "Juros - Arrendamento Financeiro", "D", 0),
+    ("3.01.01.09.02.0003", "Descontos Financeiros Concedidos", "D", 0),
     ("3.02.01.01.01.0001-0", "Contribuição Social sobre o Lucro Líquido", "D", 0),
     ("3.02.01.01.01.0002-9", "Imposto de Renda - Pessoa Jurídica", "D", 0),
 ]
@@ -260,6 +289,19 @@ SERV_PJ, SEGUROS, ASSESSORIA = "3.01.01.07.01.0009-6", "3.01.01.07.01.0056-8", "
 AGUA = "3.01.01.07.01.0049-5"
 CIF_ENERGIA, CIF_AGUA, CIF_TELEFONE = "1.01.15.03.0001", "1.01.15.03.0002", "1.01.15.03.0003"
 MUTUO_SOCIA, JUROS_MUTUO = "1.07.01.03.0001", "3.01.01.09.01.0002"
+DESC_OBTIDOS = "3.01.01.09.01.0003"
+REC_PRODUTOS, DEVOLUCOES, DED_DIFAL, CPV, DESC_CONCEDIDOS, DIFAL_MA = (
+    "3.01.01.01.01.0001", "3.01.01.01.03.0001", "3.01.01.01.03.0007", "3.01.01.03.01.0001", "3.01.01.09.02.0003",
+    "2.01.01.03.03.0017")
+CIF_MOI, CIF_PROLAB, CIF_DEPREC = "1.01.15.03.0004", "1.01.15.03.0005", "1.01.15.03.0006"
+CIF_CONTAS = [CIF_ENERGIA, CIF_AGUA, CIF_TELEFONE, CIF_MOI, CIF_PROLAB, CIF_DEPREC]
+MOD = {"X": "1.01.15.04.0001", "Y": "1.01.15.04.0002"}
+PEP = {"X": "1.01.15.05.0001", "Y": "1.01.15.05.0002"}
+PA = {"X": "1.01.15.07.0001", "Y": "1.01.15.07.0002"}
+ESTOQUE = {"MP-A": "1.01.15.01.02.0001", "MP-B": "1.01.15.01.02.0002", "MS-Z": "1.01.15.01.02.0003",
+           "MS-Q": "1.01.15.01.02.0004", "MS-R": "1.01.15.01.02.0005", "MS-K": "1.01.15.01.02.0006",
+           "ME-H": "1.01.15.01.02.0007"}
+F_ZALEGO, F_VERDE_OLIVA, F_EMBALAGENS = "2.01.01.01.01.0004", "2.01.01.01.01.0005", "2.01.01.01.01.0006"
 DESP_ICMS_AUTO, MULTAS = "3.01.01.07.03.0001", "3.01.01.07.03.0002"
 REND_APLIC, JUROS_GARANTIDA, JUROS_LEASING = "3.01.01.09.01.0001", "3.01.01.09.02.0001", "3.01.01.09.02.0002"
 CSLL_DESP, IRPJ_DESP = "3.02.01.01.01.0001-0", "3.02.01.01.01.0002-9"

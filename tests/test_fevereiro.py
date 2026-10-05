@@ -68,7 +68,7 @@ def test_gabarito_fevereiro(ctx):
     assert net("F29", pc.IRRF_RECOL) == pytest.approx(-fim_jan[pc.IRRF_RECOL] - 348.93, abs=0.01)
     assert net("F16", pc.ISS_RECOL) == pytest.approx(-fim_jan[pc.ISS_RECOL], abs=0.01)
     # eventos de produção, vendas e folha ainda em preparação (etapas 8b a 8e); tesouraria provisória
-    assert {"F05", "F20", "F34", "F48", "FTES", "FAJ"} <= set(fev["sem_gabarito"])
+    assert fev["sem_gabarito"] == []  # fevereiro completo (8e)
     assert "F08" not in fev["sem_gabarito"] and "F33" not in fev["sem_gabarito"]
     # leasing: parcela = amortização + juros desde 20/01; uma parcela passa do longo para o curto prazo
     f33 = [l for l in fev["lancamentos"] if l["evento"] == "F33"]
@@ -84,13 +84,23 @@ def test_gabarito_fevereiro(ctx):
 def test_eventos_e_mes_do_codigo():
     evs = eventos_mes(None, "2026-02")
     cods = [e["codigo"] for e in evs]
-    assert cods[0] == "F01" and "F48" in cods and cods[-2:] == ["FTES", "FAJ"] and len(cods) == 50
+    assert cods[0] == "F01" and "F48" in cods and cods[-2:] == ["FTES", "FAJ"] and len(cods) == 52 and "FP1" in cods and "FP2" in cods
     assert all(e["data"].month == 2 for e in evs)
     assert mes_do_evento("F08") == "2026-02" and mes_do_evento("J08") == "2026-01" and mes_do_evento("TES") == "2026-01"
 
 
+def test_demo_tem_fevereiro(ctx):
+    with SessionLocal() as db:
+        n = db.query(Lancamento).filter(Lancamento.dupla_id == ctx["did"], Lancamento.evento.like("F%")).count()
+    assert n > 0  # o grupo do acesso de aluno da demonstração já mostra fevereiro
+
+
 def test_fluxo_aluno_fevereiro(ctx):
     c, v = ctx["c"], ctx["v"]
+    with SessionLocal() as db:  # parte do zero em fevereiro para conferir a correção
+        for l in db.query(Lancamento).filter(Lancamento.dupla_id == ctx["did"], Lancamento.evento.like("F%")).all():
+            db.delete(l)
+        db.commit()
     _entrar(c, ctx["aluno"])
     c.get("/aluno/mes/2026-02?volta=/aluno")
     t = c.get("/aluno").text
@@ -120,7 +130,7 @@ def test_fluxo_aluno_fevereiro(ctx):
     r = c.post("/aluno/fechamento", data={"mes": "2026-02", "confirmo": "1"}, follow_redirects=False)
     assert r.status_code == 303
     t = c.get("/aluno?mes=2026-02").text
-    assert "Eventos corretos em fevereiro" in t and "Correção em preparação" in t
+    assert "Eventos corretos em fevereiro" in t and "Correção em preparação" not in t
     with SessionLocal() as db:
         from app.models_escrita import fechamento_ativo
         f = fechamento_ativo(db, ctx["did"], "2026-02")
@@ -140,7 +150,7 @@ def test_telas_da_equipe_por_mes(ctx):
     t = c.get(f"/duplas/{did}/escrituracao?mes=2026-02").text
     assert "Fevereiro/2026" in t and "fevereiro enviado" in t.lower()
     t = c.get(f"/duplas/{did}/gabarito?mes=2026-02").text
-    assert "Fevereiro em construção" in t and "Balancete de verificação em 28/02/2026" in t and "P33" in t
+    assert "Fevereiro em construção" not in t and "Balancete de verificação em 28/02/2026" in t and "P33" in t
     assert c.get(f"/duplas/{did}/gabarito.xlsx?mes=2026-02").status_code == 200
     t = c.get(f"/turmas/{tid}/painel?mes=2026-02").text
     assert "Acompanhamento de fevereiro" in t and "Matriz de calor" in t
@@ -163,3 +173,121 @@ def test_auditoria_filtra_o_mes(ctx):
     assert a_fev["total"] == len([e for e in a_fev["eventos"] if not e["sem_gabarito"]])
     assert Gabarito(v).L.ini  # saldos de 31/12/2025 seguem acessíveis
     assert date(2026, 2, 28) == eventos_mes(None, "2026-02")[-1]["data"]
+
+
+def test_8b_compras_e_estoques(ctx):
+    from app.gabarito import NCM, TIPI
+    from app.orientacao import Valores
+    v = ctx["v"]
+    x = Valores(v)
+    g = gerar_gabarito(v, "2026-02")
+    lancs = {}
+    for l in g["lancamentos"]:
+        lancs.setdefault(l["evento"], []).append(l)
+    deb = lambda ev, c: round(sum(p["valor"] for l in lancs.get(ev, []) for p in l["debitos"] if p["conta"] == c), 2)  # noqa: E731
+    cred = lambda ev, c: round(sum(p["valor"] for l in lancs.get(ev, []) for p in l["creditos"] if p["conta"] == c), 2)  # noqa: E731
+    mpb = x.insumo("MP-B")
+    prod = round(mpb["compra"] * mpb["custo_unit"], 2)
+    assert deb("F05", pc.IPI_REC) == pytest.approx(round(prod * TIPI[NCM["MP-B"]], 2), abs=0.01)  # IPI 13% recuperável
+    total = prod + deb("F05", pc.IPI_REC)
+    dp = Gabarito(v).p("evento", "F05", "desconto", 4)
+    assert cred("F05", pc.DESC_OBTIDOS) == pytest.approx(round(round(total * 0.35, 2) * dp / 100, 2), abs=0.02)
+    assert deb("F05", pc.ESTOQUE["MP-B"]) > 0 and cred("F05", pc.F_FRETE) > 0  # frete FOB no custo
+    # materiais secundários: sem IPI (distribuidor), ICMS 7%
+    assert deb("F10", pc.IPI_REC) == 0 and all(deb("F10", pc.ESTOQUE[c]) > 0 for c in ("MS-Z", "MS-K"))
+    # devolução: baixa do estoque, estorno de créditos e abatimento no fornecedor
+    assert deb("F28", pc.F_SOFISTICADA) > 0 and cred("F28", pc.ESTOQUE["MP-A"]) > 0 and cred("F28", pc.IPI_REC) > 0
+    assert deb("F23", pc.F_FRETE) == cred("F05", pc.F_FRETE)
+    assert deb("F35", pc.F_FRETE) == cred("F22", pc.F_FRETE)
+    assert any("custo médio" in m["descricao"] for m in g["memoria"]["F28"])
+    assert {"P38", "P40", "P42"} <= set(g["premissas"])
+    from app.documentos import gerar_documentos
+    ids = {d["id"] for d in gerar_documentos(v)}
+    assert {"F05-1", "F05-2", "F10-1", "F22-1", "F22-2", "F28-1"} <= ids
+
+
+def test_8c_folha_depreciacao_producao(ctx):
+    v = ctx["v"]
+    g = gerar_gabarito(v, "2026-02")
+    bal = {x["conta"]: x["final"] for x in g["balancete"]}
+    # contas de passagem zeradas: CIF, MOD a apropriar e produtos em elaboração
+    for c in pc.CIF_CONTAS + list(pc.MOD.values()) + list(pc.PEP.values()):
+        assert abs(bal.get(c, 0.0)) < 0.01, c
+    # produtos acabados = materiais + MOD + CIF; estoques de insumos ficam só com as sobras
+    prods = {p["codigo"]: p["quantidade"] for p in v["producao"]["produtos"]}
+    assert bal[pc.PA["X"]] > 0 and bal[pc.PA["Y"]] > 0
+    for i in v["producao"]["insumos"]:
+        assert bal.get(pc.ESTOQUE[i["codigo"]], 0) < 0.02 * i["valor_compra"], i["codigo"]  # só a sobra
+    lancs = {}
+    for l in g["lancamentos"]:
+        lancs.setdefault(l["evento"], []).append(l)
+    deb = lambda ev, c: round(sum(p["valor"] for l in lancs.get(ev, []) for p in l["debitos"] if p["conta"] == c), 2)  # noqa: E731
+    # folha: MOD de X e Y vai para "a apropriar"; MOI e pró-labore industrial para CIF
+    assert deb("F20", pc.MOD["X"]) > 0 and deb("F20", pc.MOD["Y"]) > 0 and deb("F20", pc.CIF_MOI) > 0
+    assert deb("F20", pc.CIF_PROLAB) > 0  # sócio industrial
+    assert deb("F21", pc.CIF_DEPREC) > 0
+    # CIF rateado pelos materiais diretos
+    md = {p: deb("FP1", pc.PEP[p]) for p in ("X", "Y")}
+    cif_tot = sum(deb(ev, c) for ev in lancs for c in pc.CIF_CONTAS)
+    apr = {p: deb("FP2", pc.PEP[p]) - (deb("F20", pc.MOD[p])) for p in ("X", "Y")}
+    assert apr["X"] / cif_tot == pytest.approx(md["X"] / (md["X"] + md["Y"]), abs=0.001)
+    # custo unitário na memória
+    assert any("custo unitário" in m["descricao"] for m in g["memoria"]["FP2"])
+    assert prods["X"] > 0 and {"P43", "P46", "P47"} <= set(g["premissas"])
+    from app.documentos import gerar_documentos
+    ids = {d["id"] for d in gerar_documentos(v)}
+    assert {"FP1-1", "FP2-1"} <= ids
+
+
+def test_8c_tela_documento_producao(ctx):
+    c = ctx["c"]
+    c.cookies.clear()
+    t = c.get(f"/duplas/{ctx['did']}/documentos/FP1-1").text
+    assert "Requisição de materiais" in t and "MP-A" in t and "Total requisitado" in t
+
+
+def test_8d_vendas(ctx):
+    from app.gabarito import NCM, TIPI
+    v = ctx["v"]
+    g = gerar_gabarito(v, "2026-02")
+    lancs = {}
+    for l in g["lancamentos"]:
+        lancs.setdefault(l["evento"], []).append(l)
+    deb = lambda ev, c: round(sum(p["valor"] for l in lancs.get(ev, []) for p in l["debitos"] if p["conta"] == c), 2)  # noqa: E731
+    cred = lambda ev, c: round(sum(p["valor"] for l in lancs.get(ev, []) for p in l["creditos"] if p["conta"] == c), 2)  # noqa: E731
+    # F04: consumidor final no MA, ICMS 12% + DIFAL 11%
+    rec = cred("F04", pc.REC_REVENDA)
+    assert deb("F04", pc.DED_ICMS) == pytest.approx(round(rec * 0.12, 2), abs=0.01)
+    assert cred("F04", pc.DIFAL_MA) == pytest.approx(round(rec * 0.11, 2), abs=0.01)
+    # F34: IPI fora da receita, ICMS 12% sobre os produtos, desconto como despesa financeira, CPV pelo custo de produção
+    rp = cred("F34", pc.REC_PRODUTOS)
+    assert cred("F34", pc.IPI_RECOL) > 0 and deb("F34", pc.DED_ICMS) == pytest.approx(round(rp * 0.12, 2), abs=0.05)
+    assert deb("F34", pc.DESC_CONCEDIDOS) > 0 and deb("F34", pc.CPV) > 0
+    assert TIPI[NCM["Y"]] == 0.195
+    bal = {x["conta"]: x["final"] for x in g["balancete"]}
+    vend = {p["codigo"]: p for p in v["producao"]["produtos"]}
+    # sobra no estoque de produtos acabados = produzido − vendido
+    assert bal[pc.PA["X"]] > 0 and vend["X"]["estoque_final"] > 0
+    # F36 devolução e F44 recebimento líquido zeram o cliente da NF 003
+    assert deb("F36", pc.DEVOLUCOES) > 0 and deb("F36", pc.ALPHA) > 0
+    assert deb("F44", pc.BANCO) == pytest.approx(deb("F26", pc.CLIENTES) - cred("F36", pc.CLIENTES), abs=0.01)
+    assert {"P48", "P49", "P50", "P51", "P52"} <= set(g["premissas"])
+    from app.documentos import gerar_documentos
+    ids = {d["id"] for d in gerar_documentos(v)}
+    assert {"F04-1", "F26-1", "F34-1", "F36-1"} <= ids
+
+
+def test_8e_apuracao_e_mes_completo(ctx):
+    v = ctx["v"]
+    g = gerar_gabarito(v, "2026-02")
+    bal = {x["conta"]: x["final"] for x in g["balancete"]}
+    f48 = [l for l in g["lancamentos"] if l["evento"] == "F48"]
+    hist = " | ".join(l["historico"] for l in f48)
+    assert "Apuração do ICMS de fevereiro" in hist and "Apuração do IPI de fevereiro" in hist and "IRPJ e CSLL por estimativa" in hist
+    # depois da apuração, cada imposto fica só de um lado (a recolher ou a recuperar)
+    for rec, recol in ((pc.ICMS_REC, pc.ICMS_RECOL), (pc.IPI_REC, pc.IPI_RECOL), (pc.PIS_REC, pc.PIS_RECOL), (pc.COFINS_REC, pc.COFINS_RECOL)):
+        assert not (bal.get(rec, 0) > 0.01 and bal.get(recol, 0) < -0.01), rec
+    assert bal.get(pc.ICMS_ANT_REC, 0) == pytest.approx(0, abs=0.01)  # antecipado de janeiro aproveitado
+    assert bal[pc.IRPJ_RECOL] < 0 and bal[pc.CSLL_RECOL] < 0
+    assert {"P53", "P54"} <= set(g["premissas"])
+    assert g["sem_gabarito"] == [] and any(l["evento"] == "FAJ" for l in g["lancamentos"])

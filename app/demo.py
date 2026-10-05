@@ -127,11 +127,11 @@ def _conversa(db, d, evento, pergunta, mat, quando, n_ant, todas_normas, origem=
 PERFIS = [
     dict(frac=1.00, valor=0.00, conta=0.00, enviar=True, homologar=True, ultimo=2, frac_fev=0.70),
     dict(frac=1.00, valor=0.20, conta=0.10, enviar=True, homologar=False, ultimo=1, frac_fev=0.40),
-    dict(frac=0.85, valor=0.10, conta=0.05, enviar=False, homologar=False, ultimo=0),
-    dict(frac=0.50, valor=0.10, conta=0.05, enviar=False, homologar=False, ultimo=1, travado="J24"),
-    dict(frac=0.40, valor=0.05, conta=0.05, enviar=False, homologar=False, ultimo=0, sozinho=True),
+    dict(frac=0.85, valor=0.10, conta=0.05, enviar=False, homologar=False, ultimo=0, frac_fev=0.35),
+    dict(frac=0.50, valor=0.10, conta=0.05, enviar=False, homologar=False, ultimo=1, travado="J24", frac_fev=0.15),
+    dict(frac=0.40, valor=0.05, conta=0.05, enviar=False, homologar=False, ultimo=0, sozinho=True, frac_fev=0.20),
     dict(frac=0.15, valor=0.10, conta=0.00, enviar=False, homologar=False, ultimo=12),
-    dict(frac=0.35, valor=0.10, conta=0.50, enviar=False, homologar=False, ultimo=3),
+    dict(frac=0.35, valor=0.10, conta=0.50, enviar=False, homologar=False, ultimo=3, frac_fev=0.10),
     dict(frac=0.30, valor=0.10, conta=0.10, enviar=False, homologar=False, ultimo=0, insiste=True),
     dict(frac=0.00, valor=0.00, conta=0.00, enviar=False, homologar=False, ultimo=None),
     dict(frac=1.00, valor=0.10, conta=0.05, enviar=True, homologar=True, ultimo=4, frac_fev=0.55),
@@ -222,7 +222,7 @@ def criar(db: Session, agora: datetime | None = None, semente: int = 2026) -> di
             aud = auditar(g, lancs, caso)
             db.add(FechamentoMensal(dupla_id=d.id, mes="2026-01", enviado_em=fim + timedelta(hours=1),
                                     enviado_por=a1.matricula, resultado=resumo_resultado(aud)))
-        if perf.get("frac_fev"):  # quem enviou janeiro já avançou em fevereiro (só eventos com gabarito pronto)
+        if perf.get("frac_fev"):  # os dois meses são livres: os grupos ativos já avançaram em fevereiro (eventos com gabarito pronto)
             gf = gerar_gabarito(valores, "2026-02")
             por_f = {}
             for gl in gf["lancamentos"]:
@@ -230,13 +230,18 @@ def criar(db: Session, agora: datetime | None = None, semente: int = 2026) -> di
             evs_f = [e["codigo"] for e in eventos_mes(caso, "2026-02")
                      if e["codigo"] in por_f and e["codigo"] not in set(gf["sem_gabarito"])]
             escolhidos_f = evs_f[:round(perf["frac_fev"] * len(evs_f))]
-            ini_f = fim + timedelta(hours=2)
-            fim_f = max(ini_f + timedelta(hours=1), min(agora - timedelta(minutes=30), ini_f + timedelta(days=3)))
+            if perf["enviar"]:  # fevereiro depois do envio de janeiro
+                ini_f = fim + timedelta(hours=2)
+                fim_f = max(ini_f + timedelta(hours=1), min(agora - timedelta(minutes=30), ini_f + timedelta(days=3)))
+            else:  # fevereiro intercalado com o fim de janeiro
+                ini_f, fim_f = inicio + (fim - inicio) / 2, fim
+            rng_f = random.Random(semente * 100 + k)  # sorteio próprio: fevereiro não altera o janeiro dos demais grupos
             for i, ev in enumerate(escolhidos_f):
-                r = rng.random()
+                r = rng_f.random()
                 erro = "conta" if r < perf["conta"] else "valor" if r < perf["conta"] + perf["valor"] else None
                 quando = ini_f + (fim_f - ini_f) * (i / max(1, len(escolhidos_f) - 1))
-                _lancar(db, d, por_f[ev], a2.matricula if i % 2 else a1.matricula, quando, erro, rng)
+                autor = a1.matricula if (perf.get("sozinho") or i % 2 == 0) else a2.matricula
+                _lancar(db, d, por_f[ev], autor, quando, erro, rng_f)
             ac.ultimo_acesso = max(ac.ultimo_acesso or fim_f, fim_f)
         grupos.append((d, perf, a1, a2))
     db.flush()

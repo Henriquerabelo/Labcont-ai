@@ -36,7 +36,7 @@ DIAS_INATIVO = 7
 EVENTOS_CRITICOS = {"J18": "folha de janeiro", "J24": "leasing (CPC 06)", "J27": "venda pelo mark-up",
                     "J30": "compra de matéria-prima com IPI", "J40": "apuração dos tributos", "TES": "tesouraria",
                     "F05": "compra de MP-B com desconto condicional", "F20": "folha de fevereiro", "F33": "parcela do leasing (SAC)",
-                    "F34": "venda dos produtos X e Y", "F48": "apuração de fevereiro", "FTES": "tesouraria de fevereiro"}
+                    "F34": "venda dos produtos X e Y", "FP2": "custo de produção e rateio do CIF", "F48": "apuração de fevereiro", "FTES": "tesouraria de fevereiro"}
 TEMAS = [
     ("Patrimônio líquido e destinação", ["J01", "J20", "J34"]),
     ("Compras e tributos recuperáveis", ["J08", "J09", "J15", "J30"]),
@@ -57,7 +57,7 @@ TEMAS = [
                                           "F37", "F40", "F42", "F43", "F44", "F46"]),
     ("Financeiro, leasing e tesouraria (fev.)", ["F07", "F33", "F47", "FTES", "FAJ"]),
     ("Vendas, devoluções e custo dos produtos", ["F04", "F26", "F34", "F36"]),
-    ("Depreciação e custos de produção", ["F21"]),
+    ("Produção e custos (CIF, MOD, rateio)", ["F21", "FP1", "FP2"]),
     ("Apuração de fevereiro", ["F48"]),
 ]
 TEMA_DO_EVENTO = {ev: tema for tema, evs in TEMAS for ev in evs}

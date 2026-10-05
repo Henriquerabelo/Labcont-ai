@@ -292,3 +292,117 @@ Decisões do professor (05/10): fevereiro completo, em etapas; **os dois meses l
 - **Documentos de fevereiro:** energia, água, telefonia, NFS-e 003 (comissão), contrato de mútuo, NFS-e 6.320 (reforma), NFS-e 345 (recrutamento), NFS-e 024 (contador).
 - **Turma de demonstração:** os grupos que enviaram janeiro já têm parte de fevereiro lançada.
 - **Testes:** `tests/test_fevereiro.py`; 63 passando.
+
+### 8b · Compras de insumos, devolução e estoques (custo médio ponderado móvel)
+
+- **Eventos com gabarito:**
+  - F05: NF 12.380, MP-B, Tocantins. IPI de 13%, ICMS de 12%, desconto financeiro condicional e CT-e 424.110.
+  - F10: NF 9.147, materiais secundários Z, Q, R e K, Rio de Janeiro. Fornecedor distribuidor, sem IPI, ICMS de 7% e frete CIF.
+  - F22: NF 1.747, ME-H, Amazonas. ICMS de 12% e CT-e 425.130.
+  - F23 e F35: pagamento dos CT-e.
+  - F28: NF 004, devolução de MP-A (CFOP 6.201).
+- **IPI pela TIPI 2022 (ADE RFB nº 1/2026):**
+  - MP-A 9,75%; MP-B 13%; MS-Z 9,75%; MS-Q 13%; MS-R 9,75%; MS-K 3,25%; ME-H 9,75%;
+  - Produto X 9,75% e Produto Y 19,5%, para as vendas da 8d.
+- **Estoques:**
+  - uma conta por insumo;
+  - a memória de cálculo mostra a ficha de cada item (quantidade, saldo e custo médio) depois de cada entrada, frete ou devolução.
+- **Contas novas:**
+  - estoques de MP-B, MS-Z, MS-Q, MS-R, MS-K e ME-H;
+  - fornecedores Indústria Zalego, Distribuidor Verde Oliva e Embalagens Comerciais;
+  - Descontos Financeiros Obtidos.
+- **Premissas P38–P42** (a validar):
+  - quem destaca o IPI;
+  - ICMS interestadual de 12% ou 7%, sem antecipação parcial nem DIFAL para insumos;
+  - desconto condicional como receita financeira, obtido sobre a parcela à vista;
+  - fretes FOB no custo (pagamento do CT-e 424.110 sem juros);
+  - custo médio e devolução pelo custo da compra.
+- **Documentos:** NF-e 12.380 com CT-e 424.110, NF-e 9.147, NF-e 1.747 com CT-e 425.130 e NF-e 004 de devolução, que a dupla emite e na qual calcula os impostos.
+- **Base normativa:** ficha EST-06 (devolução de compra) e fichas de estoque, ICMS e IPI ligadas aos eventos de fevereiro (59 fichas).
+- **Testes:** 65 passando. Janeiro conferido sem alterações.
+
+### 8c · Folha, depreciação e produção de X e Y
+
+A folha (F20) e a depreciação (F21) passaram para esta etapa porque são processadas em 13/02, antes da produção, e compõem o custo de X e Y.
+
+- **F20 · Folha de fevereiro:**
+  - 15 empregados e pró-labores; mesmos critérios de janeiro.
+  - A mão de obra direta dos setores X e Y, com encargos, provisões e VT/VA, vai para "Mão de Obra Direta a Apropriar" de cada produto.
+  - A mão de obra indireta e o pró-labore do sócio industrial (Marconde Sobreira) vão para o CIF.
+  - Renato Português está sem salário no caso: o gabarito usa o salário mínimo até a decisão do professor.
+- **F21 · Depreciação de fevereiro:**
+  - Rateio do quadro de alocação: prédio 10/25/65, máquinas 100% industrial, utilitário 70/30, móveis 45/35/20.
+  - As máquinas do leasing depreciam desde fevereiro.
+  - A parcela industrial vai para o CIF.
+- **FP1 · 19/02 · Requisição de materiais:**
+  - Ficha técnica × produção do mês, pelo custo médio de cada insumo.
+  - Os insumos vão para Produtos em Elaboração X e Y.
+- **FP2 · 23/02 · Fim da produção (19, 20 e 23/02, três dias úteis):**
+  - MOD e CIF apropriados aos produtos em elaboração; o CIF é rateado pelo custo dos materiais diretos.
+  - Transferência para Produtos Acabados.
+  - A memória de cálculo mostra o custo total e o unitário de cada produto.
+- **Contas novas:**
+  - CIF (mão de obra indireta, pró-labore industrial, depreciação);
+  - MOD a apropriar (X e Y);
+  - Produtos em Elaboração (X e Y);
+  - Produtos Acabados (X e Y).
+- **Premissas P43–P47** (a validar).
+- **Documentos:**
+  - requisição de materiais (OP 001/2026), com as quantidades por insumo e produto;
+  - boletim de produção (novo tipo "Produção").
+- **Base normativa:** fichas CUS-01 (custo de produção), CUS-02 (custeio por absorção, RIR/2018, art. 302) e CUS-03 (rateio do CIF e produtos em elaboração); 62 fichas.
+- **Tutor:** roteiro de produção.
+- **Turma de demonstração:** sorteio próprio para fevereiro (não altera o janeiro dos grupos).
+- **Testes:** 67 passando; janeiro inalterado.
+
+### 8d · Vendas, devolução e recebimento
+
+- **F04 · NF 337 — ALPHA a consumidor final em São Luís-MA, PIX:**
+  - preço pelo mark-up;
+  - ICMS interestadual de 12% e DIFAL de 11% (alíquota modal do MA de 23% desde 23/02/2025) como dedução da receita, a recolher ao MA;
+  - CMV pelo custo médio.
+- **F26 · NF 003 — ALPHA à Comercial Caribe (CE):** ICMS de 20%, boleto em 28/02.
+- **F36 · NF 1.320 — devolução de ALPHA:**
+  - pelo preço da NF 003, como dedução da receita (devoluções de vendas);
+  - estorno de ICMS, PIS e COFINS;
+  - retorno ao estoque pelo custo da saída;
+  - abatida do boleto.
+- **F44 · Recebimento da Caribe:** valor líquido da devolução.
+- **F34 · NF 005 — Produtos X e Y à Comercial Roma (PA):**
+  - preço pelo mark-up sobre o custo de produção;
+  - IPI por fora (X 9,75%, Y 19,5%), fora da receita e da base do ICMS;
+  - ICMS de 12%;
+  - desconto financeiro de 3% sobre o Y como despesa financeira;
+  - 80% recebidos na emissão e 20% em 22/03;
+  - CPV pelo custo médio dos produtos acabados.
+- **Contas novas:**
+  - Receita da Venda de Produtos de Fabricação Própria;
+  - (−) Devoluções de Vendas;
+  - (−) ICMS DIFAL sobre Vendas;
+  - ICMS DIFAL a Recolher - MA;
+  - Custo dos Produtos Vendidos;
+  - Descontos Financeiros Concedidos.
+- **Premissas P48–P52** (a validar).
+- **Documentos:** NF-e 337, 003 e 005, que a dupla emite e na qual calcula preço e impostos, e NF-e 1.320 de devolução, emitida pelo cliente.
+- **Base normativa:**
+  - fichas ICMS-10 (DIFAL na venda a consumidor final), IPI-02 (IPI na venda de produção própria) e VEN-01 (devolução de venda);
+  - EST-03 passa a tratar também do desconto concedido;
+  - 65 fichas.
+- **Falta (8e):** F48 (apuração de fevereiro), FTES e FAJ.
+- **Testes:** 68 passando; janeiro inalterado.
+
+### 8e · Apuração de fevereiro e mês completo
+
+- **F48 · Apuração (28/02, depois dos ajustes de fim de mês):**
+  - crédito do ICMS antecipado de 01/2026, pago em 26/02;
+  - compensação de débitos e créditos de ICMS, IPI, PIS e COFINS; saldo credor fica a recuperar;
+  - DIFAL do MA e ISS próprio informados à parte;
+  - IRPJ e CSLL por estimativa: revenda líquida de devoluções e venda de produtos a 8%/12%, serviços a 32%, receitas financeiras integrais, adicional de 10% acima de R$ 20.000,00;
+  - compensação do IRRF retido.
+- **Tesouraria (FTES) e ajustes (FAJ) definitivos:** fevereiro não tem mais eventos "em preparação", e todos os 52 entram na correção.
+- **Conta garantida acima do limite:**
+  - Entre as compras de insumos (a partir de 04/02) e o recebimento da venda de X e Y (24/02), o saldo devedor passa do limite contratado (R$ 970 mil).
+  - A memória de cálculo sinaliza o excesso, conforme a premissa P55: decisão do professor.
+- **Premissas P53–P55** (a validar).
+- **Base normativa:** fichas de apuração, tesouraria e ajustes ligadas aos eventos F48, FTES e FAJ.
+- **Testes:** 69 passando. Janeiro conferido sem alterações nos 6 cenários; fevereiro fecha em todos.

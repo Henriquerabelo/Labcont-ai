@@ -16,7 +16,7 @@ LUCROS_ACUMULADOS = "2.07.07.01.01.0001-7"
 LINHAS_DRE = [  # (chave, rótulo, prefixo da conta sintética, sinal na DRE: +1 receita, -1 despesa)
     ("rb", "Receita bruta", "3.01.01.01.01", +1),
     ("ded", "(−) Deduções da receita bruta", "3.01.01.01.03", -1),
-    ("custo", "(−) Custo das mercadorias e serviços vendidos", "3.01.01.03", -1),
+    ("custo", "(−) Custo dos produtos, mercadorias e serviços vendidos", "3.01.01.03", -1),
     ("adm", "(−) Despesas administrativas", "3.01.01.07.01", -1),
     ("vendas", "(−) Despesas de vendas", "3.01.01.07.02", -1),
     ("trib", "(−) Despesas tributárias", "3.01.01.07.03", -1),

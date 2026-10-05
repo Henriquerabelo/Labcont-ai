@@ -9,7 +9,7 @@ from __future__ import annotations
 
 import hashlib
 
-from .gabarito import ALIQ_IPI, ICMS_INTERESTADUAL, ISS_CONSTRUCAO, ISS_FORTALEZA, IRRF_SERVICOS, CSRF, ICMS_INTERNO_CE, r2
+from .gabarito import ALIQ_IPI, ICMS_UF, NCM, TIPI, ICMS_INTERESTADUAL, ISS_CONSTRUCAO, ISS_FORTALEZA, IRRF_SERVICOS, CSRF, ICMS_INTERNO_CE, r2
 from .caso_servico import fmt
 from .orientacao import Valores
 
@@ -276,5 +276,130 @@ def gerar_documentos(valores: dict) -> list[dict]:
             valor=h, aliq_iss=ISS_FORTALEZA * 100, iss=r2(h * ISS_FORTALEZA), iss_retido=False,
             retencoes=[("IRRF (1,5%)", r2(h * IRRF_SERVICOS)), ("CSRF - PIS/COFINS/CSLL (4,65%)", r2(h * CSRF))],
             liquido=r2(h - h * IRRF_SERVICOS - h * CSRF), vencimento="2026-03-05")
+    # ---------------- 8b: compras de insumos e devolução
+    DESC_INS = {"MP-B": "Matéria-prima B", "MS-Z": "Material secundário Z", "MS-Q": "Material secundário Q",
+                "MS-R": "Material secundário R", "MS-K": "Material secundário K", "ME-H": "Material de embalagem H"}
+
+    def nfe_insumos(ev, data, numero, emit, uf, cfop, natureza, cods, com_ipi, parcelas, transporte, obs=""):
+        itens, prod_t, ipi_t, icms_t = [], 0.0, 0.0, 0.0
+        for cod in cods:
+            i = x.insumo(cod)
+            q, cu = float(i.get("compra") or 0), float(i.get("custo_unit") or 0)
+            if not q:
+                continue
+            prod = r2(q * cu)
+            al_ipi = TIPI[NCM[cod]] if com_ipi else 0.0
+            itens.append({"codigo": cod, "descricao": DESC_INS[cod], "ncm": NCM[cod], "cfop": cfop, "unidade": "un", "quantidade": q,
+                          "unitario": cu, "total": prod, "aliq_icms": ICMS_UF[uf] * 100, "aliq_ipi": al_ipi * 100})
+            prod_t, ipi_t, icms_t = prod_t + prod, ipi_t + r2(prod * al_ipi), icms_t + r2(prod * ICMS_UF[uf])
+        if not itens:
+            return None
+        total = r2(prod_t + ipi_t)
+        dups, pago = [], 0.0
+        for rot, venc, pct in parcelas:
+            val = r2(total * pct / 100) if pct is not None else r2(total - pago)
+            pago += val
+            dups.append((rot, venc, val))
+        add(evento=ev, data=data, tipo="nfe", titulo=f"NF-e - {natureza.lower()}", numero=numero, emitente=emit,
+            destinatario=empresa, natureza=natureza, cfop=cfop, itens=itens, produtos=r2(prod_t), desconto=0, frete=0,
+            base_icms=r2(prod_t), icms=r2(icms_t), ipi=r2(ipi_t), total=total, duplicatas=dups, transporte=transporte, obs=obs)
+        return total
+
+    dp = p("evento", "F05", "desconto", 4)
+    nfe_insumos("F05", "2026-02-04", "12.380", _parte("Indústria Zalego Ltda.", "TO"), "TO", "6.101", "Venda de produção do estabelecimento",
+                ["MP-B"], True, [("à vista (35%)", "2026-02-04", 35), ("001 (saldo)", "2026-03-03", None)],
+                "FOB - por conta do destinatário (CT-e 424.110 - Frete Confiança Ltda.)",
+                obs=f"Desconto financeiro condicional de {dp:.1f}%".replace(".", ",") + " sobre o valor negociado, para pagamento nas datas acordadas.")
+    fr = p("evento", "F05", "frete")
+    if fr:
+        add(evento="F05", data="2026-02-04", tipo="cte", titulo="CT-e - prestação de serviço de transporte", numero="424.110",
+            emitente=_parte("Frete Confiança Ltda.", "TO"), destinatario=empresa, cfop="6.353", origem="TO", destino="Fortaleza/CE",
+            remetente="Indústria Zalego Ltda.", nf_ref="12.380", valor=fr, base_icms=fr, aliq_icms=12.0, icms=r2(fr * 0.12),
+            pagamento="vencimento em 13/02/2026", tomador="Destinatário (frete FOB)")
+    nfe_insumos("F10", "2026-02-09", "9.147", _parte("Distribuidor Verde Oliva Ltda.", "RJ"), "RJ", "6.102",
+                "Venda de mercadoria adquirida de terceiros", ["MS-Z", "MS-Q", "MS-R", "MS-K"], False,
+                [("à vista (15%)", "2026-02-09", 15), ("001", "2026-03-07", 42.5), ("002", "2026-04-07", None)],
+                "CIF - por conta do emitente")
+    nfe_insumos("F22", "2026-02-18", "1.747", _parte("Embalagens Comerciais Ltda.", "AM"), "AM", "6.102",
+                "Venda de mercadoria adquirida de terceiros", ["ME-H"], False,
+                [("à vista (30%)", "2026-02-18", 30), ("001 (saldo)", "2026-03-13", None)],
+                "FOB - por conta do destinatário (CT-e 425.130 - Frete Confiança Ltda.)")
+    fr = p("evento", "F22", "frete")
+    if fr:
+        add(evento="F22", data="2026-02-18", tipo="cte", titulo="CT-e - prestação de serviço de transporte", numero="425.130",
+            emitente=_parte("Frete Confiança Ltda.", "AM"), destinatario=empresa, cfop="6.353", origem="AM", destino="Fortaleza/CE",
+            remetente="Embalagens Comerciais Ltda.", nf_ref="1.747", valor=fr, base_icms=fr, aliq_icms=12.0, icms=r2(fr * 0.12),
+            pagamento="vencimento em 22/02/2026", tomador="Destinatário (frete FOB)")
+    ia = x.insumo("MP-A")
+    qd = p("evento", "F28", "devolvida") or float(ia.get("devolucao") or 0)
+    cu = float(ia.get("custo_unit") or 0) or p("evento", "J30", "custo")
+    if qd and cu:
+        add(evento="F28", data="2026-02-20", tipo="nfe", titulo="NF-e - devolução de compra para industrialização (a emitir pela dupla)",
+            numero="004", emitida_pela_empresa=True, emitente=empresa, destinatario=_parte("Indústria Sofisticada Ltda.", "MG"),
+            natureza="Devolução de compra para industrialização", cfop="6.201",
+            itens=[{"codigo": "MP-A", "descricao": "Matéria-prima A - elemento óptico (com defeito)", "ncm": "9002.11.11", "cfop": "6.201",
+                    "unidade": "un", "quantidade": qd, "unitario": cu, "total": r2(qd * cu), "aliq_icms": 7.0,
+                    "aliq_ipi": TIPI["9002.11.11"] * 100}],
+            produtos=r2(qd * cu), desconto=0, frete=0, base_icms=None, icms=None, ipi=None, total=None,
+            duplicatas=[("abatimento no saldo da NF 23.456", "2026-03-24", None)], transporte="Por conta do emitente",
+            obs="Referente à NF de entrada 23.456 de 26/01/2026. Impostos destacados a calcular pela dupla, nas mesmas alíquotas da entrada.")
+    # ---------------- 8c: produção (documentos internos)
+    prods = {pp["codigo"]: float(pp["quantidade"]) for pp in valores.get("producao", {}).get("produtos", [])}
+    if prods:
+        linhas = []
+        for i in valores.get("producao", {}).get("insumos", []):
+            por = i.get("por_produto", {})
+            qx, qy = por.get("X", 0) * prods.get("X", 0), por.get("Y", 0) * prods.get("Y", 0)
+            linhas.append([f"{i['codigo']} - {i['descricao']}", qx, qy, qx + qy])
+        add(evento="FP1", data="2026-02-19", tipo="producao", titulo="Requisição de materiais - ordem de produção 001/2026",
+            numero="OP 001/2026", emitida_pela_empresa=True, emitente=empresa, destinatario=empresa,
+            cabecalho=[("Produção do mês", f"Produto X: {prods.get('X', 0):,.0f} un · Produto Y: {prods.get('Y', 0):,.0f} un".replace(",", ".")),
+                       ("Início", "19/02/2026 (dia seguinte à compra do ME-H)"), ("Duração", "3 dias úteis")],
+            colunas=["Insumo (quantidades da ficha técnica)", "Para o Produto X (un)", "Para o Produto Y (un)", "Total requisitado (un)"],
+            linhas=linhas, obs="Os insumos saem do almoxarifado pelo custo médio ponderado móvel da data (a calcular pela dupla).")
+        add(evento="FP2", data="2026-02-23", tipo="producao", titulo="Boletim de produção - término da ordem 001/2026",
+            numero="OP 001/2026", emitida_pela_empresa=True, emitente=empresa, destinatario=empresa,
+            cabecalho=[("Início", "19/02/2026"), ("Término", "23/02/2026"), ("Centro de custo", "01 - Matriz")],
+            colunas=["Produto", "Unidades concluídas"],
+            linhas=[[f"Produto {k} (NCM {('9006.53.20' if k == 'X' else '9007.10.00')})", q] for k, q in prods.items()],
+            obs="Custos indiretos do mês rateados entre X e Y pelo custo dos materiais diretos de cada produto. "
+                "Custos e custo unitário a calcular pela dupla.")
+    # ---------------- 8d: vendas (notas emitidas pela empresa: preço pelo mark-up, a calcular pela dupla)
+    def nfe_saida(ev, data, numero, dest, natureza, cfop, itens_q, al_icms, ipi_por_item, duplicatas, transporte, obs):
+        itens = [{"codigo": cod, "descricao": desc, "ncm": ncm, "cfop": cfop, "unidade": "un", "quantidade": q, "unitario": None,
+                  "total": None, "aliq_icms": al_icms * 100, "aliq_ipi": (TIPI.get(ncm, 0.0) * 100) if ipi_por_item else 0.0}
+                 for cod, desc, ncm, q in itens_q if q]
+        if itens:
+            add(evento=ev, data=data, tipo="nfe", titulo=f"NF-e - {natureza.lower()} (a emitir pela dupla)", numero=numero,
+                emitida_pela_empresa=True, emitente=empresa, destinatario=dest, natureza=natureza, cfop=cfop, itens=itens,
+                produtos=None, desconto=0, frete=0, base_icms=None, icms=None, ipi=None if ipi_por_item else 0, total=None,
+                duplicatas=duplicatas, transporte=transporte, obs=obs)
+
+    alpha = ("ALPHA", "Mercadoria ALPHA (controlador de temperatura)", "9032.10.10")
+    nfe_saida("F04", "2026-02-03", "337", {"nome": "Consumidor final (pessoa física)", "uf": "MA", "cidade": "São Luís", "cnpj": "CPF não contribuinte"},
+              "Venda de mercadoria adquirida de terceiros", "6.108", [(*alpha, p("evento", "F04", "quantidade"))], 0.12, False,
+              [("PIX à vista", "2026-02-03", None)], "Por conta do destinatário (cliente)",
+              "Venda a consumidor final não contribuinte de outro estado: ICMS interestadual de 12% e DIFAL devido ao Maranhão "
+              "(alíquota interna de 23%), recolhido pelo remetente. Preço pelo mark-up do exercício (a calcular pela dupla).")
+    nfe_saida("F26", "2026-02-19", "003", _parte("Comercial Caribe Ltda.", "CE", "Fortaleza"), "Venda de mercadoria adquirida de terceiros",
+              "5.102", [(*alpha, p("evento", "F26", "quantidade"))], 0.20, False, [("boleto Banco Rico", "2026-02-28", None)],
+              "Sem frete", "Preço unitário pelo mark-up (custo médio ponderado móvel da data), a calcular pela dupla.")
+    vend = {pp["codigo"]: float(pp.get("vendido") or 0) for pp in valores.get("producao", {}).get("produtos", [])}
+    rc, dsc = p("evento", "F34", "recebimento", 80), p("evento", "F34", "desconto", 3)
+    nfe_saida("F34", "2026-02-24", "005", _parte("Comercial Roma Ltda.", "PA"), "Venda de produção do estabelecimento", "6.101",
+              [("X", "Produto X", "9006.53.20", vend.get("X")), ("Y", "Produto Y", "9007.10.00", vend.get("Y"))], 0.12, True,
+              [(f"na emissão ({rc:.0f}%)", "2026-02-24", None), (f"001 ({100 - rc:.0f}%)", "2026-03-22", None)],
+              "Por conta do destinatário",
+              f"Desconto financeiro de {dsc:.1f}% sobre a venda do Produto Y. ".replace(".", ",", 1) +
+              "Preços pelo mark-up a partir do custo de produção; IPI pela TIPI; valores a calcular pela dupla.")
+    qd = p("evento", "F36", "devolvida")
+    if qd:
+        add(evento="F36", data="2026-02-24", tipo="nfe", titulo="NF-e - devolução de mercadoria (emitida pelo cliente)", numero="1.320",
+            emitente=_parte("Comercial Caribe Ltda.", "CE", "Fortaleza"), destinatario=empresa, natureza="Devolução de compra para comercialização",
+            cfop="5.202", itens=[{"codigo": "ALPHA", "descricao": alpha[1], "ncm": alpha[2], "cfop": "5.202", "unidade": "un", "quantidade": qd,
+                                  "unitario": None, "total": None, "aliq_icms": 20.0, "aliq_ipi": 0.0}],
+            produtos=None, desconto=0, frete=0, base_icms=None, icms=None, ipi=0, total=None,
+            duplicatas=[("abatimento no boleto da NF 003", "2026-02-28", None)], transporte="Por conta do emitente",
+            obs="Referente à NF 003 de 19/02/2026: devolução pelo mesmo preço unitário da venda (a calcular pela dupla).")
     docs.sort(key=lambda d: (d["data"], d["evento"]))
     return docs

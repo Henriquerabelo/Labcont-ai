@@ -10,7 +10,7 @@ from ..main import render, voltar
 from ..models_dupla import Dupla
 
 router = APIRouter()
-TIPOS = {"nfe": "NF-e", "cte": "CT-e", "nfse": "NFS-e", "fatura": "Fatura", "rpa": "RPA", "contrato": "Contrato", "auto": "Auto de infração"}
+TIPOS = {"nfe": "NF-e", "cte": "CT-e", "nfse": "NFS-e", "fatura": "Fatura", "rpa": "RPA", "contrato": "Contrato", "auto": "Auto de infração", "producao": "Produção"}
 
 
 def _dupla(db, id):

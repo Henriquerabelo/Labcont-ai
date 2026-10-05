@@ -38,6 +38,13 @@ ISS_CONSTRUCAO = 0.03  # CTM Fortaleza, art. 245, II: subitens 7.2, 7.4 e 7.5
 IRRF_SERVICOS, CSRF = 0.015, 0.0465
 IR_APLICACAO = 0.225  # até 180 dias
 ALIQ_IPI = {"9002.11.11": 0.0975}  # TIPI - MP-A
+# TIPI 2022 (ADE RFB nº 1/2026) por NCM: insumos e produtos de fevereiro
+TIPI = {"9002.11.11": 0.0975, "9007.20.20": 0.13, "9002.20.10": 0.0975, "9008.50.00": 0.13, "9013.20.00": 0.0975,
+        "9011.20.20": 0.0325, "3923.21.10": 0.0975, "9006.53.20": 0.0975, "9007.10.00": 0.195}
+NCM = {"MP-A": "9002.11.11", "MP-B": "9007.20.20", "MS-Z": "9002.20.10", "MS-Q": "9008.50.00", "MS-R": "9013.20.00",
+       "MS-K": "9011.20.20", "ME-H": "3923.21.10", "X": "9006.53.20", "Y": "9007.10.00"}
+ICMS_UF = {"MA": 0.12, "PB": 0.12, "TO": 0.12, "AM": 0.12, "MG": 0.07, "RJ": 0.07, "PA": 0.12}
+ICMS_INTERNO_MA = 0.23  # alíquota modal do Maranhão desde 23/02/2025
 
 PREMISSAS = {
     "P01": "Tabelas de 2026: INSS (Portaria MPS/MF 13/2026), IRRF com a redução da Lei 15.270/2025, salário-família R$ 67,54 (remuneração até R$ 1.980,38), salário mínimo R$ 1.621,00.",
@@ -77,6 +84,24 @@ PREMISSAS = {
     "P34": "Recrutamento: a NFS-e 345 (26/02) reconhece a metade de fevereiro (a de janeiro já estava apropriada) e retém IRRF de 1,5% sobre o total (RIR/2018, art. 714); sem CSRF, porque o serviço não está na lista da Lei 10.833/2003, art. 30 (SC Disit/SRRF08 nº 8.048/2018). Não há evento de pagamento no exercício.",
     "P35": "Contabilidade de fevereiro: honorário reajustado pelo percentual do contrato (C06), arredondado a R$ 100, com IRRF 1,5% e CSRF 4,65%.",
     "P36": "Vale-transporte e vale-alimentação de março: 20 dias úteis × empregados de fevereiro (não há admissões previstas para março).",
+    "P38": "IPI pela TIPI 2022 (ADE RFB nº 1/2026): MP-B 13% (NCM 9007.20.20). Só o fornecedor industrial (Indústria Zalego) destaca IPI; o Distribuidor Verde Oliva e a Embalagens Comerciais vendem como comerciantes (CFOP 6.102), sem IPI. O IPI destacado na compra de insumo é crédito do estabelecimento industrial (RIPI, art. 226, I) e não integra o custo.",
+    "P39": "Insumos de outros estados: ICMS interestadual de 12% (TO e AM) e 7% (RJ), com crédito integral de ICMS, PIS e COFINS (base sem o ICMS). Não há antecipação parcial (exigida na entrada de mercadoria para comercialização) nem DIFAL (não é uso e consumo).",
+    "P40": "Desconto financeiro condicional da NF 12.380: não reduz o custo da MP-B nem a base dos tributos (CPC 16, item 11, trata só dos descontos comerciais); é receita financeira quando obtido. Em 04/02 ele é obtido sobre a parcela paga à vista (35% do total da nota); o do saldo será reconhecido no pagamento de 03/03.",
+    "P41": "Fretes FOB das compras de insumos (CT-e 424.110 e 425.130): integram o custo do insumo, com crédito de ICMS 12% e de PIS/COFINS; pagos em 18/02 e 24/02 pelo valor do CT-e (sem juros pelo atraso do 424.110, vencido em 13/02). Frete CIF da NF 9.147: sem lançamento.",
+    "P42": "Estoques pelo custo médio ponderado móvel, um estoque por insumo. Devolução de compra (NF 004, CFOP 6.201) pelo custo da compra devolvida: baixa do estoque, estorno dos créditos de ICMS, IPI, PIS e COFINS e abatimento do saldo do fornecedor pelo valor da nota (produtos + IPI).",
+    "P43": "Folha de fevereiro (processada em 13/02) pelos critérios de P16 a P18, com 15 empregados (os admitidos em 01/02 trabalham o mês inteiro). Vale-transporte e vale-alimentação consumidos = compras de 30/01 divididas igualmente. A mão de obra direta (setores dos Produtos X e Y), com encargos, provisões e benefícios, acumula em \"Mão de Obra Direta a Apropriar\" de cada produto; a mão de obra indireta vai para CIF. Renato Português (MOD do Produto X) não tem salário no exercício: o gabarito usa o salário mínimo até a decisão do professor.",
+    "P44": "Pró-labore de fevereiro: Marconde Sobreira, sócio industrial, passa a receber; como dirige a produção, o pró-labore e o INSS patronal de 20% são CIF. Adalberto Cantareira (administração) e Marcela Soares (comercial) seguem como em janeiro.",
+    "P45": "Depreciação de fevereiro (13/02): mesmos métodos de P20 e rateio do quadro de alocação (prédio 10/25/65, máquinas 100% industrial, veículo utilitário 70/30, móveis 45/35/20). As máquinas arrendadas depreciam desde fevereiro (100% industrial); a reforma, concluída em 23/02, deprecia a partir de março. A parcela industrial é CIF.",
+    "P46": "Produção de fevereiro: começa em 19/02 (dia seguinte à compra do ME-H) e termina em 23/02 (três dias úteis: 19, 20 e 23/02). A requisição de 19/02 baixa os insumos pelo custo médio do dia, nas quantidades da ficha técnica × produção do mês. Todos os itens da ficha técnica (matérias-primas, materiais secundários e embalagem) são materiais diretos.",
+    "P47": "CIF de fevereiro (energia, água e telefonia industriais, mão de obra indireta, pró-labore industrial e depreciação industrial) rateados entre X e Y na proporção do custo dos materiais diretos. Em 23/02, fim da produção, MOD e CIF são apropriados aos produtos em elaboração, que passam a produtos acabados; custo unitário = custo total ÷ unidades produzidas.",
+    "P48": "Preço de venda (ALPHA, Produto X e Produto Y) pelo mark-up do exercício: custo médio na data × 1 ÷ [1 − (ICMS 20% + PIS 1,65% + COFINS 7,6% + margem de contribuição)], com esses percentuais mesmo quando a operação tem outra alíquota de ICMS; arredondado a centavos. A baixa do estoque (CMV ou CPV) é pelo custo médio da data.",
+    "P49": "Venda a consumidor final não contribuinte em outro estado (NF 337, São Luís-MA): ICMS interestadual de 12% para o Ceará e DIFAL = valor da operação × (23% − 12%) para o Maranhão (EC 87/2015; LC 190/2022; alíquota modal do MA de 23% desde 23/02/2025), recolhido pelo remetente e registrado como dedução da receita. PIS e COFINS sobre a receita menos o ICMS destacado. Frete por conta do cliente.",
+    "P50": "Venda de X e Y à Comercial Roma (PA, contribuinte, para revenda): IPI pela TIPI (X 9,75%; Y 19,5%, alíquota geral) sobre o valor dos produtos e cobrado à parte. Ele não é receita (Decreto-Lei 1.598/77, art. 12, § 4º, com redação da Lei 12.973/2014) e não integra a base do ICMS (CF, art. 155, § 2º, XI). ICMS interestadual de 12%; sem DIFAL (destinatário contribuinte).",
+    "P51": "Desconto financeiro sobre o Produto Y: incide sobre o valor dos produtos Y, é concedido na emissão e abatido da parcela recebida (80% do total da nota). Não reduz a receita bruta nem a base dos tributos: é despesa financeira. O saldo (20%) vence em 22/03.",
+    "P52": "Devolução de venda (NF 1.320 da Comercial Caribe, ALPHA): pelo preço da venda original, como dedução da receita (devoluções de vendas), com estorno de ICMS, PIS e COFINS (a recuperar) e retorno ao estoque pelo custo médio da saída; abatida do boleto. O recebimento de 27/02 é pelo valor líquido.",
+    "P53": "Apuração de fevereiro (28/02) pelos critérios de P23: débitos e créditos de ICMS, IPI, PIS e COFINS compensados; saldo credor permanece a recuperar. O ICMS antecipado de 01/2026, pago em 26/02, vira crédito em fevereiro (P03). O DIFAL devido ao Maranhão é recolhido à parte (GNRE), sem compensação. Créditos de PIS/COFINS limitados a insumos, fretes, energia e devoluções, como em janeiro: sem créditos sobre depreciação de máquinas e contraprestações de leasing e sem PIS/COFINS sobre receitas financeiras (simplificação didática).",
+    "P54": "IRPJ e CSLL por estimativa de fevereiro (P22): revenda (líquida de devoluções) e venda de produtos com presunção de 8% (IRPJ) e 12% (CSLL); serviços 32%; receitas financeiras integrais (rendimentos, juros do mútuo e descontos obtidos). IRPJ 15% + adicional de 10% sobre o que exceder R$ 20.000,00 no mês; CSLL 9%; IRRF retido sobre receitas compensado com o IRPJ.",
+    "P55": "Conta garantida sem trava de limite: em fevereiro as compras de insumos (04/02 a 18/02) acontecem antes do recebimento da venda de X e Y (24/02), e o saldo devedor passa do limite contratado. O gabarito registra o uso necessário para o caixa não ficar negativo e sinaliza o excesso na memória de cálculo. Cabe ao professor decidir se mantém, se amplia o limite ou se muda as datas do caso.",
     "P37": "Aplicações em fevereiro: CDB apropriado até 05/02 (F07) e no fim do mês; o resgate de 27/02 retira só o rendimento acumulado do INVEST LIQUID (saldo menos o valor aplicado remanescente), com IR de 22,5% a recuperar.",
 }
 
@@ -126,6 +151,14 @@ def idades(texto) -> list[int]:
     if not dentro and not re.search(r"anos", alvo):
         return []
     return [int(x) for x in re.findall(r"\d+", alvo)]
+
+
+def qtd(v) -> str:
+    return f"{int(round(v)):,}".replace(",", ".")
+
+
+def f4(v) -> str:
+    return f"{v:.4f}".replace(".", ",")
 
 
 def fmt(v) -> str:
@@ -254,7 +287,8 @@ class Gabarito:
             if j:
                 self.L.lanc(ate, ev, f"Juros da conta garantida até {ate:%d/%m}", [(pc.JUROS_GARANTIDA, j)],
                             [(pc.GARANTIDA, j)], {"P15"})
-                self.L.memo(ev, f"Juros conta garantida ({(ate - g['data']).days} dias a {fmt(taxa)}% a.m.)", j)
+                dias = (ate - g['data']).days
+                self.L.memo(ev, f"Juros conta garantida ({dias} {'dia' if dias == 1 else 'dias'} a {fmt(taxa)}% a.m.)", j)
                 g["saldo"] = r2(g["saldo"] + j)
         g["data"] = ate
 
@@ -276,10 +310,17 @@ class Gabarito:
                 falta = -self.L.saldo(pc.BANCO)
             if falta > 0.004:
                 self._juros_garantida(d, ev)
-                self.L.lanc(d, ev, f"Uso da conta garantida em {d:%d/%m}", [(pc.BANCO, falta)], [(pc.GARANTIDA, falta)], {"P15"})
+                limite = self.p("contrato", "C01", "limite", 970000)
+                acima = r2(self.garantida["saldo"] + falta) > limite
+                self.L.lanc(d, ev, f"Uso da conta garantida em {d:%d/%m}", [(pc.BANCO, falta)], [(pc.GARANTIDA, falta)],
+                            {"P15", "P55"} if acima else {"P15"})
                 self.L.memo(ev, f"{d:%d/%m} uso da conta garantida", falta)
                 self.garantida["saldo"] = r2(self.garantida["saldo"] + falta)
                 self.garantida["data"] = d
+                if acima:
+                    self.L.memo(ev, f"Atenção: saldo da conta garantida acima do limite contratado de {fmt(limite)} (P55)",
+                                self.garantida["saldo"], "acima do limite")
+                    self.L.premissas_evento[ev].add("P55")
         elif self.garantida["saldo"] > 0:
             self._juros_garantida(d, ev)
             if self.L.saldo(pc.BANCO) >= self.garantida["saldo"]:
@@ -686,6 +727,8 @@ class Gabarito:
                        ("Pagamento à vista (25%)", vista)):
             self.L.memo(ev, t, val)
         self.sof_total = total
+        self.est = {"MP-A": [q, custo]}
+        self.sof_unit = {"cu": cu, "custo_un": custo / q if q else 0.0}
         self.L.lanc(d, ev, "NF 23.456 Indústria Sofisticada - MP-A",
                     [(pc.MPA, custo), (pc.IPI_REC, ipi), (pc.ICMS_REC, icms), (pc.PIS_REC, pis), (pc.COFINS_REC, cof)],
                     [(pc.BANCO, vista), (pc.F_SOFISTICADA, total - vista)], {"P02", "P05", "P08"})
@@ -1073,6 +1116,462 @@ class Gabarito:
                 l["premissas"] = sorted(set(l["premissas"]) | {"P37"})
         self.L.premissas_evento[ev].add("P37")
 
+    # ---------------- 8b: compras de insumos e estoques (custo médio ponderado móvel)
+    def _kardex(self, ev, cod, q, v, rot):
+        e = self.est.setdefault(cod, [0.0, 0.0])
+        e[0], e[1] = e[0] + q, r2(e[1] + v)
+        cm = e[1] / e[0] if e[0] else 0.0
+        self.L.memo(ev, f"Estoque {cod} após {rot}: {qtd(e[0])} un · custo médio {f4(cm)}", e[1])
+
+    def _compra_insumos(self, d, ev, hist, itens, uf, ipi_destacado, conta_forn, vista_pct, premissas, desconto_pct=0.0):
+        """itens: [(cod, q, custo_unit)]. Devolve o total da nota."""
+        al = ICMS_UF[uf]
+        deb, prod_t, ipi_t, custos = defaultdict(float), 0.0, 0.0, []
+        for cod, q, cu in itens:
+            prod = r2(q * cu)
+            ipi = r2(prod * TIPI[NCM[cod]]) if ipi_destacado else 0.0
+            icms = r2(prod * al)
+            pis, cof = r2((prod - icms) * PIS), r2((prod - icms) * COFINS)
+            custo = r2(prod - icms - pis - cof)
+            custos.append((cod, q, custo))
+            deb[pc.ESTOQUE[cod]] += custo
+            deb[pc.IPI_REC] += ipi
+            deb[pc.ICMS_REC] += icms
+            deb[pc.PIS_REC] += pis
+            deb[pc.COFINS_REC] += cof
+            prod_t, ipi_t = prod_t + prod, ipi_t + ipi
+            self.L.memo(ev, f"{cod}: {qtd(q)} un × {f4(cu)} = {fmt(prod)}"
+                        + (f"; IPI {fmt(TIPI[NCM[cod]] * 100)}% {fmt(ipi)}" if ipi_destacado else "")
+                        + f"; ICMS {fmt(al * 100)}% {fmt(icms)}; PIS {fmt(pis)}; COFINS {fmt(cof)}", custo, "custo do insumo")
+        total = r2(prod_t + ipi_t)
+        vista = r2(total * vista_pct / 100)
+        desc = r2(vista * desconto_pct / 100)
+        self.L.memo(ev, "Total da nota (produtos + IPI)", total)
+        self.L.memo(ev, f"Pagamento à vista ({fmt(vista_pct)}%)", vista)
+        cred = [(pc.BANCO, vista - desc), (conta_forn, total - vista)]
+        if desc:
+            self.L.memo(ev, f"Desconto financeiro condicional obtido ({fmt(desconto_pct)}% sobre a parcela à vista)", desc)
+            cred.append((pc.DESC_OBTIDOS, desc))
+            self.receitas_fev["financeiras"] += desc
+        self.L.lanc(d, ev, hist, list(deb.items()), cred, premissas)
+        for cod, q, custo in custos:
+            self._kardex(ev, cod, q, custo, "a compra")
+        return total
+
+    def _frete_insumo(self, d, ev, cte, cod, frete, uf):
+        al = ICMS_UF[uf]
+        icms = r2(frete * al)
+        pis, cof = r2((frete - icms) * PIS), r2((frete - icms) * COFINS)
+        custo = r2(frete - icms - pis - cof)
+        self.L.memo(ev, f"Frete FOB (CT-e {cte})", frete)
+        self.L.memo(ev, f"Créditos sobre o frete (ICMS {fmt(al * 100)}%, PIS, COFINS)", icms + pis + cof)
+        self.L.lanc(d, ev, f"CT-e {cte} - frete FOB da compra de {cod}",
+                    [(pc.ESTOQUE[cod], custo), (pc.ICMS_REC, icms), (pc.PIS_REC, pis), (pc.COFINS_REC, cof)],
+                    [(pc.F_FRETE, frete)], {"P05", "P41"})
+        self._kardex(ev, cod, 0, custo, "o frete")
+
+    def _insumo(self, cod):
+        i = self.x.insumo(cod)
+        return float(i.get("compra") or 0), float(i.get("custo_unit") or 0)
+
+    def f05(self, d):
+        ev = "F05"
+        q, cu = self._insumo("MP-B")
+        dp = self.p("evento", "F05", "desconto", 4)
+        self._compra_insumos(d, ev, "NF 12.380 Indústria Zalego - MP-B", [("MP-B", q, cu)], "TO", True, pc.F_ZALEGO, 35,
+                             {"P38", "P39", "P40", "P42", "P05"}, desconto_pct=dp)
+        self.frete_f05 = self.p("evento", "F05", "frete", 1980)
+        self._frete_insumo(d, ev, "424.110", "MP-B", self.frete_f05, "TO")
+
+    def f10(self, d):
+        ev = "F10"
+        itens = [(cod, *self._insumo(cod)) for cod in ("MS-Z", "MS-Q", "MS-R", "MS-K")]
+        total = self._compra_insumos(d, ev, "NF 9.147 Distribuidor Verde Oliva - materiais secundários",
+                                     [i for i in itens if i[1]], "RJ", False, pc.F_VERDE_OLIVA, 15, {"P38", "P39", "P41", "P42", "P05"})
+        self.L.memo(ev, "Saldo em 2 parcelas iguais (07/03 e 07/04)", r2(total * 0.85))
+
+    def f22(self, d):
+        ev = "F22"
+        q, cu = self._insumo("ME-H")
+        self._compra_insumos(d, ev, "NF 1.747 Embalagens Comerciais - ME-H", [("ME-H", q, cu)], "AM", False, pc.F_EMBALAGENS, 30,
+                             {"P38", "P39", "P42", "P05"})
+        self.frete_f22 = self.p("evento", "F22", "frete", 1410)
+        self._frete_insumo(d, ev, "425.130", "ME-H", self.frete_f22, "AM")
+
+    def f23(self, d):
+        v = getattr(self, "frete_f05", 0.0)
+        self.L.memo("F23", "CT-e 424.110 (vencido em 13/02)", v)
+        self.L.lanc(d, "F23", "Pagamento do CT-e 424.110 - Frete Confiança", [(pc.F_FRETE, v)], [(pc.BANCO, v)], {"P41"})
+
+    def f35(self, d):
+        v = getattr(self, "frete_f22", 0.0)
+        self.L.memo("F35", "CT-e 425.130", v)
+        self.L.lanc(d, "F35", "Pagamento do CT-e 425.130 - Frete Confiança", [(pc.F_FRETE, v)], [(pc.BANCO, v)], {"P41"})
+
+    def f28(self, d):
+        ev = "F28"
+        qd = self.p("evento", "F28", "devolvida") or float(self.x.insumo("MP-A").get("devolucao") or 320)
+        cu = self.sof_unit["cu"]
+        prod = r2(qd * cu)
+        ipi = r2(prod * TIPI[NCM["MP-A"]])
+        icms = r2(prod * ICMS_UF["MG"])
+        pis, cof = r2((prod - icms) * PIS), r2((prod - icms) * COFINS)
+        custo = r2(prod - icms - pis - cof)
+        for t, val in ((f"{qtd(qd)} un de MP-A devolvidas × {f4(cu)}", prod), ("IPI 9,75% (estorno do crédito)", ipi),
+                       ("ICMS 7% (estorno do crédito)", icms), ("PIS (estorno)", pis), ("COFINS (estorno)", cof),
+                       ("Baixa do estoque pelo custo da compra", custo), ("Abatimento no saldo do fornecedor (produtos + IPI)", prod + ipi)):
+            self.L.memo(ev, t, val)
+        self.L.lanc(d, ev, "NF 004 - devolução de MP-A à Indústria Sofisticada (CFOP 6.201)", [(pc.F_SOFISTICADA, prod + ipi)],
+                    [(pc.ESTOQUE["MP-A"], custo), (pc.IPI_REC, ipi), (pc.ICMS_REC, icms), (pc.PIS_REC, pis), (pc.COFINS_REC, cof)],
+                    {"P08", "P42"})
+        self._kardex(ev, "MP-A", -qd, -custo, "a devolução")
+
+    # ---------------- 8c: folha, depreciação e produção
+    def _destino(self, setor: str) -> str:
+        s = (setor or "").lower()
+        if "industrial" in s:
+            return "modx" if "produto x" in s else "mody" if "produto y" in s else "moi"
+        return "vendas" if "comerc" in s else "adm"
+
+    @staticmethod
+    def _conta_area(chave: str, destino: str) -> str:
+        if destino == "adm":
+            return pc.POR_AREA[chave][0]
+        if destino == "vendas":
+            return pc.POR_AREA[chave][1]
+        return {"modx": pc.MOD["X"], "mody": pc.MOD["Y"], "moi": pc.CIF_MOI}[destino]
+
+    def f20(self, d):
+        ev = "F20"
+        func = [f for f in self.v.get("folha", []) if f.get("salario_fev") or f.get("pendente")]
+        n = len(func) or 1
+        vt_ind, va_ind = r2(self.ab(pc.VT) / n), r2(self.ab(pc.VA) / n)
+        deb, cred, tot = defaultdict(float), defaultdict(float), defaultdict(float)
+        por_dest = defaultdict(float)
+        for f in func:
+            dest = self._destino(f["setor"])
+            sal = f.get("salario_fev") or (SALARIO_MINIMO if f.get("pendente") else 0)
+            he, com = f.get("he_fev") or 0, f.get("comissao_fev") or 0
+            rem = r2(sal + he + com)
+            inss = inss_empregado(min(rem, TETO_INSS))
+            ids = idades(f.get("dependentes_fev"))
+            deps = sum(1 for i in ids if i <= 21)
+            ir, nota = irrf(rem, inss, deps)
+            sf = r2(SALARIO_FAMILIA_COTA * sum(1 for i in ids if i <= 14)) if rem <= SALARIO_FAMILIA_LIMITE else 0.0
+            dvt = r2(min(sal * 0.06, vt_ind))
+            dva = r2(va_ind * 0.05)
+            liq = r2(rem + sf - inss - ir - dvt - dva)
+            enc, fg = r2(rem * ENCARGOS_INSS_FOLHA), r2(rem * FGTS)
+            fer, dec = r2(rem / 12 * 4 / 3), r2(rem / 12)
+            enc_f, fg_f, enc_d, fg_d = r2(fer * ENCARGOS_INSS_FOLHA), r2(fer * FGTS), r2(dec * ENCARGOS_INSS_FOLHA), r2(dec * FGTS)
+            custo = {"salarios": sal + he, "inss": enc, "fgts": fg, "ferias": fer + enc_f + fg_f, "decimo": dec + enc_d + fg_d,
+                     "vt": vt_ind - dvt, "va": va_ind - dva}
+            for k, val in custo.items():
+                deb[self._conta_area(k, dest)] += val
+                por_dest[dest] += val
+            if com:
+                deb[pc.COMISSOES] += com
+                por_dest[dest] += com
+            cred[pc.PROV_FERIAS] += fer
+            cred[pc.INSS_FERIAS] += enc_f
+            cred[pc.FGTS_FERIAS] += fg_f
+            cred[pc.PROV_13] += dec
+            cred[pc.INSS_13] += enc_d
+            cred[pc.FGTS_13] += fg_d
+            cred[pc.INSS_REC] += inss + enc - sf
+            cred[pc.FGTS_REC] += fg
+            cred[pc.IRRF_RECOL] += ir
+            cred[pc.SAL_PAGAR] += liq
+            cred[pc.VT] += vt_ind
+            cred[pc.VA] += va_ind
+            for k, val in (("rem", rem), ("enc", enc), ("fgts", fg)):
+                tot[k] += val
+            self.L.memo(ev, f"{f['nome']} ({f['setor']}{'; salário não informado no caso: mínimo' if f.get('pendente') else ''}): "
+                            f"remuneração {fmt(rem)}; INSS {fmt(inss)}; IRRF {fmt(ir)} ({nota}); sal.-família {fmt(sf)}; "
+                            f"desc. VT {fmt(dvt)} / VA {fmt(dva)}", liq, "líquido")
+        self.L.memo(ev, f"VT e VA consumidos por empregado ({n} empregados)", vt_ind + va_ind)
+        self.L.memo(ev, "Encargos INSS 27,80% sobre a folha", tot["enc"])
+        self.L.memo(ev, "FGTS 8%", tot["fgts"])
+        for dest, rot in (("adm", "Despesas administrativas"), ("vendas", "Despesas de vendas"), ("modx", "MOD a apropriar - Produto X"),
+                          ("mody", "MOD a apropriar - Produto Y"), ("moi", "Mão de obra indireta (CIF)")):
+            if por_dest.get(dest):
+                self.L.memo(ev, f"Custo total da folha · {rot}", por_dest[dest])
+        self.L.lanc(d, ev, "Folha de pagamento de fevereiro/2026", list(deb.items()), list(cred.items()),
+                    {"P01", "P16", "P17", "P18", "P43"})
+        pl_deb, pl_cred = defaultdict(float), defaultdict(float)
+        for s_ in self.v.get("socios", []):
+            pl = float(s_.get("pro_labore_fev") or 0)
+            if not pl:
+                continue
+            fn = (s_.get("funcao") or "").lower()
+            inss = r2(min(pl, TETO_INSS) * 0.11)
+            deps = sum(1 for i in idades(s_.get("dependentes") or self._dep_socio(s_["nome"])) if i <= 21)
+            ir, nota = irrf(pl, inss, deps)
+            pat = r2(pl * INSS_PATRONAL_CI)
+            if "industrial" in fn:
+                pl_deb[pc.CIF_PROLAB] += pl + pat
+            else:
+                a = 1 if "comerc" in fn else 0
+                pl_deb[pc.POR_AREA["prolabore"][a]] += pl
+                pl_deb[pc.POR_AREA["inss"][a]] += pat
+            pl_cred[pc.PROLAB_PAGAR] += pl - inss - ir
+            pl_cred[pc.INSS_REC] += inss + pat
+            pl_cred[pc.IRRF_RECOL] += ir
+            self.L.memo(ev, f"Pró-labore {s_['nome']}: {fmt(pl)}; INSS 11% {fmt(inss)}; IRRF {fmt(ir)} ({nota}); patronal 20% {fmt(pat)}"
+                        + (" · CIF" if "industrial" in fn else ""), pl - inss - ir, "líquido")
+        if pl_deb:
+            self.L.lanc(d, ev, "Pró-labore de fevereiro/2026", list(pl_deb.items()), list(pl_cred.items()), {"P01", "P16", "P44"})
+
+    def f21(self, d):
+        ev = "F21"
+        deb, cred = defaultdict(float), defaultdict(float)
+        itens = [
+            ("Galpão (prédio)", self.L.saldo(pc.GALPAO), 20, 80, (0.10, 0.25, 0.65), pc.DEP_IMOVEIS),
+            ("Máquinas industriais", self.L.saldo(pc.MAQUINAS), 8, 20, (0.0, 0.0, 1.0), pc.DEP_MAQ),
+            ("Máquinas arrendadas (leasing)", self.L.saldo(pc.MAQ_LEASING), 8, 20, (0.0, 0.0, 1.0), pc.DEP_MAQ),
+            ("Veículo utilitário", self.L.saldo(pc.VEICULOS), 5, 40, (0.70, 0.30, 0.0), pc.DEP_VEIC),
+            ("Ar-condicionados (móveis e aparelhos)", self.L.saldo(pc.MOVEIS), 12, 10, (0.45, 0.35, 0.20), pc.DEP_MOVEIS),
+        ]
+        for nome, valor, anos, resid, (pa, pv, pi), conta in itens:
+            if valor <= 0:
+                continue
+            q = r2(valor * (1 - resid / 100) / (anos * 12))
+            va, vv = r2(q * pa), r2(q * pv)
+            vi = r2(q - va - vv)
+            deb[pc.POR_AREA["depreciacao"][0]] += va
+            deb[pc.POR_AREA["depreciacao"][1]] += vv
+            deb[pc.CIF_DEPREC] += vi
+            cred[conta] += q
+            self.L.memo(ev, f"{nome}: {fmt(valor)} × (1 − {resid}%) ÷ {anos * 12} meses; adm. {int(pa * 100)}% / vendas {int(pv * 100)}% "
+                            f"/ industrial {int(pi * 100)}%", q)
+        self.L.lanc(d, ev, "Depreciação de fevereiro/2026", [(c, v) for c, v in deb.items() if v], list(cred.items()), {"P20", "P45"})
+
+    def _producao(self):
+        prods = {p["codigo"]: float(p["quantidade"]) for p in self.v.get("producao", {}).get("produtos", [])}
+        fichas = {i["codigo"]: i.get("por_produto", {}) for i in self.v.get("producao", {}).get("insumos", [])}
+        return prods, fichas
+
+    def fp1(self, d):
+        ev = "FP1"
+        prods, fichas = self._producao()
+        deb, cred = defaultdict(float), defaultdict(float)
+        self.md = {"X": 0.0, "Y": 0.0}
+        for cod, por in fichas.items():
+            e = self.est.get(cod)
+            if not e or not e[0]:
+                continue
+            cm = e[1] / e[0]
+            for prod, coef in por.items():
+                q = coef * prods.get(prod, 0)
+                if not q:
+                    continue
+                v = r2(q * cm)
+                deb[pc.PEP[prod]] += v
+                cred[pc.ESTOQUE[cod]] += v
+                self.md[prod] += v
+                self.L.memo(ev, f"{cod} → Produto {prod}: {fmt(coef).replace(',00', '')} × {qtd(prods[prod])} = {qtd(q)} un × "
+                                f"custo médio {f4(cm)}", v)
+                e[0], e[1] = e[0] - q, r2(e[1] - v)
+        for cod in fichas:
+            if cod in self.est:
+                self.L.memo(ev, f"Estoque {cod} após a requisição: {qtd(self.est[cod][0])} un", self.est[cod][1])
+        for prod in ("X", "Y"):
+            self.L.memo(ev, f"Materiais diretos - Produto {prod}", self.md[prod])
+        self.L.lanc(d, ev, "Requisição de materiais - início da produção de X e Y", list(deb.items()), list(cred.items()), {"P42", "P46"})
+
+    def fp2(self, d):
+        ev = "FP2"
+        prods, _ = self._producao()
+        md = getattr(self, "md", {"X": 0.0, "Y": 0.0})
+        tot_md = (md["X"] + md["Y"]) or 1
+        cif = {c: self.L.saldo(c) for c in pc.CIF_CONTAS if self.L.saldo(c) > 0.004}
+        tot_cif = r2(sum(cif.values()))
+        cif_x = r2(tot_cif * md["X"] / tot_md)
+        cif_p = {"X": cif_x, "Y": r2(tot_cif - cif_x)}
+        mod = {p: self.L.saldo(pc.MOD[p]) for p in ("X", "Y")}
+        for c, v in cif.items():
+            self.L.memo(ev, f"CIF · {pc.CONTAS[c]['nome']}", v)
+        self.L.memo(ev, "Total do CIF", tot_cif)
+        self.L.memo(ev, f"Rateio pelos materiais diretos: X {fmt(100 * md['X'] / tot_md)}% · Y {fmt(100 * md['Y'] / tot_md)}%", None)
+        deb = [(pc.PEP[p], mod[p] + cif_p[p]) for p in ("X", "Y")]
+        cred = [(pc.MOD[p], mod[p]) for p in ("X", "Y") if mod[p]] + list(cif.items())
+        self.L.lanc(d, ev, "Apropriação da MOD e do CIF aos produtos em elaboração", deb, cred, {"P43", "P47"})
+        acab = []
+        for p in ("X", "Y"):
+            total = self.L.saldo(pc.PEP[p])
+            q = prods.get(p, 0)
+            acab.append((p, total, q))
+            for t, val in ((f"Produto {p} · materiais diretos", md[p]), (f"Produto {p} · mão de obra direta", mod[p]),
+                           (f"Produto {p} · CIF rateado", cif_p[p]), (f"Produto {p} · custo total ({qtd(q)} un)", total)):
+                self.L.memo(ev, t, val)
+            self.L.memo(ev, f"Produto {p} · custo unitário {f4(total / q if q else 0)}", None)
+            self.est[p] = [q, total]
+        self.L.lanc(d, ev, "Término da produção - transferência para produtos acabados",
+                    [(pc.PA[p], t) for p, t, _ in acab], [(pc.PEP[p], t) for p, t, _ in acab], {"P46", "P47"})
+
+    # ---------------- 8d: vendas
+    def _divisor(self):
+        mk = self.v.get("markup", {}) or {}
+        margem = float(mk.get("margem_contribuicao") or 45)
+        return 1 - (ICMS_INTERNO_CE * 100 + PIS * 100 + COFINS * 100 + margem) / 100
+
+    def _venda_alpha(self, d, ev, q, cliente_hist, al_icms, conta_rec, difal_pct=0.0, premissas=("P06", "P48")):
+        div = self._divisor()
+        cm = self.alpha_v / self.alpha_q
+        preco = r2(cm * (1 / div))
+        rec = r2(q * preco)
+        icms = r2(rec * al_icms)
+        difal = r2(rec * difal_pct)
+        pis, cof = r2((rec - icms) * PIS), r2((rec - icms) * COFINS)
+        cmv = r2(q * cm)
+        for t, val in (("Custo médio ALPHA", cm), (f"Mark-up divisor {f4(div)} → multiplicador {f4(1 / div)}", None),
+                       ("Preço unitário", preco), (f"Receita ({qtd(q)} un)", rec), (f"ICMS {fmt(al_icms * 100)}%", icms)) + \
+                (((f"DIFAL {fmt(difal_pct * 100)}% (23% MA − 12%)", difal),) if difal else ()) + \
+                (("PIS 1,65% (base sem ICMS)", pis), ("COFINS 7,6% (base sem ICMS)", cof), ("CMV", cmv)):
+            self.L.memo(ev, t, val)
+        self.L.lanc(d, ev, f"{cliente_hist} - venda de ALPHA", [(conta_rec, rec)], [(pc.REC_REVENDA, rec)], set(premissas))
+        deb = [(pc.DED_ICMS, icms), (pc.DED_PIS, pis), (pc.DED_COFINS, cof)] + ([(pc.DED_DIFAL, difal)] if difal else [])
+        cred = [(pc.ICMS_RECOL, icms), (pc.PIS_RECOL, pis), (pc.COFINS_RECOL, cof)] + ([(pc.DIFAL_MA, difal)] if difal else [])
+        self.L.lanc(d, ev, f"Tributos sobre a venda - {cliente_hist}", deb, cred, set(premissas))
+        self.L.lanc(d, ev, f"Baixa do estoque - {cliente_hist} (CMV)", [(pc.CMV, cmv)], [(pc.ALPHA, cmv)], {"P48"})
+        self.alpha_q -= q
+        self.alpha_v = r2(self.alpha_v - cmv)
+        self.L.memo(ev, f"Estoque ALPHA após a venda: {qtd(self.alpha_q)} un", self.alpha_v)
+        self.receitas_fev["revenda"] += rec
+        return rec, preco, cm
+
+    def f04(self, d):
+        q = self.p("evento", "F04", "quantidade", 40)
+        self._venda_alpha(d, "F04", q, "NF 337 consumidor final (São Luís-MA)", ICMS_UF["MA"], pc.BANCO,
+                          difal_pct=ICMS_INTERNO_MA - ICMS_UF["MA"], premissas=("P06", "P48", "P49"))
+
+    def f26(self, d):
+        q = self.p("evento", "F26", "quantidade", 10400)
+        rec, preco, cm = self._venda_alpha(d, "F26", q, "NF 003 Comercial Caribe", ICMS_INTERNO_CE, pc.CLIENTES)
+        self.caribe = {"valor": rec, "preco": preco, "cm": cm}
+
+    def f36(self, d):
+        ev = "F36"
+        cb = getattr(self, "caribe", None)
+        if not cb:
+            return
+        q = self.p("evento", "F36", "devolvida", 70)
+        v = r2(q * cb["preco"])
+        icms = r2(v * ICMS_INTERNO_CE)
+        pis, cof = r2((v - icms) * PIS), r2((v - icms) * COFINS)
+        custo = r2(q * cb["cm"])
+        for t, val in ((f"{qtd(q)} un devolvidas × preço da NF 003 {fmt(cb['preco'])}", v), ("Estorno do ICMS 20%", icms),
+                       ("Estorno do PIS", pis), ("Estorno da COFINS", cof), ("Retorno ao estoque pelo custo da saída", custo)):
+            self.L.memo(ev, t, val)
+        self.L.lanc(d, ev, "NF 1.320 Comercial Caribe - devolução de ALPHA", [(pc.DEVOLUCOES, v)], [(pc.CLIENTES, v)], {"P52"})
+        self.L.lanc(d, ev, "Estorno dos tributos sobre a venda devolvida", [(pc.ICMS_REC, icms), (pc.PIS_REC, pis), (pc.COFINS_REC, cof)],
+                    [(pc.DED_ICMS, icms), (pc.DED_PIS, pis), (pc.DED_COFINS, cof)], {"P52"})
+        self.L.lanc(d, ev, "Retorno da mercadoria devolvida ao estoque", [(pc.ALPHA, custo)], [(pc.CMV, custo)], {"P52"})
+        self.alpha_q += q
+        self.alpha_v = r2(self.alpha_v + custo)
+        self.receitas_fev["revenda"] -= v
+        cb["devolucao"] = v
+        self.L.memo(ev, f"Estoque ALPHA após a devolução: {qtd(self.alpha_q)} un", self.alpha_v)
+
+    def f44(self, d):
+        cb = getattr(self, "caribe", None)
+        if not cb:
+            return
+        v = r2(cb["valor"] - cb.get("devolucao", 0.0))
+        self.L.memo("F44", "Boleto da NF 003 menos a devolução (NF 1.320)", v)
+        self.L.lanc(d, "F44", "Recebimento Comercial Caribe - NF 003 (líquido da devolução)", [(pc.BANCO, v)], [(pc.CLIENTES, v)], {"P52"})
+
+    def f34(self, d):
+        ev = "F34"
+        div = self._divisor()
+        vend = {p["codigo"]: float(p.get("vendido") or 0) for p in self.v.get("producao", {}).get("produtos", [])}
+        dpct = self.p("evento", "F34", "desconto", 3)
+        rpct = self.p("evento", "F34", "recebimento", 80)
+        al = ICMS_UF["PA"]
+        rec_t = ipi_t = icms_t = pis_t = cof_t = cpv_t = 0.0
+        rec_p, cpv_p = {}, {}
+        for p in ("X", "Y"):
+            q = vend.get(p, 0)
+            e = self.est.get(p)
+            if not q or not e or not e[0]:
+                continue
+            cm = e[1] / e[0]
+            preco = r2(cm * (1 / div))
+            rec = r2(q * preco)
+            ipi = r2(rec * TIPI[NCM[p]])
+            icms = r2(rec * al)
+            pis, cof = r2((rec - icms) * PIS), r2((rec - icms) * COFINS)
+            cpv = r2(q * cm)
+            rec_p[p], cpv_p[p] = rec, cpv
+            rec_t, ipi_t, icms_t, pis_t, cof_t, cpv_t = rec_t + rec, ipi_t + ipi, icms_t + icms, pis_t + pis, cof_t + cof, cpv_t + cpv
+            for t, val in ((f"Produto {p}: custo médio {f4(cm)} × {f4(1 / div)} = preço", preco), (f"Produto {p}: {qtd(q)} un", rec),
+                           (f"Produto {p}: IPI {fmt(TIPI[NCM[p]] * 100)}%", ipi), (f"Produto {p}: ICMS 12%", icms),
+                           (f"Produto {p}: PIS / COFINS", pis + cof), (f"Produto {p}: CPV", cpv)):
+                self.L.memo(ev, t, val)
+            e[0], e[1] = e[0] - q, r2(e[1] - cpv)
+            self.L.memo(ev, f"Estoque do Produto {p} após a venda: {qtd(e[0])} un", e[1])
+        if not rec_t:
+            return
+        total = r2(rec_t + ipi_t)
+        desc = r2(rec_p.get("Y", 0) * dpct / 100)
+        recebido = r2(total * rpct / 100)
+        for t, val in (("Total da nota (produtos + IPI)", total), (f"Recebido na emissão ({fmt(rpct)}% do total) menos o desconto", recebido - desc),
+                       (f"Desconto financeiro de {fmt(dpct)}% sobre o Produto Y (despesa financeira)", desc),
+                       (f"Saldo a receber em 22/03 ({fmt(100 - rpct)}%)", total - recebido)):
+            self.L.memo(ev, t, val)
+        self.L.lanc(d, ev, "NF 005 Comercial Roma - venda dos Produtos X e Y",
+                    [(pc.BANCO, recebido - desc), (pc.DESC_CONCEDIDOS, desc), (pc.CLIENTES, total - recebido)],
+                    [(pc.REC_PRODUTOS, rec_t), (pc.IPI_RECOL, ipi_t)], {"P48", "P50", "P51"})
+        self.L.lanc(d, ev, "Tributos sobre a venda - NF 005", [(pc.DED_ICMS, icms_t), (pc.DED_PIS, pis_t), (pc.DED_COFINS, cof_t)],
+                    [(pc.ICMS_RECOL, icms_t), (pc.PIS_RECOL, pis_t), (pc.COFINS_RECOL, cof_t)], {"P06", "P50"})
+        self.L.lanc(d, ev, "Baixa dos produtos vendidos - NF 005 (CPV)", [(pc.CPV, cpv_t)],
+                    [(pc.PA[p], v) for p, v in cpv_p.items()], {"P48"})
+        self.receitas_fev["producao"] = self.receitas_fev.get("producao", 0.0) + rec_t
+
+    # ---------------- 8e: apuração de fevereiro
+    def f48(self, d):
+        ev = "F48"
+        L = self.L
+        ant = self.ab(pc.ICMS_ANT_RECOL)  # antecipado de 01/2026, pago em 26/02 (F40)
+        if ant > 0.004:
+            L.memo(ev, "ICMS antecipado de 01/2026 pago em 26/02: crédito em fevereiro", ant)
+            L.lanc(d, ev, "Crédito do ICMS antecipado de 01/2026 (pago em 26/02)", [(pc.ICMS_REC, ant)], [(pc.ICMS_ANT_REC, ant)],
+                   {"P03", "P53"})
+        for nome, deb_c, cred_c in (("ICMS", pc.ICMS_RECOL, pc.ICMS_REC), ("IPI", pc.IPI_RECOL, pc.IPI_REC),
+                                    ("PIS", pc.PIS_RECOL, pc.PIS_REC), ("COFINS", pc.COFINS_RECOL, pc.COFINS_REC)):
+            debitos = -L.saldo(deb_c)
+            creditos = L.saldo(cred_c)
+            comp = r2(min(debitos, creditos))
+            L.memo(ev, f"{nome}: débitos {fmt(debitos)} − créditos {fmt(creditos)}", debitos - creditos,
+                   "a recolher" if debitos > creditos else "saldo credor")
+            if comp > 0:
+                L.lanc(d, ev, f"Apuração do {nome} de fevereiro", [(deb_c, comp)], [(cred_c, comp)], {"P23", "P53"})
+        difal = -L.saldo(pc.DIFAL_MA)
+        if difal > 0.004:
+            L.memo(ev, "DIFAL devido ao Maranhão (recolhimento por GNRE, sem compensação)", difal)
+        iss = -L.saldo(pc.ISS_RECOL)
+        if iss > 0.004:
+            L.memo(ev, "ISS próprio de fevereiro (NFS-e 003), a recolher ao município", iss)
+        r = self.receitas
+        rv, rp, rs, rf = (r2(r.get(k, 0.0)) for k in ("revenda", "producao", "servicos", "financeiras"))
+        b_ir = r2((rv + rp) * 0.08 + rs * 0.32 + rf)
+        b_cs = r2((rv + rp) * 0.12 + rs * 0.32 + rf)
+        irpj = r2(b_ir * 0.15 + max(0.0, b_ir - 20000) * 0.10)
+        csll = r2(b_cs * 0.09)
+        for t, val in (("Receita de revenda (líquida de devoluções)", rv), ("Receita de venda de produtos", rp),
+                       ("Receita de serviços", rs), ("Receitas financeiras", rf),
+                       ("Base IRPJ (8% / 32% / 100%)", b_ir), ("IRPJ 15% + adicional 10%", irpj),
+                       ("Base CSLL (12% / 32% / 100%)", b_cs), ("CSLL 9%", csll)):
+            L.memo(ev, t, val)
+        L.lanc(d, ev, "IRPJ e CSLL por estimativa - fevereiro", [(pc.IRPJ_DESP, irpj), (pc.CSLL_DESP, csll)],
+               [(pc.IRPJ_RECOL, irpj), (pc.CSLL_RECOL, csll)], {"P22", "P54"})
+        comp = r2(min(irpj, L.saldo(pc.IRRF_REC) + L.saldo(pc.IRRF_APLIC)))
+        if comp > 0:
+            c1 = min(comp, L.saldo(pc.IRRF_REC))
+            L.memo(ev, "IRRF retido compensado na estimativa", comp)
+            L.lanc(d, ev, "Compensação do IRRF retido com o IRPJ", [(pc.IRPJ_RECOL, comp)],
+                   [(pc.IRRF_REC, c1), (pc.IRRF_APLIC, comp - c1)], {"P22", "P54"})
+
     def ajustes_fev(self, d):
         ev = "FAJ"
         premio = self.p("contrato", "C09", "prêmio", 6300)
@@ -1103,26 +1602,27 @@ class Gabarito:
 
     # eventos de fevereiro: dia e método (None = gabarito em preparação nas etapas 8b a 8e)
     EVENTOS_FEV = {
-        "F01": (2, "f01"), "F02": (2, "f02"), "F03": (2, "f03"), "F04": (3, None), "F05": (4, None), "F06": (4, "f06"),
-        "F07": (5, "f07"), "F08": (6, "f08"), "F09": (6, "f09"), "F10": (9, None), "F11": (9, "f11"), "F12": (10, "f12"),
+        "F01": (2, "f01"), "F02": (2, "f02"), "F03": (2, "f03"), "F04": (3, "f04"), "F05": (4, "f05"), "F06": (4, "f06"),
+        "F07": (5, "f07"), "F08": (6, "f08"), "F09": (6, "f09"), "F10": (9, "f10"), "F11": (9, "f11"), "F12": (10, "f12"),
         "F13": (10, "f13"), "F14": (11, "f14"), "F15": (11, "f15"), "F16": (12, "f16"), "F17": (12, "f17"),
-        "F18": (13, "f18"), "F19": (13, "f19"), "F20": (13, None), "F21": (13, None), "F22": (18, None), "F23": (18, None),
-        "F24": (18, "f24"), "F25": (19, "f25"), "F26": (19, None), "F27": (20, "f27"), "F28": (20, None), "F29": (20, "f29"),
-        "F30": (23, "f30"), "F31": (23, "f31"), "F32": (23, "f32"), "F33": (23, "f33"), "F34": (24, None), "F35": (24, None),
-        "F36": (24, None), "F37": (25, "f37"), "F38": (25, "f38"), "F39": (25, "f39"), "F40": (26, "f40"), "F41": (26, "f41"),
-        "F42": (26, "f42"), "F43": (27, "f43"), "F44": (27, None), "F45": (27, "f45"), "F46": (27, "f46"), "F47": (27, "f47"),
-        "F48": (28, None),
+        "F18": (13, "f18"), "F19": (13, "f19"), "F20": (13, "f20"), "F21": (13, "f21"), "F22": (18, "f22"), "F23": (18, "f23"),
+        "F24": (18, "f24"), "F25": (19, "f25"), "F26": (19, "f26"), "F27": (20, "f27"), "F28": (20, "f28"), "F29": (20, "f29"),
+        "F30": (23, "f30"), "F31": (23, "f31"), "F32": (23, "f32"), "F33": (23, "f33"), "F34": (24, "f34"), "F35": (24, "f35"),
+        "F36": (24, "f36"), "F37": (25, "f37"), "F38": (25, "f38"), "F39": (25, "f39"), "F40": (26, "f40"), "F41": (26, "f41"),
+        "F42": (26, "f42"), "F43": (27, "f43"), "F44": (27, "f44"), "F45": (27, "f45"), "F46": (27, "f46"), "F47": (27, "f47"),
+        "F48": (28, "f48"), "FP1": (19, "fp1"), "FP2": (23, "fp2"),
     }
     # tesouraria e ajustes de fevereiro mudam conforme as etapas seguintes entram: ficam fora da correção até a 8e
-    PROVISORIOS_FEV = {"FTES", "FAJ"}
+    PROVISORIOS_FEV: set = set()  # fevereiro completo (8e): tesouraria e ajustes definitivos
 
     def _executar_fev(self):
         self.executados = set()
-        self.receitas_fev = {"revenda": 0.0, "servicos": 0.0, "financeiras": 0.0}
+        self.receitas_fev = {"revenda": 0.0, "producao": 0.0, "servicos": 0.0, "financeiras": 0.0}
         self.irrf_receitas_fev = 0.0
+        self.receitas = self.receitas_fev  # rendimentos apropriados em fevereiro entram na estimativa de fevereiro
         por_dia = defaultdict(list)
         for ev, (dia, metodo) in self.EVENTOS_FEV.items():
-            if metodo:
+            if metodo and ev != "F48":  # a apuração roda depois dos ajustes de fim de mês
                 por_dia[dia].append((ev, metodo))
         fim = date(ANO, 2, 28)
         for dia in range(1, 29):
@@ -1132,6 +1632,8 @@ class Gabarito:
                 self.executados.add(ev)
             self.tesouraria(d, "FTES")
         self.ajustes_fev(fim)
+        self.f48(fim)
+        self.executados.add("F48")
         self.tesouraria(fim, "FTES")
 
     # ---------------- execução

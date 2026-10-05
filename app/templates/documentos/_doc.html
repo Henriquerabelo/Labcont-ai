@@ -57,6 +57,10 @@
       {% for rot in ['(−) INSS do contribuinte individual', '(−) IRRF', '(−) ISS'] %}<div class="dc-box"><div class="dc-rot">{{ rot }}</div><div class="dc-val">{{ calc(none) }}</div></div>{% endfor %}
       <div class="dc-box dc-destaque"><div class="dc-rot">Líquido · pagamento em {{ data(doc.vencimento) }}</div><div class="dc-val">{{ calc(none) }}</div></div>
     </div>
+  {% elif doc.tipo == 'producao' %}
+    {% if doc.cabecalho %}<div class="dc-linha">{% for k, v in doc.cabecalho %}<div><span class="dc-rot">{{ k }}</span> {{ v }}</div>{% endfor %}</div>{% endif %}
+    <table class="dc-tab"><thead><tr>{% for c in doc.colunas %}<th class="{{ 'num' if not loop.first }}">{{ c }}</th>{% endfor %}</tr></thead>
+      <tbody>{% for l in doc.linhas %}<tr>{% for c in l %}<td class="{{ 'num' if not loop.first }}">{{ c if c is string else c|n(0) }}</td>{% endfor %}</tr>{% endfor %}</tbody></table>
   {% elif doc.tipo == 'contrato' %}
     <table class="dc-tab"><tbody>{% for k, v in doc.clausulas %}<tr><th style="width:30%">{{ k }}</th><td>{{ v }}</td></tr>{% endfor %}</tbody></table>
   {% elif doc.tipo == 'auto' %}

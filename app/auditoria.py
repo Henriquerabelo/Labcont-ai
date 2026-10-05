@@ -21,7 +21,9 @@ TOLERANCIA = 0.05  # R$ por conta, para diferenças de arredondamento
 ESPECIAIS = {"TES": "Tesouraria: resgates automáticos e conta garantida", "AJ": "Ajustes de fim de mês (apropriações e juros)",
              "J40": "Apuração dos tributos de janeiro",
              "FTES": "Tesouraria de fevereiro: resgates automáticos e conta garantida",
-             "FAJ": "Ajustes de fim de fevereiro (apropriações e juros)", "F48": "Apuração dos tributos de fevereiro"}
+             "FAJ": "Ajustes de fim de fevereiro (apropriações e juros)", "F48": "Apuração dos tributos de fevereiro",
+             "FP1": "Produção: requisição de materiais para X e Y (início em 19/02, dia seguinte à compra do ME-H)",
+             "FP2": "Produção: apropriação da MOD e do CIF e transferência para produtos acabados (término em 23/02)"}
 NIVEIS = {"correto": "Correto", "valor": "Valor divergente", "conta": "Conta errada", "pendente": "Pendente",
           "preparo": "Correção em preparação"}
 

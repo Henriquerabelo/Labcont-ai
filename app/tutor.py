@@ -54,7 +54,8 @@ ROTEIROS = {
                "Que tributos estão destacados no documento e quais deles a empresa pode recuperar, considerando a destinação do bem?",
                "Quem paga o frete (CIF ou FOB) e como isso afeta o custo de aquisição?",
                "Quanto foi pago à vista e quanto ficou para pagar? Em que conta fica a obrigação?"],
-    "venda": ["Como o mark-up chega ao preço de venda a partir do custo médio da mercadoria?",
+    "venda": ["Como o mark-up chega ao preço de venda a partir do custo médio da mercadoria ou do custo de produção?",
+              "A venda é para dentro do estado ou para outro estado? O comprador é contribuinte ou consumidor final?",
               "Quais tributos incidem sobre essa venda e qual é a base de cálculo de cada um?",
               "Além da receita, que outro registro é necessário para a mercadoria que saiu do estoque?"],
     "servico": ["O documento é de serviço tomado ou prestado pela empresa?",
@@ -79,6 +80,10 @@ ROTEIROS = {
     "apuracao": ["Quais créditos e débitos de ICMS, PIS e COFINS foram registrados no mês?",
                  "Como se calcula o IRPJ e a CSLL por estimativa sobre a receita bruta?",
                  "Quando o saldo é credor, o que acontece com ele?"],
+    "producao": ["Quais itens da ficha técnica cada produto consome e quanto do estoque de cada insumo foi requisitado?",
+                 "Por qual custo os insumos saem do estoque (custo médio na data da requisição)?",
+                 "O que é custo direto e o que é custo indireto nesta produção? Qual a base de rateio definida no exercício?",
+                 "Em que momento os custos saem de Produtos em Elaboração e vão para Produtos Acabados?"],
     "geral": ["Qual documento comprova esse fato e qual é a data de competência?",
               "Que contas do plano são afetadas e qual é a natureza de cada uma (devedora ou credora)?",
               "Os débitos somam o mesmo que os créditos?"],
@@ -101,7 +106,7 @@ GRUPO_EVENTO = {
     "F42": "pagamento", "F43": "pagamento", "F46": "pagamento", "F13": "recebimento", "F44": "recebimento",
     "F20": "folha", "F38": "folha", "F39": "folha", "F07": "financeiro", "F27": "financeiro", "F33": "financeiro",
     "F47": "financeiro", "FTES": "financeiro", "FAJ": "financeiro", "F15": "capital", "F25": "capital", "F48": "apuracao",
-    "F21": "geral",
+    "F21": "geral", "FP1": "producao", "FP2": "producao",
 }
 
 
