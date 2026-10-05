@@ -74,6 +74,7 @@
       <div class="dupla-esc">
         <span>Código: <strong class="mono-sm">{{ ac.codigo if ac else '—' }}</strong></span>
         <span>{% if pr and pr.enviado %}Janeiro <strong>enviado</strong> {{ pr.enviado.strftime('%d/%m') }} · <strong>{{ pr.percentual }}%</strong> correto{% else %}Janeiro em andamento: {{ pr.eventos if pr else 0 }}/42 eventos lançados{% if pr and pr.previa is defined %} <span class="muted mono-sm">(prévia {{ pr.previa }}%)</span>{% endif %}{% endif %}</span>
+        {% set pf = progresso_fev.get(d.id) %}<span>{% if pf and pf.enviado %}Fevereiro <strong>enviado</strong> {{ pf.enviado.strftime('%d/%m') }} · <strong>{{ pf.percentual }}%</strong> correto{% elif pf and pf.eventos %}Fevereiro: {{ pf.eventos }}/50 eventos lançados{% if pf.previa is defined %} <span class="muted mono-sm">(prévia {{ pf.previa }}%)</span>{% endif %}{% endif %}</span>
         <a class="btn btn-sm btn-dark" href="/duplas/{{ d.id }}/escrituracao">Escrituração</a><a class="btn btn-sm" href="/duplas/{{ d.id }}/tutor">Tutor</a><a class="btn btn-sm" href="/aluno/ver/{{ d.id }}" title="Abre a área do aluno deste grupo em modo somente leitura">Ver como aluno</a>
       </div>{% endif %}
       <footer>

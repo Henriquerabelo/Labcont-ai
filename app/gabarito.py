@@ -34,6 +34,7 @@ ICMS_INTERNO_CE = 0.20
 ICMS_INTERESTADUAL = {"MA": 0.12, "PB": 0.12, "MG": 0.07}
 PIS, COFINS = 0.0165, 0.076
 ISS_FORTALEZA = 0.05
+ISS_CONSTRUCAO = 0.03  # CTM Fortaleza, art. 245, II: subitens 7.2, 7.4 e 7.5
 IRRF_SERVICOS, CSRF = 0.015, 0.0465
 IR_APLICACAO = 0.225  # até 180 dias
 ALIQ_IPI = {"9002.11.11": 0.0975}  # TIPI - MP-A
@@ -50,7 +51,7 @@ PREMISSAS = {
     "P09": "Comissão de representação (NFS-e): ISS 5% (Fortaleza), PIS 1,65% e COFINS 7,6% sobre o valor do serviço; IRRF de 1,5% retido pelo tomador (IRRF a recuperar). Sem retenção de CSRF.",
     "P10": "Serviços contábeis (PJ): retenção de IRRF 1,5% e CSRF 4,65% (confere com o saldo de dezembro: R$ 5.500,00 → R$ 5.161,75).",
     "P11": "Arquiteto autônomo (RPA): INSS 11% retido (limitado ao teto), IRRF pela tabela mensal, ISS 5% retido (não recolhe por valor fixo) e INSS patronal de 20%. O projeto é da reforma do galpão e, por isso, é capitalizado em Imobilizado em andamento junto com o encargo patronal.",
-    "P12": "Reforma do galpão (empreitada com material): 1ª parcela de 50% paga na entrada da NFS-e; retenção de INSS 11% e ISS 5% sobre a parcela de mão de obra; sem IRRF/CSRF. Capitalizada em Imobilizado em andamento.",
+    "P12": "Reforma do galpão (empreitada com material): 1ª parcela de 50% paga na entrada da NFS-e; retenção de INSS 11% e ISS 3% (CTM Fortaleza, art. 245, II, subitem 7.2; materiais fora da base, art. 240, § 4º, I) sobre a parcela de mão de obra; sem IRRF/CSRF. Capitalizada em Imobilizado em andamento.",
     "P13": "Arrendamento financeiro (CPC 06): máquinas reconhecidas no imobilizado em contrapartida da obrigação, separada em curto prazo (parcelas dos próximos 12 meses, SAC) e longo prazo. Juros compostos pelo ano civil (365 dias) apropriados no fim do mês; depreciação a partir de fevereiro (bem recebido após o processamento de 15/01).",
     "P14": "Aplicações: INVEST LIQUID e CDB rendem juros compostos com capitalização diária (taxa mensal, mês de 30 dias), apropriados no fim do mês e no resgate. No resgate, IR de 22,5% (até 180 dias) vai para IRRF a recuperar; IOF desconsiderado.",
     "P15": "Tesouraria diária: ao fim de cada dia, se o Banco Rico ficar negativo, resgata-se primeiro o INVEST LIQUID e depois usa-se a conta garantida (juros compostos de capitalização diária a partir do dia seguinte). A conta garantida é quitada integralmente no primeiro dia em que o saldo bancário for suficiente.",
@@ -65,6 +66,18 @@ PREMISSAS = {
     "P24": "Destinação de 2025 (02/01): participações sobre o lucro após IR/CS, reserva legal de 5%, dividendos sobre o lucro líquido ajustado e o saldo em reserva estatutária.",
     "P25": "Seguro: apropriação mensal de 1/12 do prêmio. Recrutamento: metade dos honorários apropriada em janeiro (serviço a faturar).",
     "P26": "Pagamento de 14/01 (água, energia e telefone de janeiro) inclui o telefone fixo, como descrito no evento, mesmo com vencimento posterior na tabela de telefonia.",
+    # ---------------- fevereiro (Etapa 8)
+    "P27": "Obrigações da competência 01/2026 pagas em fevereiro pelos saldos do gabarito em 31/01 (folha, encargos, tributos e fornecedores). O IRRF (R$ 348,93) e a CSRF (R$ 255,75) de 12/2025 não têm evento de pagamento no exercício e continuam a recolher; os pagamentos de fevereiro recolhem só a competência 01/2026.",
+    "P28": "Em fevereiro há produção: a parcela industrial das utilidades e dos itens do quadro de alocação é custo indireto de fabricação (CIF), acumulada em contas de CIF a apropriar e rateada entre X e Y pelo custo dos materiais diretos. A energia dos setores do Produto X e do Produto Y é tratada como CIF (não há medição por ordem de produção).",
+    "P29": "Utilidades de fevereiro: energia pela fatura (comercial, Produto X e Produto Y; administrativa = diferença), com crédito de PIS 1,65% e COFINS 7,6% sobre o total, deduzido proporcionalmente de cada área; água sem crédito, administrativa e comercial pela fatura e industrial = diferença; telefone fixo e celulares 20/60/20 e internet 40/50/10 (adm./vendas/industrial).",
+    "P30": "Ar Frio: pagamento de 45% do valor da NF 7.852 em 09/02, como descrito no evento (o contrato previa parcelas de 40%). Indústria Sofisticada: 30% do total da NF 23.456 (com IPI) em 25/02.",
+    "P31": "Reforma: 2ª parcela (50%) com as mesmas retenções da 1ª (INSS 11% e ISS 3% sobre a mão de obra). Concluída em 23/02, o imobilizado em andamento (projeto, encargo e parcelas) é transferido para Edifícios e Construções; a depreciação começa em março (a de fevereiro é processada em 13/02).",
+    "P32": "Leasing (SAC): 1ª parcela em 23/02 = amortização (valor ÷ prazo) + juros compostos pelo ano civil desde 20/01. Os juros de janeiro já apropriados saem do passivo e os de fevereiro até o pagamento vão para despesa; depois do pagamento, uma parcela passa do longo para o curto prazo (o circulante mantém as próximas 12).",
+    "P33": "Mútuo à sócia (parte relacionada, sem vencimento): Realizável a Longo Prazo (Lei 6.404/76, art. 179, II), pelo valor do evento; juros compostos pela taxa do contrato, por fração diária (mês de 30 dias), apropriados no fim do mês como receita financeira. IOF desconsiderado.",
+    "P34": "Recrutamento: a NFS-e 345 (26/02) reconhece a metade de fevereiro (a de janeiro já estava apropriada) e retém IRRF de 1,5% sobre o total (RIR/2018, art. 714); sem CSRF, porque o serviço não está na lista da Lei 10.833/2003, art. 30 (SC Disit/SRRF08 nº 8.048/2018). Não há evento de pagamento no exercício.",
+    "P35": "Contabilidade de fevereiro: honorário reajustado pelo percentual do contrato (C06), arredondado a R$ 100, com IRRF 1,5% e CSRF 4,65%.",
+    "P36": "Vale-transporte e vale-alimentação de março: 20 dias úteis × empregados de fevereiro (não há admissões previstas para março).",
+    "P37": "Aplicações em fevereiro: CDB apropriado até 05/02 (F07) e no fim do mês; o resgate de 27/02 retira só o rendimento acumulado do INVEST LIQUID (saldo menos o valor aplicado remanescente), com IR de 22,5% a recuperar.",
 }
 
 
@@ -163,6 +176,15 @@ class Livro:
                            "premissas": sorted(premissas)})
         self.premissas_evento[ev].update(premissas)
 
+    def abrir_mes(self):
+        """Saldos finais viram os saldos de abertura do mês seguinte; lançamentos e memória recomeçam."""
+        contas = set(self.ini) | set(self.mov)
+        self.ini = {c: self.saldo(c) for c in contas}
+        self.mov = defaultdict(float)
+        self.lancs = []
+        self.memoria = defaultdict(list)
+        self.premissas_evento = defaultdict(set)
+
     def memo(self, ev: str, descricao: str, valor=None, obs: str = ""):
         self.memoria[ev].append({"descricao": descricao, "valor": None if valor is None else r2(valor), "obs": obs})
 
@@ -236,8 +258,7 @@ class Gabarito:
                 g["saldo"] = r2(g["saldo"] + j)
         g["data"] = ate
 
-    def tesouraria(self, d: date):
-        ev = "TES"
+    def tesouraria(self, d: date, ev: str = "TES"):
         banco = self.L.saldo(pc.BANCO)
         if banco < 0:
             falta = -banco
@@ -355,6 +376,7 @@ class Gabarito:
         self.L.lanc(d, "J08", "NF 7.852 Ar Frio - ar-condicionados (adm.)", [(pc.MOVEIS, valor + difal)],
                     [(pc.BANCO, vista), (pc.F_ARFRIO, valor - vista), (pc.DIFAL, difal)], {"P02", "P04"})
         self.custo_ar = valor + difal
+        self.ar_valor = valor
 
     def j09(self, d):
         f = self.p("evento", "J09", "frete")
@@ -599,9 +621,9 @@ class Gabarito:
         pm = self.p("contrato", "C12", "material", 40)
         parc = r2(tot * 0.5)
         mo = r2(parc * (1 - pm / 100))
-        inss, iss = r2(mo * 0.11), r2(mo * ISS_FORTALEZA)
+        inss, iss = r2(mo * 0.11), r2(mo * ISS_CONSTRUCAO)
         for t, val in (("Contrato de reforma", tot), ("1ª parcela (50%)", parc), (f"Mão de obra ({fmt(100 - pm)}%)", mo),
-                       ("INSS retido 11% (mão de obra)", inss), ("ISS retido 5% (mão de obra)", iss), ("Valor pago", parc - inss - iss)):
+                       ("INSS retido 11% (mão de obra)", inss), ("ISS retido 3% (mão de obra)", iss), ("Valor pago", parc - inss - iss)):
             self.L.memo(ev, t, val)
         self.L.lanc(d, ev, "NFS-e 6.300 Construtor Express - 1ª parcela da reforma", [(pc.OBRAS, parc)],
                     [(pc.BANCO, parc - inss - iss), (pc.INSS_RET, inss), (pc.ISS_RET, iss)], {"P12"})
@@ -663,6 +685,7 @@ class Gabarito:
                        ("ICMS 7% (crédito)", icms), ("PIS (crédito)", pis), ("COFINS (crédito)", cof), ("Custo da MP-A", custo),
                        ("Pagamento à vista (25%)", vista)):
             self.L.memo(ev, t, val)
+        self.sof_total = total
         self.L.lanc(d, ev, "NF 23.456 Indústria Sofisticada - MP-A",
                     [(pc.MPA, custo), (pc.IPI_REC, ipi), (pc.ICMS_REC, icms), (pc.PIS_REC, pis), (pc.COFINS_REC, cof)],
                     [(pc.BANCO, vista), (pc.F_SOFISTICADA, total - vista)], {"P02", "P05", "P08"})
@@ -731,6 +754,7 @@ class Gabarito:
             j = r2(ls["saldo"] * ((1 + ls["taxa"] / 100) ** ((d - ls["data"]).days / 365) - 1))
             self.L.memo(ev, f"Juros do leasing ({(d - ls['data']).days} dias a {fmt(ls['taxa'])}% a.a.)", j)
             self.L.lanc(d, ev, "Juros do arrendamento financeiro - janeiro", [(pc.JUROS_LEASING, j)], [(pc.LEASING_CP, j)], {"P13"})
+            ls["juros_apropriados"] = ls.get("juros_apropriados", 0.0) + j
 
     def j40(self, d):
         ev = "J40"
@@ -766,6 +790,350 @@ class Gabarito:
             L.lanc(d, ev, "Compensação do IRRF retido com o IRPJ", [(pc.IRPJ_RECOL, comp)],
                    [(pc.IRRF_REC, c1), (pc.IRRF_APLIC, comp - c1)], {"P22"})
 
+
+    # ================================================================== fevereiro (Etapa 8)
+    def ab(self, conta: str) -> float:
+        """Saldo de abertura de fevereiro (31/01), positivo para o lado natural da conta."""
+        v = self.L.ini.get(conta, 0.0)
+        return r2(v if pc.CONTAS[conta]["natureza"] == "D" else -v)
+
+    def pagar_ab(self, d, ev, hist, contas: list[str], menos: dict | None = None, premissas=("P27",)):
+        itens = [(c, r2(self.ab(c) - (menos or {}).get(c, 0.0))) for c in contas]
+        itens = [(c, v) for c, v in itens if v > 0.004]
+        if not itens:
+            self.L.memo(ev, "Não há saldo a pagar desta competência", 0.0)
+            self.L.premissas_evento[ev].update(premissas)
+            return
+        tot = r2(sum(v for _, v in itens))
+        self.L.lanc(d, ev, hist, itens, [(pc.BANCO, tot)], set(premissas))
+        for c, v in itens:
+            self.L.memo(ev, f"{pc.CONTAS[c]['nome']} (saldo de 31/01)", v)
+
+    @staticmethod
+    def _repartir(total: float, pesos: list[float]) -> list[float]:
+        """Divide um valor por pesos, com o arredondamento na maior parte."""
+        soma = sum(pesos) or 1
+        partes = [r2(total * w / soma) for w in pesos]
+        i = max(range(len(partes)), key=lambda k: partes[k])
+        partes[i] = r2(partes[i] + total - sum(partes))
+        return partes
+
+    def f01(self, d):
+        ev = "F01"
+        tot = self.p("evento", "F01", "valor total", 3400)
+        base = self.x.base("evento", "F01", "valor total") or 3400
+        com, px, py = (round(vb * tot / base / 10) * 10 for vb in (590, 1070, 1210))
+        adm = r2(tot - com - px - py)
+        pis, cof = r2(tot * PIS), r2(tot * COFINS)
+        liq = self._repartir(r2(tot - pis - cof), [adm, com, px + py])
+        for t, val in (("Conta de energia (total)", tot), ("Área administrativa (diferença)", adm), ("Área comercial", com),
+                       ("Setor do Produto X (CIF)", px), ("Setor do Produto Y (CIF)", py),
+                       ("Crédito de PIS 1,65% + COFINS 7,6% (sobre o total)", pis + cof),
+                       ("Custo líquido: adm. / vendas / CIF", None)):
+            self.L.memo(ev, t, val)
+        for rot, v in zip(("administrativa", "vendas", "CIF"), liq):
+            self.L.memo(ev, f"  {rot}", v)
+        self.L.lanc(d, ev, "NF energia Luz do Sertão 988.333 - fevereiro",
+                    [(pc.POR_AREA["energia"][0], liq[0]), (pc.POR_AREA["energia"][1], liq[1]), (pc.CIF_ENERGIA, liq[2]),
+                     (pc.PIS_REC, pis), (pc.COFINS_REC, cof)], [(pc.ENERGIA_PAGAR, tot)], {"P05", "P28", "P29"})
+        self.energia_fev = tot
+
+    def f02(self, d):
+        ev = "F02"
+        tot = self.p("evento", "F02", "valor total", 1780)
+        base = self.x.base("evento", "F02", "valor total") or 1780
+        adm, com = (round(vb * tot / base / 10) * 10 for vb in (280, 320))
+        ind = r2(tot - adm - com)
+        for t, val in (("Fatura de água (total)", tot), ("Área administrativa", adm), ("Área comercial", com),
+                       ("Área industrial (diferença, CIF)", ind)):
+            self.L.memo(ev, t, val)
+        self.L.lanc(d, ev, "Fatura de água Águas do Litoral 322.666 - fevereiro",
+                    [(pc.POR_AREA["agua"][0], adm), (pc.POR_AREA["agua"][1], com), (pc.CIF_AGUA, ind)],
+                    [(pc.AGUA_PAGAR, tot)], {"P28", "P29"})
+        self.agua_fev = tot
+
+    def f03(self, d):
+        ev = "F03"
+        fixo = self.p("evento", "F03", "telefone", 690)
+        cel = self.p("contrato", "C08", "mensalidade", 480)
+        net = self.p("contrato", "C07", "mensalidade", 350)
+        tel = fixo + cel
+        adm, ven, ind = r2(tel * 0.20 + net * 0.40), r2(tel * 0.60 + net * 0.50), r2(tel * 0.20 + net * 0.10)
+        ind = r2(tel + net - adm - ven)
+        for t, val in (("Telefone fixo", fixo), ("Celulares (C08)", cel), ("Internet (C07)", net),
+                       ("Administrativa: telefone 20% + internet 40%", adm), ("Vendas: telefone 60% + internet 50%", ven),
+                       ("Industrial (CIF): telefone 20% + internet 10%", ind)):
+            self.L.memo(ev, t, val)
+        self.L.lanc(d, ev, "NFs de telefonia e internet - fevereiro",
+                    [(pc.POR_AREA["telefone"][0], adm), (pc.POR_AREA["telefone"][1], ven), (pc.CIF_TELEFONE, ind)],
+                    [(pc.TEL_PAGAR, fixo), (pc.F_CELL, cel), (pc.F_INTERNET, net)], {"P28", "P29"})
+        self.fixo_fev = fixo
+
+    def f06(self, d):
+        self.pagar_ab(d, "F06", "Pagamento do auto de infração (ICMS e multa reduzida)", [pc.AUTO], premissas=("P21", "P27"))
+
+    def f07(self, d):
+        if self.cdb:
+            self._apropria(self.cdb, pc.CDB, d, "F07", "CDB Renda Mais")
+        self.L.premissas_evento["F07"].update({"P14", "P37"})
+        for l in self.L.lancs:
+            if l["evento"] == "F07":
+                l["premissas"] = sorted(set(l["premissas"]) | {"P37"})
+
+    def f08(self, d):
+        ev = "F08"
+        v = self.p("evento", "F08", "comissão", 82000)
+        iss, pis, cof, ir = r2(v * ISS_FORTALEZA), r2(v * PIS), r2(v * COFINS), r2(v * IRRF_SERVICOS)
+        for t, val in (("Comissão (NFS-e 003)", v), ("ISS 5%", iss), ("PIS 1,65%", pis), ("COFINS 7,6%", cof),
+                       ("IRRF 1,5% retido pelo tomador", ir), ("Valor a receber", v - ir)):
+            self.L.memo(ev, t, val)
+        self.L.lanc(d, ev, "NFS-e 003 - comissão de representação", [(pc.COMISSOES_REC, v - ir), (pc.IRRF_REC, ir)],
+                    [(pc.REC_SERVICOS, v)], {"P09"})
+        self.L.lanc(d, ev, "Tributos sobre a comissão", [(pc.DED_ISS, iss), (pc.DED_PIS, pis), (pc.DED_COFINS, cof)],
+                    [(pc.ISS_RECOL, iss), (pc.PIS_RECOL, pis), (pc.COFINS_RECOL, cof)], {"P09"})
+        self.receitas_fev["servicos"] += v
+        self.irrf_receitas_fev += ir
+        self.comissao_fev = r2(v - ir)
+
+    def f09(self, d):
+        self.pagar_ab(d, "F09", "Pagamento de salários e pró-labores de 01/2026", [pc.SAL_PAGAR, pc.PROLAB_PAGAR])
+
+    def f11(self, d):
+        ev = "F11"
+        v = r2(getattr(self, "ar_valor", 0.0) * 0.45)
+        self.L.memo(ev, "45% do valor da NF 7.852", v)
+        self.L.lanc(d, ev, "Pagamento parcial (45%) da NF 7.852 - Ar Frio", [(pc.F_ARFRIO, v)], [(pc.BANCO, v)], {"P30"})
+
+    def f12(self, d):
+        self.pagar_ab(d, "F12", "Pagamento do FGTS de 01/2026", [pc.FGTS_REC])
+
+    def f13(self, d):
+        v = getattr(self, "comissao_fev", 0.0)
+        self.L.memo("F13", "Recebimento da comissão (líquida de IRRF)", v)
+        self.L.lanc(d, "F13", "Recebimento da NFS-e 003", [(pc.BANCO, v)], [(pc.COMISSOES_REC, v)])
+
+    def f14(self, d):
+        self.pagar_ab(d, "F14", "Pagamento Cell Telefonia - 01/2026", [pc.F_CELL])
+
+    def f15(self, d):
+        self.integralizar(d, "F15", "Marconde Sobreira")
+
+    def f16(self, d):
+        self.pagar_ab(d, "F16", "Pagamento do ISSQN de 01/2026 (próprio e retido)", [pc.ISS_RECOL, pc.ISS_RET])
+
+    def f17(self, d):
+        self.pagar_ab(d, "F17", "Pagamento Contador Formado - NFS-e 023 (01/2026)", [pc.F_CONTADOR])
+
+    def f18(self, d):
+        self.pagar_ab(d, "F18", "Pagamento Internet & Comunicação - 01/2026", [pc.F_INTERNET])
+
+    def f19(self, d):
+        ev = "F19"
+        itens = [(pc.AGUA_PAGAR, getattr(self, "agua_fev", 0.0)), (pc.ENERGIA_PAGAR, getattr(self, "energia_fev", 0.0)),
+                 (pc.TEL_PAGAR, getattr(self, "fixo_fev", 0.0))]
+        self.pagar(d, ev, "Pagamento de água, energia e telefone fixo de 02/2026", [(c, v) for c, v in itens if v])
+        self.L.premissas_evento[ev].add("P26")
+
+    def f24(self, d):
+        self.pagar_ab(d, "F24", "Pagamento do saldo da NF 3.369 - Comercial Elegante", [pc.F_ELEGANTE])
+
+    def f25(self, d):
+        self.integralizar(d, "F25", "Adalberto Cantareira")
+
+    def f27(self, d):
+        ev = "F27"
+        v = self.p("evento", "F27", "valor") or 20000.0
+        taxa = self.p("contrato", "C10", "taxa", 4.0)
+        self.mutuo = {"saldo": v, "custo": v, "data": d, "taxa": taxa}
+        self.L.memo(ev, f"Mútuo cedido à sócia Cassilda Apedeuta ({fmt(taxa)}% a.m.)", v)
+        self.L.lanc(d, ev, "Mútuo cedido à sócia Cassilda Apedeuta", [(pc.MUTUO_SOCIA, v)], [(pc.BANCO, v)], {"P33"})
+
+    def f29(self, d):
+        self.pagar_ab(d, "F29", "Pagamento do IRRF de 01/2026", [pc.IRRF_RECOL], menos={pc.IRRF_RECOL: 348.93})
+
+    def f30(self, d):
+        self.pagar_ab(d, "F30", "Quitação do RPA do arquiteto", [pc.F_RPA])
+
+    def f31(self, d):
+        self.pagar_ab(d, "F31", "Pagamento da GPS (INSS) de 01/2026", [pc.INSS_REC, pc.INSS_RET])
+
+    def f32(self, d):
+        ev = "F32"
+        tot = self.p("contrato", "C12", "valor", 228000)
+        pm = self.p("contrato", "C12", "material", 40)
+        parc = r2(tot - r2(tot * 0.5))
+        mo = r2(parc * (1 - pm / 100))
+        inss, iss = r2(mo * 0.11), r2(mo * ISS_CONSTRUCAO)
+        for t, val in (("2ª parcela (50%)", parc), (f"Mão de obra ({fmt(100 - pm)}%)", mo), ("INSS retido 11% (mão de obra)", inss),
+                       ("ISS retido 3% (mão de obra)", iss), ("Valor pago", parc - inss - iss)):
+            self.L.memo(ev, t, val)
+        self.L.lanc(d, ev, "NFS-e 6.320 Construtor Express - 2ª parcela da reforma", [(pc.OBRAS, parc)],
+                    [(pc.BANCO, parc - inss - iss), (pc.INSS_RET, inss), (pc.ISS_RET, iss)], {"P12", "P31"})
+        obra = self.L.saldo(pc.OBRAS)
+        self.L.memo(ev, "Reforma concluída: transferência para Edifícios e Construções", obra)
+        self.L.lanc(d, ev, "Conclusão da reforma do galpão - transferência para o imobilizado em operação", [(pc.GALPAO, obra)],
+                    [(pc.OBRAS, obra)], {"P31"})
+
+    def f33(self, d):
+        ev = "F33"
+        ls = self.leasing
+        if not ls:
+            return
+        n = int(self.p("contrato", "C04", "prazo", 18))
+        v0 = self.p("contrato", "C04", "valor", 300000)
+        amort = r2(v0 / n)
+        j_tot = r2(ls["saldo"] * ((1 + ls["taxa"] / 100) ** ((d - ls["data"]).days / 365) - 1))
+        j_jan = r2(ls.get("juros_apropriados", 0.0))
+        j_fev = r2(j_tot - j_jan)
+        for t, val in ((f"Amortização (SAC, {n} parcelas)", amort),
+                       (f"Juros de {ls['data']:%d/%m} a {d:%d/%m} ({(d - ls['data']).days} dias a {fmt(ls['taxa'])}% a.a.)", j_tot),
+                       ("  já apropriados em janeiro", j_jan), ("  de fevereiro (despesa)", j_fev), ("Parcela paga", amort + j_tot)):
+            self.L.memo(ev, t, val)
+        self.L.lanc(d, ev, "Pagamento da 1ª parcela do leasing (SAC)", [(pc.LEASING_CP, amort + j_jan), (pc.JUROS_LEASING, j_fev)],
+                    [(pc.BANCO, amort + j_tot)], {"P13", "P32"})
+        ls["saldo"], ls["data"], ls["juros_apropriados"] = r2(ls["saldo"] - amort), d, 0.0
+        if n > 12 and self.L.saldo(pc.LEASING_LP) < -0.004:
+            self.L.memo(ev, "Transferência de uma parcela do longo para o curto prazo", amort)
+            self.L.lanc(d, ev, "Leasing: parcela do longo prazo transferida para o curto prazo", [(pc.LEASING_LP, amort)],
+                        [(pc.LEASING_CP, amort)], {"P13", "P32"})
+
+    def f37(self, d):
+        ev = "F37"
+        v = r2(getattr(self, "sof_total", 0.0) * 0.30)
+        self.L.memo(ev, "30% do total da NF 23.456", v)
+        self.L.lanc(d, ev, "Pagamento de 30% da NF 23.456 - Indústria Sofisticada", [(pc.F_SOFISTICADA, v)], [(pc.BANCO, v)], {"P30"})
+
+    def f38(self, d):
+        n = self._func_fev()
+        v = r2(n * 20 * 2 * 5.40)
+        self.L.memo("F38", f"VT março: {n} empregados × 20 dias × 2 × R$ 5,40", v)
+        self.L.lanc(d, "F38", "Compra de vale-transporte para março", [(pc.VT, v)], [(pc.BANCO, v)], {"P36"})
+
+    def f39(self, d):
+        n = self._func_fev()
+        v = r2(n * 20 * 1 * 26.00)
+        self.L.memo("F39", f"VA março: {n} empregados × 20 dias × R$ 26,00", v)
+        self.L.lanc(d, "F39", "Compra de vale-alimentação para março", [(pc.VA, v)], [(pc.BANCO, v)], {"P36"})
+
+    def f40(self, d):
+        self.pagar_ab(d, "F40", "Pagamento do ICMS de 01/2026 (normal, antecipado e DIFAL)",
+                      [pc.ICMS_RECOL, pc.ICMS_ANT_RECOL, pc.DIFAL])
+
+    def f41(self, d):
+        ev = "F41"
+        h = self.p("contrato", "C05", "honor", 8800)
+        metade = r2(h / 2)
+        ir = r2(h * IRRF_SERVICOS)
+        for t, val in (("Honorários totais (jan-fev)", h), ("Metade de fevereiro (despesa)", metade), ("IRRF 1,5% retido", ir),
+                       ("Líquido a pagar", h - ir)):
+            self.L.memo(ev, t, val)
+        self.L.lanc(d, ev, "NFS-e 345 Recrutamento S/S - seleção de pessoal (fevereiro)", [(pc.SERV_PJ, metade)],
+                    [(pc.F_RECRUT, metade)], {"P25", "P34"})
+        self.L.lanc(d, ev, "Retenção de IRRF - NFS-e 345", [(pc.F_RECRUT, ir)], [(pc.IRRF_RECOL, ir)], {"P34"})
+
+    def f42(self, d):
+        self.pagar_ab(d, "F42", "Pagamento de PIS e COFINS de 01/2026", [pc.PIS_RECOL, pc.COFINS_RECOL])
+
+    def f43(self, d):
+        self.pagar_ab(d, "F43", "Pagamento da CSRF de 01/2026", [pc.CSRF_RECOL], menos={pc.CSRF_RECOL: 255.75})
+
+    def f45(self, d):
+        ev = "F45"
+        h0 = self.p("contrato", "C06", "honorário", 5500)
+        reaj = self.p("contrato", "C06", "reajuste", 25.45)
+        h = round(h0 * (1 + reaj / 100) / 100) * 100
+        ir, cs = r2(h * IRRF_SERVICOS), r2(h * CSRF)
+        for t, val in ((f"Honorário reajustado ({fmt(h0)} + {fmt(reaj)}%, arredondado a R$ 100)", h), ("IRRF 1,5%", ir),
+                       ("CSRF 4,65%", cs), ("Líquido a pagar em 05/03", h - ir - cs)):
+            self.L.memo(ev, t, val)
+        self.L.lanc(d, ev, "NFS-e 024 Contador Formado - fevereiro", [(pc.ASSESSORIA, h)],
+                    [(pc.F_CONTADOR, h - ir - cs), (pc.IRRF_RECOL, ir), (pc.CSRF_RECOL, cs)], {"P10", "P35"})
+
+    def f46(self, d):
+        self.pagar_ab(d, "F46", "Pagamento de IRPJ e CSLL por estimativa de 01/2026", [pc.IRPJ_RECOL, pc.CSLL_RECOL])
+
+    def f47(self, d):
+        ev = "F47"
+        inv = self.invest
+        if not inv or inv["saldo"] <= 0:
+            self.L.memo(ev, "INVEST LIQUID sem saldo: não há rendimento a resgatar", 0.0)
+            return
+        self._apropria(inv, pc.INVEST, d, ev, "INVEST LIQUID")
+        rend = r2(inv["saldo"] - inv["custo"])
+        if rend <= 0:
+            return
+        ir = r2(rend * IR_APLICACAO)
+        self.L.memo(ev, "Rendimento acumulado resgatado", rend)
+        self.L.memo(ev, "IR 22,5% (a recuperar)", ir)
+        self.L.lanc(d, ev, "Resgate do rendimento do INVEST LIQUID", [(pc.BANCO, rend - ir), (pc.IRRF_APLIC, ir)],
+                    [(pc.INVEST, rend)], {"P14", "P37"})
+        inv["saldo"] = r2(inv["saldo"] - rend)
+        for l in self.L.lancs:
+            if l["evento"] == ev:
+                l["premissas"] = sorted(set(l["premissas"]) | {"P37"})
+        self.L.premissas_evento[ev].add("P37")
+
+    def ajustes_fev(self, d):
+        ev = "FAJ"
+        premio = self.p("contrato", "C09", "prêmio", 6300)
+        seg = r2(premio / 12)
+        self.L.memo(ev, "Apropriação do seguro (1/12 do prêmio)", seg)
+        self.L.lanc(d, ev, "Apropriação do seguro - fevereiro", [(pc.SEGUROS, seg)], [(pc.SEGUROS_APROP, seg)], {"P25"})
+        if self.invest and self.invest["saldo"] > 0:
+            self._apropria(self.invest, pc.INVEST, d, ev, "INVEST LIQUID")
+        if self.cdb:
+            self._apropria(self.cdb, pc.CDB, d, ev, "CDB Renda Mais")
+        self._juros_garantida(d, ev)
+        ls = self.leasing
+        if ls and ls["saldo"] > 0:
+            j = r2(ls["saldo"] * ((1 + ls["taxa"] / 100) ** ((d - ls["data"]).days / 365) - 1))
+            if j:
+                self.L.memo(ev, f"Juros do leasing ({(d - ls['data']).days} dias a {fmt(ls['taxa'])}% a.a.)", j)
+                self.L.lanc(d, ev, "Juros do arrendamento financeiro - fevereiro", [(pc.JUROS_LEASING, j)], [(pc.LEASING_CP, j)], {"P13", "P32"})
+                ls["juros_apropriados"] = ls.get("juros_apropriados", 0.0) + j
+        m = getattr(self, "mutuo", None)
+        if m:
+            dias = (d - m["data"]).days
+            j = r2(m["saldo"] * ((1 + m["taxa"] / 100) ** (dias / 30) - 1))
+            if j:
+                self.L.memo(ev, f"Juros do mútuo ({dias} dias a {fmt(m['taxa'])}% a.m.)", j)
+                self.L.lanc(d, ev, "Juros do mútuo com a sócia - fevereiro", [(pc.MUTUO_SOCIA, j)], [(pc.JUROS_MUTUO, j)], {"P33"})
+                m["saldo"], m["data"] = r2(m["saldo"] + j), d
+                self.receitas_fev["financeiras"] += j
+
+    # eventos de fevereiro: dia e método (None = gabarito em preparação nas etapas 8b a 8e)
+    EVENTOS_FEV = {
+        "F01": (2, "f01"), "F02": (2, "f02"), "F03": (2, "f03"), "F04": (3, None), "F05": (4, None), "F06": (4, "f06"),
+        "F07": (5, "f07"), "F08": (6, "f08"), "F09": (6, "f09"), "F10": (9, None), "F11": (9, "f11"), "F12": (10, "f12"),
+        "F13": (10, "f13"), "F14": (11, "f14"), "F15": (11, "f15"), "F16": (12, "f16"), "F17": (12, "f17"),
+        "F18": (13, "f18"), "F19": (13, "f19"), "F20": (13, None), "F21": (13, None), "F22": (18, None), "F23": (18, None),
+        "F24": (18, "f24"), "F25": (19, "f25"), "F26": (19, None), "F27": (20, "f27"), "F28": (20, None), "F29": (20, "f29"),
+        "F30": (23, "f30"), "F31": (23, "f31"), "F32": (23, "f32"), "F33": (23, "f33"), "F34": (24, None), "F35": (24, None),
+        "F36": (24, None), "F37": (25, "f37"), "F38": (25, "f38"), "F39": (25, "f39"), "F40": (26, "f40"), "F41": (26, "f41"),
+        "F42": (26, "f42"), "F43": (27, "f43"), "F44": (27, None), "F45": (27, "f45"), "F46": (27, "f46"), "F47": (27, "f47"),
+        "F48": (28, None),
+    }
+    # tesouraria e ajustes de fevereiro mudam conforme as etapas seguintes entram: ficam fora da correção até a 8e
+    PROVISORIOS_FEV = {"FTES", "FAJ"}
+
+    def _executar_fev(self):
+        self.executados = set()
+        self.receitas_fev = {"revenda": 0.0, "servicos": 0.0, "financeiras": 0.0}
+        self.irrf_receitas_fev = 0.0
+        por_dia = defaultdict(list)
+        for ev, (dia, metodo) in self.EVENTOS_FEV.items():
+            if metodo:
+                por_dia[dia].append((ev, metodo))
+        fim = date(ANO, 2, 28)
+        for dia in range(1, 29):
+            d = date(ANO, 2, dia)
+            for ev, metodo in sorted(por_dia.get(dia, [])):
+                getattr(self, metodo)(d)
+                self.executados.add(ev)
+            self.tesouraria(d, "FTES")
+        self.ajustes_fev(fim)
+        self.tesouraria(fim, "FTES")
+
     # ---------------- execução
     EVENTOS = {
         "J01": (2, "j01"), "J02": (2, "j02"), "J03": (5, "j03"), "J04": (5, "j04"), "J05": (6, "j05"), "J06": (6, "j06"),
@@ -778,7 +1146,15 @@ class Gabarito:
         "J38": (30, "j38"), "J39": (30, "j39"),
     }
 
-    def executar(self) -> dict:
+    def executar(self, mes: str = "2026-01") -> dict:
+        self._executar_jan()
+        if mes != "2026-02":
+            return self.resultado("2026-01")
+        self.L.abrir_mes()
+        self._executar_fev()
+        return self.resultado("2026-02")
+
+    def _executar_jan(self):
         por_dia = defaultdict(list)
         for ev, (dia, metodo) in self.EVENTOS.items():
             por_dia[dia].append((ev, metodo))
@@ -790,9 +1166,8 @@ class Gabarito:
         self.ajustes(FIM_MES)
         self.j40(FIM_MES)
         self.tesouraria(FIM_MES)
-        return self.resultado()
 
-    def resultado(self) -> dict:
+    def resultado(self, mes: str = "2026-01") -> dict:
         L = self.L
         contas = []
         for c, info in pc.CONTAS.items():
@@ -812,7 +1187,12 @@ class Gabarito:
         resultado = r2(-sum(x["final"] for x in contas if x["conta"].startswith("3")))
         usadas = sorted({p for l in L.lancs for p in l["premissas"]})
         return {
-            "formato": "labcont-gabarito/1", "mes": "2026-01",
+            "formato": "labcont-gabarito/1", "mes": mes,
+            "sem_gabarito": (sorted([e for e, (_, m) in self.EVENTOS_FEV.items() if not m] + sorted(self.PROVISORIOS_FEV))
+                             if mes == "2026-02" else []),
+            # eventos de fevereiro processados sem nada a lançar (ex.: aplicação sem saldo): corretos se a dupla não lançar
+            "sem_efeito": (sorted(getattr(self, "executados", set()) - {l["evento"] for l in L.lancs})
+                           if mes == "2026-02" else []),
             "lancamentos": L.lancs, "memoria": dict(L.memoria), "balancete": contas,
             "totais": {"devedor": tot_d, "credor": tot_c, "ativo": ativo, "passivo_pl": passivo_pl, "resultado": resultado,
                        # o balanço de 2025 tem R$ 0,01 de arredondamento (depreciação acumulada 10.408,33 x 10.408,34)
@@ -823,5 +1203,5 @@ class Gabarito:
         }
 
 
-def gerar_gabarito(valores: dict) -> dict:
-    return Gabarito(valores).executar()
+def gerar_gabarito(valores: dict, mes: str = "2026-01") -> dict:
+    return Gabarito(valores).executar(mes)

@@ -1,4 +1,4 @@
-"""Gabarito de janeiro: por dupla (valores sorteados) e do caso-base (para conferência do professor)."""
+"""Gabarito mensal (janeiro e fevereiro): por dupla (valores sorteados) e do caso-base (para conferência do professor)."""
 from __future__ import annotations
 
 import io
@@ -15,18 +15,19 @@ from ..geracao import gerar
 from ..main import render, voltar
 from ..models_caso import Caso
 from ..models_dupla import Dupla
+from .. import periodos
+from ..periodos import MESES
 
 router = APIRouter()
 XLSX = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
 
 
-def _eventos(caso: Caso | None) -> dict:
-    out = {"TES": "Tesouraria diária (resgates e conta garantida)", "AJ": "Ajustes de fim de mês (apropriações e juros)",
-           "J40": "Apuração dos tributos de janeiro"}
+def _eventos(caso: Caso | None, mes: str = "2026-01") -> dict:
+    from ..auditoria import ESPECIAIS
+    out = dict(ESPECIAIS)
     if caso:
         for e in caso.eventos:
-            if e.data and e.data.month == 1:
-                out.setdefault(e.codigo, e.descricao)
+            if e.data and e.data.month == MESES[mes]["inicio"].month:
                 out[e.codigo] = e.descricao
     return out
 
@@ -67,8 +68,10 @@ STATUS = {"PENDENTE": "Pendente", "VALIDADA": "Validada", "AJUSTAR": "Ajustar"}
 def _contexto(g: dict, caso: Caso | None, editar: bool = False) -> dict:
     val = ((caso.dados or {}).get("premissas_validacao") or {}) if caso else {}
     pend = sum(1 for k in g["premissas"] if (val.get(k) or {}).get("status", "PENDENTE") != "VALIDADA")
-    return {"g": g, "grupos": _grupos(g), "linhas_bal": _balancete(g), "eventos": _eventos(caso),
-            "validacao": val, "status_opcoes": STATUS, "pendentes": pend, "editar_premissas": editar, "caso_ref": caso}
+    mes = g.get("mes", "2026-01")
+    return {"g": g, "grupos": _grupos(g), "linhas_bal": _balancete(g), "eventos": _eventos(caso, mes),
+            "validacao": val, "status_opcoes": STATUS, "pendentes": pend, "editar_premissas": editar, "caso_ref": caso,
+            "mes": mes, "meses": MESES, "mes_info": MESES[mes]}
 
 
 @router.get("/duplas/{id}/gabarito")
@@ -76,9 +79,11 @@ def gabarito_dupla(request: Request, id: int, db: Session = Depends(get_db)):
     d = db.get(Dupla, id)
     if not d or not d.empresa:
         return voltar("/duplas", erro="Gere a empresa da dupla antes do gabarito.")
-    g = gerar_gabarito(d.empresa.valores)
+    mes = periodos.da_requisicao(request)
+    g = gerar_gabarito(d.empresa.valores, mes)
     return render(request, "gabarito/ver.html", d=d, titulo=f"{d.empresa.valores['empresa'].get('nome', 'Empresa')} · {d.rotulo}",
-                  xlsx=f"/duplas/{id}/gabarito.xlsx", voltar_url=f"/duplas/{id}/empresa", menu="duplas", **_contexto(g, d.empresa.caso))
+                  xlsx=f"/duplas/{id}/gabarito.xlsx?mes={mes}", voltar_url=f"/duplas/{id}/empresa", menu="duplas",
+                  url_mes=f"/duplas/{id}/gabarito", **_contexto(g, d.empresa.caso))
 
 
 @router.get("/casos/{id}/gabarito")
@@ -87,9 +92,11 @@ def gabarito_caso(request: Request, id: int, db: Session = Depends(get_db)):
     caso = db.get(Caso, id)
     if not caso:
         return voltar("/casos", erro="Caso não encontrado.")
-    g = gerar_gabarito(gerar(caso, 0, "Caso-base", None, base=True))
+    mes = periodos.da_requisicao(request)
+    g = gerar_gabarito(gerar(caso, 0, "Caso-base", None, base=True), mes)
     return render(request, "gabarito/caso.html", caso=caso, aba="gabarito", abas=ABAS, escopos=ESCOPOS, naturezas=NATUREZAS,
-                  xlsx=f"/casos/{id}/gabarito.xlsx", menu="casos", **_contexto(g, caso, editar=True))
+                  xlsx=f"/casos/{id}/gabarito.xlsx?mes={mes}", menu="casos", url_mes=f"/casos/{id}/gabarito",
+                  **_contexto(g, caso, editar=True))
 
 
 @router.post("/casos/{id}/gabarito/premissas")
@@ -156,7 +163,8 @@ def _xlsx(g: dict, titulo: str, eventos: dict) -> bytes:
     ws.append([])
     ws.append(["", "Total devedor / credor", None, None, None, t["devedor"], ""])
     ws.append(["", "", None, None, None, t["credor"], ""])
-    ws.append(["", "Resultado de janeiro (antes do encerramento)", None, None, None, t["resultado"], ""])
+    periodo = "janeiro" if g.get("mes", "2026-01") == "2026-01" else "janeiro e fevereiro acumulados"
+    ws.append(["", f"Resultado de {periodo} (antes do encerramento)", None, None, None, t["resultado"], ""])
     for row in ws.iter_rows(min_row=2, min_col=3, max_col=6):
         for c in row:
             c.number_format = num
@@ -181,22 +189,26 @@ def _xlsx(g: dict, titulo: str, eventos: dict) -> bytes:
 
 
 @router.get("/duplas/{id}/gabarito.xlsx")
-def gabarito_dupla_xlsx(id: int, db: Session = Depends(get_db)):
+def gabarito_dupla_xlsx(request: Request, id: int, db: Session = Depends(get_db)):
     d = db.get(Dupla, id)
     if not d or not d.empresa:
         return voltar("/duplas", erro="Gere a empresa da dupla antes do gabarito.")
-    g = gerar_gabarito(d.empresa.valores)
-    nome = f"Gabarito janeiro - {d.turma.disciplina.codigo} {d.turma.codigo} - Dupla {d.numero:02d}.xlsx"
-    corpo = _xlsx(g, f"Gabarito de janeiro/2026 · {d.empresa.valores['empresa'].get('nome', '')} · {d.rotulo}", _eventos(d.empresa.caso))
+    mes = periodos.da_requisicao(request)
+    nm = MESES[mes]["nome"]
+    g = gerar_gabarito(d.empresa.valores, mes)
+    nome = f"Gabarito {nm} - {d.turma.disciplina.codigo} {d.turma.codigo} - Dupla {d.numero:02d}.xlsx"
+    corpo = _xlsx(g, f"Gabarito de {nm}/2026 · {d.empresa.valores['empresa'].get('nome', '')} · {d.rotulo}", _eventos(d.empresa.caso, mes))
     return Response(corpo, media_type=XLSX, headers={"Content-Disposition": f"attachment; filename*=UTF-8''{quote(nome)}"})
 
 
 @router.get("/casos/{id}/gabarito.xlsx")
-def gabarito_caso_xlsx(id: int, db: Session = Depends(get_db)):
+def gabarito_caso_xlsx(request: Request, id: int, db: Session = Depends(get_db)):
     caso = db.get(Caso, id)
     if not caso:
         return voltar("/casos", erro="Caso não encontrado.")
-    g = gerar_gabarito(gerar(caso, 0, "Caso-base", None, base=True))
-    nome = f"Gabarito janeiro - caso-base {caso.id}.xlsx"
-    corpo = _xlsx(g, f"Gabarito de janeiro/2026 · {caso.nome} (valores do caso-base)", _eventos(caso))
+    mes = periodos.da_requisicao(request)
+    nm = MESES[mes]["nome"]
+    g = gerar_gabarito(gerar(caso, 0, "Caso-base", None, base=True), mes)
+    nome = f"Gabarito {nm} - caso-base {caso.id}.xlsx"
+    corpo = _xlsx(g, f"Gabarito de {nm}/2026 · {caso.nome} (valores do caso-base)", _eventos(caso, mes))
     return Response(corpo, media_type=XLSX, headers={"Content-Disposition": f"attachment; filename*=UTF-8''{quote(nome)}"})

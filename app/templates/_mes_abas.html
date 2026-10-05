@@ -1,0 +1,2 @@
+{# Abas de mês para telas da equipe: usa `mes`, `meses` e `url_mes` (caminho sem a query). #}
+<nav class="mes-abas" aria-label="Mês">{% for m, i in meses.items() %}<a href="{{ url_mes }}?mes={{ m }}" class="{{ 'ativo' if m == mes }}" {{ 'aria-current=page' if m == mes }}>{{ i.rotulo }}</a>{% endfor %}</nav>

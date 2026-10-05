@@ -1,19 +1,20 @@
 {% extends "base.html" %}
-{% block titulo %}Notas de janeiro · {{ t.disciplina.codigo }} {{ t.codigo }}{% endblock %}
+{% block titulo %}Notas de {{ mes_info.nome }} · {{ t.disciplina.codigo }} {{ t.codigo }}{% endblock %}
 {% block conteudo %}
-<div class="breadcrumb"><a href="/duplas">Grupos</a> / <a href="/turmas/{{ t.id }}/duplas">{{ t.disciplina.codigo }} · Turma {{ t.codigo }}</a> / <a href="/turmas/{{ t.id }}/painel">Painel</a> / Notas de janeiro</div>
+<div class="breadcrumb"><a href="/duplas">Grupos</a> / <a href="/turmas/{{ t.id }}/duplas">{{ t.disciplina.codigo }} · Turma {{ t.codigo }}</a> / <a href="/turmas/{{ t.id }}/painel">Painel</a> / Notas de {{ mes_info.nome }}</div>
 <div class="page-head">
-  <div><div class="eyebrow">Homologação · janeiro</div><h1>Notas de janeiro</h1>
+  <div><div class="eyebrow">Homologação · {{ mes_info.nome }}</div><h1>Notas de {{ mes_info.nome }}</h1>
   <p class="lead">O sistema propõe a nota de cada aluno a partir do fechamento enviado pelo grupo, por um critério objetivo de conformidade técnica. Você revisa, ajusta pela participação qualitativa e homologa. Só a nota homologada aparece para o aluno.</p></div>
-  <div class="acoes"><a class="btn" href="/turmas/{{ t.id }}/notas.csv">Exportar CSV</a><a class="btn" href="/turmas/{{ t.id }}/painel">Painel da turma</a></div>
+  <div class="acoes"><a class="btn" href="/turmas/{{ t.id }}/notas.csv?mes={{ mes }}">Exportar CSV</a><a class="btn" href="/turmas/{{ t.id }}/painel?mes={{ mes }}">Painel da turma</a></div>
 </div>
 <div class="aviso" role="note"><span><strong>Critério:</strong> nota = 10 × (eventos corretos × {{ pesos.correto|n(1) }} + valor divergente × {{ pesos.valor|n(1) }} + conta errada ou pendente × 0) ÷ eventos do mês. Ajuste de −10 a +10 sobre a nota do sistema; a nota final fica entre 0 e 10.</span></div>
 <div class="stats" style="margin:24px 0">
   <div class="stat"><div class="num">{{ linhas|length }}</div><div class="lbl">Alunos em grupos</div></div>
-  <div class="stat"><div class="num">{{ prontas }}</div><div class="lbl">Com nota proposta (janeiro enviado)</div></div>
+  <div class="stat"><div class="num">{{ prontas }}</div><div class="lbl">Com nota proposta ({{ mes_info.nome }} enviado)</div></div>
   <div class="stat"><div class="num">{{ homologadas }}</div><div class="lbl">Homologadas</div></div>
 </div>
-<form method="post" action="/turmas/{{ t.id }}/notas" class="card" style="padding:8px 24px 20px">
+{% include "_mes_abas.html" %}
+<form method="post" action="/turmas/{{ t.id }}/notas" class="card" style="padding:8px 24px 20px"><input type="hidden" name="mes" value="{{ mes }}">
   <div class="table-wrap"><table class="mini">
     <thead><tr><th><input type="checkbox" aria-label="Marcar todos" onclick="this.form.querySelectorAll('input.sel').forEach(c => c.checked = this.checked)"></th><th>Aluno</th><th>Grupo</th><th>Fechamento</th><th class="num">Sistema</th><th class="num" style="width:90px">Ajuste</th><th class="num">Final</th><th>Observação</th><th>Situação</th></tr></thead>
     <tbody>{% for l in linhas %}{% set n = l.n %}

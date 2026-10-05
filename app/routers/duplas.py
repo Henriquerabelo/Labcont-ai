@@ -120,7 +120,7 @@ def tela(request: Request, tid: int, db: Session = Depends(get_db)):
                   contas=contas, status=status_turma(db, tid), altera=bool(c and c.altera_turma(tid)),
                   caso_padrao=_caso_padrao(db, t, duplas), total_ativos=len(_ativos(t)),
                   geradas=sum(1 for d in duplas if d.empresa), codigos=codigos_turma(db, tid),
-                  progresso=progresso_turma(db, tid), url_aluno=str(request.base_url).rstrip("/") + "/aluno", menu="duplas")
+                  progresso=progresso_turma(db, tid), progresso_fev=progresso_turma(db, tid, "2026-02"), url_aluno=str(request.base_url).rstrip("/") + "/aluno", menu="duplas")
 
 
 @router.post("/turmas/{tid}/duplas")

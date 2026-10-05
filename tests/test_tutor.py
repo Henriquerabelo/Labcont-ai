@@ -68,7 +68,7 @@ def _msgs(dupla_id):
 def test_sem_ia_responde_com_roteiro(ctx):
     c = ctx["c"]
     _entrar(c, ctx["cod1"], "540000")
-    assert "Sobre qual evento?" in c.get("/aluno/tutor?evento=J06").text
+    assert "Sobre qual evento de janeiro?" in c.get("/aluno/tutor?evento=J06").text
     r = c.post("/aluno/tutor", data={"evento": "J06", "pergunta": "Quais tributos recupero nesta nota?"}, follow_redirects=False)
     assert r.status_code == 303 and "J06" in r.headers["location"]
     m = _msgs(ctx["d1"])

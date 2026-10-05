@@ -5,11 +5,11 @@
 <div class="page-head" style="margin-bottom:24px">
   <div><div class="eyebrow">{{ d.empresa.valores.empresa.nome }} · tutor</div><h1>{{ ev.codigo ~ ' · Tutor' if ev else 'Tutor' }}</h1>
     <p class="lead">O tutor ajuda com perguntas e explicações sobre os documentos, as normas e o raciocínio contábil. Ele não entrega lançamentos prontos{% if not fech %} nem diz se o seu lançamento está certo — a correção só acontece no fechamento do mês{% endif %}.</p></div>
-  <div class="acoes">{% if ev and not fech %}<a class="btn" href="/aluno/lancar?evento={{ ev.codigo }}">Lançar {{ ev.codigo }}</a>{% endif %}<a class="btn" href="/aluno/documentos">Documentos</a></div>
+  <div class="acoes">{% if ev and not fech %}<a class="btn" href="/aluno/lancar?evento={{ ev.codigo }}">Lançar {{ ev.codigo }}</a>{% endif %}<a class="btn" href="/aluno/documentos?mes={{ mes }}">Documentos</a></div>
 </div>
 <div class="tutor-layout">
   <aside class="card tutor-eventos">
-    <h4 class="h4" style="margin-bottom:8px">Sobre qual evento?</h4>
+    <h4 class="h4" style="margin-bottom:8px">Sobre qual evento de {{ mes_info.nome }}?</h4>
     <a href="/aluno/tutor" class="{{ 'ativo' if not ev }}">Dúvida geral</a>
     {% for e in eventos %}<a href="/aluno/tutor?evento={{ e.codigo }}" class="{{ 'ativo' if ev and ev.codigo == e.codigo }}" title="{{ e.descricao }}">{{ e.codigo }} <span class="muted">{{ e.descricao[:38] }}{{ '…' if e.descricao|length > 38 }}</span>{% if e.codigo in usados %} ·{% endif %}</a>{% endfor %}
   </aside>

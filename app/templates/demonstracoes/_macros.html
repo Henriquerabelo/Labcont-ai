@@ -1,7 +1,7 @@
 {% macro v(x) -%}{% if x < 0 %}({{ (-x)|n(2) }}){% else %}{{ x|n(2) }}{% endif %}{%- endmacro %}
 {% macro dre(r, titulo) %}
 <section class="card dem">
-  <div class="card-head"><h3>{{ titulo }}</h3><span class="muted mono-sm">janeiro/2026 · R$</span></div>
+  <div class="card-head"><h3>{{ titulo }}</h3><span class="muted mono-sm">{{ (r.periodo or "janeiro") }} · R$</span></div>
   <table class="mini dem-tab"><tbody>
   {% for l in r.dre %}
     {% if l.total %}<tr class="dem-total{{ ' dem-forte' if l.forte }}"><td>{{ l.rotulo }}</td><td class="num">{{ v(l.valor) }}</td></tr>
@@ -37,7 +37,7 @@
 {% macro are(r) %}
 <section class="card dem">
   <div class="card-head"><h3>Prévia do encerramento (ARE)</h3><span class="muted mono-sm">não é gravado</span></div>
-  <p class="mono-sm muted">No Lucro Real anual, o resultado de janeiro fica no balancete de suspensão/redução e as contas de resultado só são encerradas em 31/12. Esta prévia mostra os lançamentos que zerariam as contas de resultado, transferindo o saldo para a ARE e dela para Lucros ou Prejuízos Acumulados.</p>
+  <p class="mono-sm muted">No Lucro Real anual, o resultado do mês fica no balancete de suspensão/redução e as contas de resultado só são encerradas em 31/12. Esta prévia mostra os lançamentos que zerariam as contas de resultado, transferindo o saldo para a ARE e dela para Lucros ou Prejuízos Acumulados.</p>
   {% if r.are %}<table class="mini"><thead><tr><th>Débito</th><th>Crédito</th><th class="num">Valor</th></tr></thead><tbody>
     {% for x in r.are %}<tr class="{{ 'dem-total' if x.final }}"><td>{{ x.debito }}</td><td>{{ x.credito }}</td><td class="num">{{ x.valor|n(2) }}</td></tr>{% endfor %}
   </tbody></table>{% else %}<p class="vazio">Sem contas de resultado movimentadas.</p>{% endif %}

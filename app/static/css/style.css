@@ -446,3 +446,14 @@ table.calor td { padding: 3px 6px; border: 0; }
 .erro-txt { color: #b4441f; }
 @media (max-width: 900px) { .dem-grid { grid-template-columns: 1fr; } }
 .ciencia { text-transform: none; font-size: 13px; color: var(--graphite); align-items: flex-start; gap: 8px; } .privacidade h3 { margin: 24px 0 6px; } .privacidade ul { padding-left: 20px; line-height: 1.6; }
+
+/* Etapa 8 · seletor de mês da área do aluno */
+.mes-sel { display: inline-flex; margin-left: 12px; border: 1px solid var(--ash); border-radius: 999px; overflow: hidden; }
+.mes-sel a { padding: 4px 12px; font-size: 12px; text-transform: uppercase; letter-spacing: .04em; }
+.mes-sel a.ativo { background: var(--ink, #111); color: #fff; }
+.meses-status { margin-top: 10px; display: flex; flex-wrap: wrap; gap: 6px; }
+.meses-status .tag.atual { outline: 2px solid currentColor; outline-offset: 1px; }
+.nivel-preparo { background: #eef1f4; color: #55606b; }
+.mes-abas { display: flex; gap: 4px; margin: 0 0 20px; border-bottom: 1px solid var(--ash); }
+.mes-abas a { padding: 8px 14px; font-size: 13px; border-bottom: 2px solid transparent; margin-bottom: -1px; }
+.mes-abas a.ativo { border-bottom-color: var(--ink, #000); font-weight: 600; }

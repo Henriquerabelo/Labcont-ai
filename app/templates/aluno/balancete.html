@@ -2,8 +2,8 @@
 {% set menu = 'balancete' %}
 {% block titulo %}Balancete{% endblock %}
 {% block conteudo %}
-<div class="page-head"><div><div class="eyebrow">{{ d.empresa.valores.empresa.nome }}</div><h1>Balancete de verificação</h1>
-  <p class="lead">Saldos de 31/12/2025 mais os lançamentos da dupla em janeiro.</p></div>
+<div class="page-head"><div><div class="eyebrow">{{ d.empresa.valores.empresa.nome }}</div><h1>Balancete de verificação · {{ mes_info.rotulo }}</h1>
+  <p class="lead">{% if mes == '2026-01' %}Saldos de 31/12/2025 mais os lançamentos da dupla em janeiro.{% else %}Saldos iniciais = balanço de 31/12/2025 mais os lançamentos da dupla em janeiro; movimento = lançamentos de {{ mes_info.nome }}.{% endif %}</p></div>
   <div class="acoes">{% if tot_d|round(2) == tot_c|round(2) %}<span class="tag tag-ok">débitos = créditos</span>{% else %}<span class="tag tag-alerta">diferença {{ (tot_d - tot_c)|abs|n(2) }}</span>{% endif %}</div></div>
 <div class="card table-wrap"><table class="mini gab-bal">
   <thead><tr><th>Conta</th><th>Nome</th><th class="num">Saldo inicial</th><th class="num">Débitos</th><th class="num">Créditos</th><th class="num">Saldo final</th></tr></thead>

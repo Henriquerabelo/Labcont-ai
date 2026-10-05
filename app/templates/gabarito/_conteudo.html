@@ -1,15 +1,16 @@
 {% set t = g.totais %}
 <div class="stats" style="margin-bottom:24px">
   <div class="stat"><div class="num">{{ g.lancamentos|length }}</div><div class="lbl">Lançamentos</div></div>
-  <div class="stat"><div class="num" style="font-size:34px">{{ t.ativo|n(2) }}</div><div class="lbl">Ativo em 31/01 (R$)</div></div>
-  <div class="stat"><div class="num" style="font-size:34px">{{ t.resultado|n(2) }}</div><div class="lbl">Resultado de janeiro (R$)</div></div>
+  <div class="stat"><div class="num" style="font-size:34px">{{ t.ativo|n(2) }}</div><div class="lbl">Ativo em {{ mes_info.fim.strftime('%d/%m') }} (R$)</div></div>
+  <div class="stat"><div class="num" style="font-size:34px">{{ t.resultado|n(2) }}</div><div class="lbl">Resultado {{ 'de janeiro' if mes == '2026-01' else 'acumulado jan–fev' }} (R$)</div></div>
   <div class="stat"><div class="num" style="font-size:34px">{% if t.fecha %}<span class="tag tag-ok" style="font-size:14px">fecha</span>{% else %}<span class="tag tag-alerta" style="font-size:14px">não fecha</span>{% endif %}</div>
     <div class="lbl">Débitos = créditos{% if t.diferenca %} (dif. {{ t.diferenca|n(2) }} do balanço de 2025){% endif %}</div></div>
 </div>
 
+{% if g.sem_gabarito %}<div class="aviso" role="note"><span><strong>Fevereiro em construção.</strong> Ainda sem gabarito (fora da correção automática): {{ g.sem_gabarito|join(', ') }}. A tesouraria (FTES) e os ajustes (FAJ) só ficam definitivos quando todos os eventos do mês estiverem prontos.</span></div>{% endif %}
 <nav class="abas gab-abas">
   <a href="#lancamentos" class="ativo" data-aba="lancamentos">Lançamentos e memória</a>
-  <a href="#balancete" data-aba="balancete">Balancete em 31/01</a>
+  <a href="#balancete" data-aba="balancete">Balancete em {{ mes_info.fim.strftime('%d/%m') }}</a>
   <a href="#premissas" data-aba="premissas">Premissas{% if pendentes %} · {{ pendentes }} a validar{% else %} · todas validadas{% endif %}</a>
 </nav>
 
@@ -43,7 +44,7 @@
 </section>
 
 <section class="gab-painel card" id="p-balancete" hidden>
-  <div class="card-head"><h3>Balancete de verificação em 31/01/2026</h3><span class="muted mono-sm">antes do encerramento do resultado</span></div>
+  <div class="card-head"><h3>Balancete de verificação em {{ mes_info.fim.strftime('%d/%m/%Y') }}</h3><span class="muted mono-sm">antes do encerramento do resultado</span></div>
   <div class="table-wrap"><table class="mini gab-bal">
     <thead><tr><th>Conta</th><th>Nome</th><th class="num">Saldo inicial</th><th class="num">Débitos</th><th class="num">Créditos</th><th class="num">Saldo final</th></tr></thead>
     <tbody>

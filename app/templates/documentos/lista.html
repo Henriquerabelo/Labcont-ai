@@ -3,8 +3,8 @@
 {% block conteudo %}
 <div class="breadcrumb"><a href="/duplas">Duplas</a> / <a href="/turmas/{{ d.turma.id }}/duplas">{{ d.turma.disciplina.codigo }} · Turma {{ d.turma.codigo }}</a> / <a href="/duplas/{{ d.id }}/empresa">{{ d.rotulo }}</a> / Documentos</div>
 <div class="page-head">
-  <div><div class="eyebrow">Etapa 4 · Central de documentos · janeiro/2026</div><h1>Documentos da {{ d.empresa.valores.empresa.nome or 'empresa' }}</h1>
-  <p class="lead">Notas fiscais, conhecimentos de transporte, faturas e contratos de janeiro com os valores desta dupla. É a partir deles que a dupla escritura os fatos. Documentos didáticos, sem valor fiscal.</p></div>
+  <div><div class="eyebrow">Etapa 4 · Central de documentos · janeiro e fevereiro/2026</div><h1>Documentos da {{ d.empresa.valores.empresa.nome or 'empresa' }}</h1>
+  <p class="lead">Notas fiscais, conhecimentos de transporte, faturas e contratos de janeiro e fevereiro com os valores desta dupla. É a partir deles que a dupla escritura os fatos. Documentos didáticos, sem valor fiscal.</p></div>
   <div class="acoes"><a class="btn" href="/duplas/{{ d.id }}/empresa">Voltar à empresa</a><a class="btn" href="/duplas/{{ d.id }}/gabarito">Gabarito</a></div>
 </div>
 <div class="table-wrap card" style="padding:8px 24px">

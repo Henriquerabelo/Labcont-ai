@@ -5,8 +5,8 @@
 {% block conteudo %}
 <div class="page-head" style="margin-bottom:24px">
   <div><div class="eyebrow">{{ d.empresa.valores.empresa.nome }} · CPC 26</div><h1>Demonstrações contábeis</h1>
-    <p class="lead">Montadas automaticamente a partir dos lançamentos da dupla e do balanço de 31/12/2025. Elas mostram as consequências dos seus registros; a correção continua sendo feita só no fechamento do mês.</p></div>
-  <div class="acoes"><a class="btn" href="/aluno/balancete">Balancete</a><a class="btn" href="/aluno/razao">Razão</a></div>
+    <p class="lead">Montadas automaticamente a partir dos lançamentos da dupla e do balanço de 31/12/2025, com saldos até o fim de {{ mes_info.nome }} ({{ r.periodo }}). Elas mostram as consequências dos seus registros; a correção continua sendo feita só no fechamento do mês.</p></div>
+  <div class="acoes"><a class="btn" href="/aluno/balancete?mes={{ mes }}">Balancete</a><a class="btn" href="/aluno/razao">Razão</a></div>
 </div>
 <div class="dem-grid">{{ dre(r, 'Demonstração do resultado') }}{{ bp(r, 'Balanço patrimonial') }}</div>
 {{ are(r) }}

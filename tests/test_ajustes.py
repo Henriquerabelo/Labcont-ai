@@ -98,6 +98,18 @@ def test_fichas_novas_e_atualizacao(ctx):
         cods = {n.codigo for n in db.query(Norma).all()}
         assert {"CPC26-01", "CPC26-02", "ICMS-08", "ISS-FOR"} <= cods
         assert "Lei estadual 12.670/1996" in db.query(Norma).filter_by(codigo="ICMS-05").one().fonte
+        assert {"ISS-FOR-02", "ISS-FOR-03", "ISS-FOR-04", "ICMS-09"} <= cods
+        assert "229, 240 e 245" in db.query(Norma).filter_by(codigo="ISS-FOR").one().fonte
+        assert "35.061/2022" in db.query(Norma).filter_by(codigo="ICMS-09").one().fonte
+
+
+def test_busca_ctm_e_ricms():
+    from app.dados_normas.fichas import FICHAS
+    from app.normas import buscar
+    ns = [Norma(**f, ativa=True) for f in FICHAS]
+    assert buscar(ns, "Qual a alíquota do ISS da reforma do galpão? O material entra?", "J26")[0][0].codigo == "ISS-FOR-03"
+    assert buscar(ns, "Onde encontro o regulamento do ICMS do Ceará?")[0][0].codigo == "ICMS-09"
+    assert "ISS-FOR-04" in [n.codigo for n, _ in buscar(ns, "O arquiteto autônomo do RPA: preciso reter ISS?", "J23")]
 
 
 def test_tempo_ate_envio_e_privacidade(ctx):

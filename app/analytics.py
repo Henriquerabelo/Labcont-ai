@@ -22,7 +22,8 @@ from sqlalchemy import Boolean, DateTime, Float, ForeignKey, String, Text, func,
 from sqlalchemy.orm import Mapped, Session, mapped_column
 
 from . import plano_contas as pc
-from .auditoria import auditar, eventos_janeiro
+from .auditoria import auditar, eventos_ate, eventos_janeiro, eventos_mes
+from .periodos import do_mes
 from .db import Base
 from .gabarito import gerar_gabarito
 from .models import Turma
@@ -33,7 +34,9 @@ from .models_escrita import DuplaAcesso, Lancamento, TutorMensagem, fechamento_a
 PESOS_NIVEL = {"correto": 1.0, "valor": 0.5, "conta": 0.0, "pendente": 0.0}  # critério da nota preliminar
 DIAS_INATIVO = 7
 EVENTOS_CRITICOS = {"J18": "folha de janeiro", "J24": "leasing (CPC 06)", "J27": "venda pelo mark-up",
-                    "J30": "compra de matéria-prima com IPI", "J40": "apuração dos tributos", "TES": "tesouraria"}
+                    "J30": "compra de matéria-prima com IPI", "J40": "apuração dos tributos", "TES": "tesouraria",
+                    "F05": "compra de MP-B com desconto condicional", "F20": "folha de fevereiro", "F33": "parcela do leasing (SAC)",
+                    "F34": "venda dos produtos X e Y", "F48": "apuração de fevereiro", "FTES": "tesouraria de fevereiro"}
 TEMAS = [
     ("Patrimônio líquido e destinação", ["J01", "J20", "J34"]),
     ("Compras e tributos recuperáveis", ["J08", "J09", "J15", "J30"]),
@@ -45,6 +48,17 @@ TEMAS = [
     ("Imobilizado e depreciação", ["J19"]),
     ("Autuação fiscal", ["J29"]),
     ("Apuração dos tributos", ["J40"]),
+    # fevereiro
+    ("Patrimônio líquido e partes relacionadas", ["F15", "F25", "F27"]),
+    ("Compras de insumos e estoques (custo médio)", ["F05", "F10", "F22", "F23", "F28", "F35"]),
+    ("Utilidades, serviços e retenções", ["F01", "F02", "F03", "F08", "F32", "F41", "F45"]),
+    ("Folha, encargos e benefícios (fev.)", ["F09", "F12", "F20", "F31", "F38", "F39"]),
+    ("Pagamentos e recebimentos (fev.)", ["F06", "F11", "F13", "F14", "F16", "F17", "F18", "F19", "F24", "F29", "F30",
+                                          "F37", "F40", "F42", "F43", "F44", "F46"]),
+    ("Financeiro, leasing e tesouraria (fev.)", ["F07", "F33", "F47", "FTES", "FAJ"]),
+    ("Vendas, devoluções e custo dos produtos", ["F04", "F26", "F34", "F36"]),
+    ("Depreciação e custos de produção", ["F21"]),
+    ("Apuração de fevereiro", ["F48"]),
 ]
 TEMA_DO_EVENTO = {ev: tema for tema, evs in TEMAS for ev in evs}
 
@@ -85,11 +99,11 @@ def _ultima(*datas):
     return max(ds) if ds else None
 
 
-def analisar_turma(db: Session, tid: int, agora: datetime | None = None) -> dict:
+def analisar_turma(db: Session, tid: int, agora: datetime | None = None, mes: str = "2026-01") -> dict:
     agora = agora or datetime.now()
     t = db.get(Turma, tid)
     duplas = [d for d in db.scalars(select(Dupla).where(Dupla.turma_id == tid).order_by(Dupla.numero)).all() if d.empresa]
-    eventos = eventos_janeiro(duplas[0].empresa.caso if duplas else None)
+    eventos = eventos_mes(duplas[0].empresa.caso if duplas else None, mes)
     cods = [e["codigo"] for e in eventos]
     ids = [d.id for d in duplas]
     lancs_all = db.scalars(select(Lancamento).where(Lancamento.dupla_id.in_(ids))).all() if ids else []
@@ -104,9 +118,9 @@ def analisar_turma(db: Session, tid: int, agora: datetime | None = None) -> dict
     grupos = []
     conta_erros = defaultdict(set)  # (conta, situação) → grupos com divergência nela
     for d in duplas:
-        lancs, msgs = por_dupla_l[d.id], por_dupla_m[d.id]
-        fech = fechamento_ativo(db, d.id)
-        aud = auditar(gerar_gabarito(d.empresa.valores), lancs, d.empresa.caso) if lancs else None
+        lancs, msgs = do_mes(por_dupla_l[d.id], mes), [m for m in por_dupla_m[d.id] if (m.evento or "") in set(cods) or not m.evento]
+        fech = fechamento_ativo(db, d.id, mes)
+        aud = auditar(gerar_gabarito(d.empresa.valores, mes), lancs, d.empresa.caso) if lancs else None
         niveis = {e["codigo"]: e["nivel"] for e in aud["eventos"]} if aud else {c: "pendente" for c in cods}
         if fech:  # nota oficial = retrato do envio
             snap = (fech.resultado or {}).get("eventos", {})
@@ -183,6 +197,8 @@ def analisar_turma(db: Session, tid: int, agora: datetime | None = None) -> dict
     temas = []
     for tema, evs in TEMAS:
         ls = [l for l in linhas_ev if l["codigo"] in evs]
+        if not ls:
+            continue
         lanc = sum(l["lancados"] for l in ls)
         erro = sum(l["erros"] for l in ls)
         temas.append({"tema": tema, "eventos": evs, "lancados": lanc, "erros": erro,
@@ -221,7 +237,7 @@ def analisar_turma(db: Session, tid: int, agora: datetime | None = None) -> dict
         "tempo_medio": _media([g["dias_ate_envio"] for g in enviados]),
     }
     return {"t": t, "grupos": grupos_ord, "eventos": linhas_ev, "temas": temas, "contas": contas, "engaj": engaj,
-            "resumo": resumo, "mediana": med}
+            "resumo": resumo, "mediana": med, "mes": mes}
 
 
 def _dias_ate_envio(lancs, fech) -> float | None:
@@ -245,23 +261,26 @@ def _faixa(pct) -> int:
 
 
 # --------------------------------------------------------------------- notas de janeiro
-def propor_notas(db: Session, tid: int) -> list[dict]:
+def propor_notas(db: Session, tid: int, mes: str = "2026-01") -> list[dict]:
     """Nota preliminar de cada aluno: critério objetivo sobre o fechamento enviado pelo grupo
     (correto = 1, valor divergente = 0,5, conta errada ou pendente = 0) × 10 ÷ eventos do mês."""
     linhas = []
     duplas = [d for d in db.scalars(select(Dupla).where(Dupla.turma_id == tid).order_by(Dupla.numero)).all() if d.empresa]
     existentes = {(n.discente_id, n.periodo): n for n in db.scalars(select(NotaPeriodo).where(NotaPeriodo.turma_id == tid)).all()}
     for d in duplas:
-        fech = fechamento_ativo(db, d.id)
-        total = len(eventos_janeiro(d.empresa.caso))
+        fech = fechamento_ativo(db, d.id, mes)
+        if mes == "2026-01":
+            total = len(eventos_janeiro(d.empresa.caso))
+        else:  # fevereiro: só os eventos com correção automática no envio contam
+            total = ((fech.resultado or {}).get("total") if fech else None) or len(eventos_mes(d.empresa.caso, mes))
         snap = ((fech.resultado or {}).get("eventos") or {}) if fech else {}
         niveis = {c: v.get("nivel") for c, v in snap.items()}
         sistema = nota_por_niveis(niveis, total) if fech else None
         cont = Counter(niveis.values())
         for m in sorted(d.membros, key=lambda m: m.discente.nome):
-            n = existentes.get((m.discente_id, "2026-01"))
+            n = existentes.get((m.discente_id, mes))
             if n is None:
-                n = NotaPeriodo(turma_id=tid, dupla_id=d.id, discente_id=m.discente_id, periodo="2026-01", ajuste=0.0)
+                n = NotaPeriodo(turma_id=tid, dupla_id=d.id, discente_id=m.discente_id, periodo=mes, ajuste=0.0)
                 db.add(n)
             if not n.homologada:  # enquanto não homologada, acompanha o fechamento (inclusive reaberto/reenviado)
                 n.nota_sistema, n.dupla_id = sistema, d.id
@@ -281,6 +300,7 @@ def resumo_gestao(db: Session, turmas: list[Turma]) -> list[dict]:
         contas = db.scalar(select(func.count(Usuario.id)).where(Usuario.discente_id.in_(alunos))) if alunos else 0
         n_l = len(db.execute(select(Lancamento.dupla_id, Lancamento.evento).where(Lancamento.dupla_id.in_(ids)).distinct()).all()) if ids else 0
         fechs = [f for f in (fechamento_ativo(db, i) for i in ids) if f]
+        fechs_fev = [f for f in (fechamento_ativo(db, i, "2026-02") for i in ids) if f]
         pcts = [(f.resultado or {}).get("percentual", 0) for f in fechs]
         tempos = []
         for f in fechs:
@@ -291,11 +311,11 @@ def resumo_gestao(db: Session, turmas: list[Turma]) -> list[dict]:
         ult_l = db.scalar(select(func.max(Lancamento.criado_em)).where(Lancamento.dupla_id.in_(ids))) if ids else None
         ult_a = db.scalar(select(func.max(DuplaAcesso.ultimo_acesso)).where(DuplaAcesso.dupla_id.in_(ids))) if ids else None
         homolog = db.scalar(select(func.count(NotaPeriodo.id)).where(NotaPeriodo.turma_id == t.id, NotaPeriodo.homologada.is_(True)))
-        n_ev = len(eventos_janeiro(duplas[0].empresa.caso)) if duplas else 42
+        n_ev = len(eventos_ate(duplas[0].empresa.caso, "2026-02")) if duplas else 92
         out.append({"t": t, "status": status_turma(db, t.id), "matriculados": len(t.matriculas), "grupos": len(duplas),
                     "alunos": len(alunos), "contas": contas or 0, "adesao": round(100 * (contas or 0) / len(alunos)) if alunos else 0,
                     "progresso": round(100 * (n_l or 0) / (n_ev * len(duplas))) if duplas else 0,
-                    "enviados": len(fechs), "media": round(sum(pcts) / len(pcts)) if pcts else None,
+                    "enviados": len(fechs), "enviados_fev": len(fechs_fev), "media": round(sum(pcts) / len(pcts)) if pcts else None,
                     "perguntas": perg or 0, "ultima": _ultima(ult_l, ult_a), "homologadas": homolog or 0,
                     "tempo_medio": _media(tempos)})
     return out

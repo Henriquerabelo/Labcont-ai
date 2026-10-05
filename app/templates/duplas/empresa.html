@@ -11,7 +11,7 @@
   <div class="acoes">
     <a class="btn btn-primary" href="/duplas/{{ d.id }}/orientacao.docx">Orientação (.docx)</a>
     <a class="btn btn-dark" href="/duplas/{{ d.id }}/documentos">Documentos</a>
-    <a class="btn btn-dark" href="/duplas/{{ d.id }}/gabarito">Gabarito de janeiro</a>
+    <a class="btn btn-dark" href="/duplas/{{ d.id }}/gabarito?mes=2026-01">Gabarito de janeiro</a><a class="btn" href="/duplas/{{ d.id }}/gabarito?mes=2026-02">Gabarito de fevereiro</a>
     <a class="btn" href="/duplas/{{ d.id }}/empresa.json">Exportar JSON</a>
     {% if d.empresa.caso %}
     <form class="inline" method="post" action="/duplas/{{ d.id }}/empresa/sortear"><input type="hidden" name="manter" value="1"><button class="btn" type="submit" title="Reaplica o caso (após edições) com a mesma semente">Recalcular</button></form>

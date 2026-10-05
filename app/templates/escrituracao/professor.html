@@ -6,12 +6,14 @@
   <div><div class="eyebrow">Etapa 5 · auditoria da escrituração · visão do professor</div><h1>{{ d.empresa.valores.empresa.nome }} · {{ d.rotulo }}</h1>
     <p class="lead">{% for m in d.membros %}{{ m.discente.nome }}{% if not loop.last %} · {% endif %}{% endfor %}</p>
     <p class="mono-sm muted">Código de acesso: <strong>{{ acesso.codigo if acesso else '— (gere na tela de duplas)' }}</strong>{% if acesso and acesso.ultimo_acesso %} · último acesso {{ acesso.ultimo_acesso.strftime('%d/%m/%Y %H:%M') }}{% endif %} · {{ lancs|length }} lançamento(s)</p></div>
-  <div class="acoes"><a class="btn" href="/duplas/{{ d.id }}/demonstracoes">DRE e Balanço</a><a class="btn" href="/aluno/ver/{{ d.id }}">Ver como aluno</a><a class="btn" href="/duplas/{{ d.id }}/tutor">Conversas com o tutor</a><a class="btn" href="/duplas/{{ d.id }}/gabarito">Gabarito</a><a class="btn" href="/duplas/{{ d.id }}/documentos">Documentos</a></div>
+  <div class="acoes"><a class="btn" href="/duplas/{{ d.id }}/demonstracoes?mes={{ mes }}">DRE e Balanço</a><a class="btn" href="/aluno/ver/{{ d.id }}">Ver como aluno</a><a class="btn" href="/duplas/{{ d.id }}/tutor">Conversas com o tutor</a><a class="btn" href="/duplas/{{ d.id }}/gabarito?mes={{ mes }}">Gabarito</a><a class="btn" href="/duplas/{{ d.id }}/documentos">Documentos</a></div>
 </div>
+{% include "_mes_abas.html" %}
+{% set nm = mes_info.nome %}
 <div class="aviso" role="note" style="justify-content:space-between;flex-wrap:wrap">
-  {% if fech %}<span><strong>Janeiro enviado</strong> pela dupla em {{ fech.enviado_em.strftime('%d/%m/%Y %H:%M') }} (matrícula {{ fech.enviado_por }}) · nota registrada no envio: <strong>{{ (fech.resultado or {}).get('percentual', 0) }}%</strong> de eventos corretos. A dupla já vê a correção.</span>
-    <form method="post" action="/duplas/{{ d.id }}/fechamento/reabrir" data-confirmar="Reabrir janeiro para a dupla? Ela poderá alterar os lançamentos e enviar de novo."><button class="btn btn-sm" type="submit">Reabrir para a dupla</button></form>
-  {% else %}<span><strong>Prévia:</strong> a dupla ainda não enviou o fechamento de janeiro e não vê esta correção. Ela só vê se cada evento foi lançado ou está pendente.</span>{% endif %}
+  {% if fech %}<span><strong>{{ nm|capitalize }} enviado</strong> pela dupla em {{ fech.enviado_em.strftime('%d/%m/%Y %H:%M') }} (matrícula {{ fech.enviado_por }}) · nota registrada no envio: <strong>{{ (fech.resultado or {}).get('percentual', 0) }}%</strong> de eventos corretos. A dupla já vê a correção.</span>
+    <form method="post" action="/duplas/{{ d.id }}/fechamento/reabrir" data-confirmar="Reabrir {{ nm }} para a dupla? Ela poderá alterar os lançamentos e enviar de novo."><input type="hidden" name="mes" value="{{ mes }}"><button class="btn btn-sm" type="submit">Reabrir para a dupla</button></form>
+  {% else %}<span><strong>Prévia:</strong> a dupla ainda não enviou o fechamento de {{ nm }} e não vê esta correção. Ela só vê se cada evento foi lançado ou está pendente.</span>{% endif %}
 </div>
 {% include "aluno/_avisos.html" %}
 {% set c = aud.contagem %}
@@ -24,10 +26,10 @@
 </div>
 <div class="card" style="padding:8px 24px;margin-bottom:24px"><table class="aud mini">
   <thead><tr><th>Data</th><th>Evento</th><th>Descrição</th><th>Situação</th></tr></thead>
-  <tbody>{% for e in aud.eventos %}<tr><td class="mono-sm">{{ e.data.strftime('%d/%m') if e.data else '' }}</td><td class="mono-sm">{% if e.nivel != 'pendente' %}<a href="#ev-{{ e.codigo }}">{{ e.codigo }}</a>{% else %}{{ e.codigo }}{% endif %}</td>
+  <tbody>{% for e in aud.eventos %}<tr><td class="mono-sm">{{ e.data.strftime('%d/%m') if e.data else '' }}</td><td class="mono-sm">{% if e.lancado %}<a href="#ev-{{ e.codigo }}">{{ e.codigo }}</a>{% else %}{{ e.codigo }}{% endif %}</td>
     <td>{{ e.descricao }}</td><td><span class="nivel nivel-{{ e.nivel }}">{{ niveis[e.nivel] }}</span></td></tr>{% endfor %}</tbody>
 </table></div>
-{% for e in aud.eventos if e.nivel != 'pendente' %}
+{% for e in aud.eventos if e.lancado and e.nivel != 'preparo' %}
 <article class="card gab-ev" id="ev-{{ e.codigo }}">
   <header class="card-head"><h3><span class="mono-sm muted">{{ e.codigo }} · {{ e.data.strftime('%d/%m') if e.data else '' }}</span><br>{{ e.descricao }}</h3>
     <span class="nivel nivel-{{ e.nivel }}">{{ niveis[e.nivel] }}</span></header>

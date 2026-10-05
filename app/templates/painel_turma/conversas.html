@@ -4,7 +4,7 @@
 <div class="breadcrumb"><a href="/duplas">Duplas</a> / <a href="/turmas/{{ d.turma.id }}/duplas">{{ d.turma.disciplina.codigo }} · Turma {{ d.turma.codigo }}</a> / <a href="/turmas/{{ d.turma.id }}/painel">Painel</a> / {{ d.rotulo }} · Tutor</div>
 <div class="page-head">
   <div><div class="eyebrow">Etapa 6 · conversas com o tutor · visão do professor</div><h1>{{ d.empresa.valores.empresa.nome }} · {{ d.rotulo }}</h1>
-    <p class="lead">{% for m in d.membros %}{{ m.discente.nome }}{% if not loop.last %} · {% endif %}{% endfor %} · {{ n_perg }} pergunta(s){{ ' · janeiro enviado' if fech }}</p></div>
+    <p class="lead">{% for m in d.membros %}{{ m.discente.nome }}{% if not loop.last %} · {% endif %}{% endfor %} · {{ n_perg }} pergunta(s){{ ' · janeiro enviado' if fech }}{{ ' · fevereiro enviado' if fech_fev }}</p></div>
   <div class="acoes"><a class="btn btn-dark" href="/duplas/{{ d.id }}/escrituracao">Escrituração</a><a class="btn" href="/turmas/{{ d.turma.id }}/painel">Painel da turma</a></div>
 </div>
 {% for b in blocos %}

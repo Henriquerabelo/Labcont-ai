@@ -2,11 +2,11 @@
 {% set menu = 'documentos' %}
 {% block titulo %}Documentos{% endblock %}
 {% block conteudo %}
-<div class="page-head"><div><div class="eyebrow">{{ d.empresa.valores.empresa.nome }} · janeiro/2026</div><h1>Documentos</h1>
+<div class="page-head"><div><div class="eyebrow">{{ d.empresa.valores.empresa.nome }} · {{ mes_info.nome }}/2026</div><h1>Documentos de {{ mes_info.nome }}</h1>
   <p class="lead">Notas, conhecimentos de transporte, faturas e contratos recebidos ou emitidos pela empresa. Documentos didáticos, sem valor fiscal.</p></div></div>
 <div class="table-wrap card" style="padding:8px 24px"><table>
   <thead><tr><th>Data</th><th>Evento</th><th>Documento</th><th>Nº</th><th>Emitente</th><th class="num">Valor (R$)</th><th></th></tr></thead>
-  <tbody>{% for x in docs %}
+  <tbody>{% if not docs %}<tr><td colspan="7" class="vazio">Nenhum documento de {{ mes_info.nome }} disponível ainda.</td></tr>{% endif %}{% for x in docs %}
     <tr><td class="mono-sm">{{ x.data[8:10] }}/{{ x.data[5:7] }}</td><td class="mono-sm">{{ x.evento }}</td><td><span class="tag">{{ tipos[x.tipo] }}</span> {{ x.titulo }}</td>
       <td class="mono-sm">{{ x.numero }}</td><td>{{ x.emitente.nome }}</td>
       {% set val = x.total if x.total is defined else (x.valor if x.valor is defined else none) %}

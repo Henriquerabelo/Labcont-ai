@@ -33,7 +33,8 @@ def _sintetica(conta: str, nivel: int) -> str:
     return ".".join(partes[:nivel])
 
 
-def montar(saldos: dict[str, float]) -> dict:
+def montar(saldos: dict[str, float], mes: str = "2026-01") -> dict:
+    """Saldos acumulados até o fim do mês (no Lucro Real anual as contas de resultado só são encerradas em dezembro)."""
     s = {c: r2(v) for c, v in saldos.items() if abs(r2(v)) >= 0.005}
 
     # ------------------------------------------------------------ DRE
@@ -93,7 +94,8 @@ def montar(saldos: dict[str, float]) -> dict:
     pc_, t_pc = grupo("2.01", "C")
     pnc, t_pnc = grupo("2.03", "C")
     pl, t_pl = grupo("2.07", "C")
-    pl.append({"codigo": "", "rotulo": "Resultado do período (janeiro, antes do encerramento)", "valor": ll, "contas": []})
+    periodo = "janeiro" if mes == "2026-01" else "janeiro e fevereiro acumulados"
+    pl.append({"codigo": "", "rotulo": f"Resultado do período ({periodo}, antes do encerramento)", "valor": ll, "contas": []})
     t_pl = r2(t_pl + ll)
     ativo = r2(t_ac + t_anc)
     passivo_pl = r2(t_pc + t_pnc + t_pl)
@@ -114,7 +116,7 @@ def montar(saldos: dict[str, float]) -> dict:
         are.append({"debito": "Apuração do Resultado do Exercício (ARE)" if ll > 0 else "Lucros ou Prejuízos Acumulados",
                     "credito": "Lucros ou Prejuízos Acumulados" if ll > 0 else "Apuração do Resultado do Exercício (ARE)",
                     "valor": r2(abs(ll)), "final": True})
-    return {"dre": dre, "lucro": ll, "bp": bp, "are": are}
+    return {"dre": dre, "lucro": ll, "bp": bp, "are": are, "mes": mes, "periodo": periodo}
 
 
 def saldos_finais(saldos_ini: dict[str, float], partidas) -> dict[str, float]:

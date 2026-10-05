@@ -24,7 +24,7 @@ from . import plano_contas as pc
 LIMITE_DIARIO = 40  # perguntas por dupla por dia
 
 SISTEMA = """Você é o Tutor do LABCONT-AI, monitor da disciplina Laboratório de Prática Contábil (UFC).
-A dupla está escriturando os fatos de janeiro/2026 da sua empresa simulada (indústria e comércio, Lucro Real, Fortaleza-CE).
+A dupla está escriturando os fatos de {mes_nome}/2026 da sua empresa simulada (indústria e comércio, Lucro Real, Fortaleza-CE).
 
 Como você ajuda:
 - Use o método socrático: devolva perguntas e pistas que levem a dupla a raciocinar sobre o documento, a natureza da operação, os tributos envolvidos e as contas afetadas.
@@ -60,7 +60,7 @@ ROTEIROS = {
     "servico": ["O documento é de serviço tomado ou prestado pela empresa?",
                 "Há retenções na fonte (IRRF, CSRF, INSS, ISS)? Quem é o responsável por recolhê-las?",
                 "A despesa pertence a qual competência e a qual área da empresa?"],
-    "pagamento": ["Onde essa obrigação estava registrada antes do pagamento (balanço de 31/12/2025 ou lançamento de janeiro)?",
+    "pagamento": ["Onde essa obrigação estava registrada antes do pagamento (balanço de 31/12/2025 ou lançamento de um mês anterior)?",
                   "O pagamento quita a dívida inteira ou só uma parte? Há juros, multa ou desconto?"],
     "folha": ["Quais verbas compõem a remuneração de cada empregado e quais descontos incidem sobre ela?",
               "Que encargos são da empresa (INSS patronal, RAT, Terceiros, FGTS) e quais são do empregado?",
@@ -92,6 +92,16 @@ GRUPO_EVENTO = {
     "J18": "folha", "J36": "folha", "J37": "folha", "J04": "financeiro", "J14": "financeiro", "J24": "financeiro",
     "TES": "financeiro", "AJ": "financeiro", "J20": "capital", "J34": "capital", "J01": "resultado", "J40": "apuracao",
     "J19": "geral", "J29": "geral",
+    # fevereiro
+    "F05": "compra", "F10": "compra", "F22": "compra", "F28": "compra", "F04": "venda", "F26": "venda", "F34": "venda",
+    "F36": "venda", "F01": "servico", "F02": "servico", "F03": "servico", "F08": "servico", "F32": "servico", "F41": "servico",
+    "F45": "servico", "F06": "pagamento", "F09": "pagamento", "F11": "pagamento", "F12": "pagamento", "F14": "pagamento",
+    "F16": "pagamento", "F17": "pagamento", "F18": "pagamento", "F19": "pagamento", "F23": "pagamento", "F24": "pagamento",
+    "F29": "pagamento", "F30": "pagamento", "F31": "pagamento", "F35": "pagamento", "F37": "pagamento", "F40": "pagamento",
+    "F42": "pagamento", "F43": "pagamento", "F46": "pagamento", "F13": "recebimento", "F44": "recebimento",
+    "F20": "folha", "F38": "folha", "F39": "folha", "F07": "financeiro", "F27": "financeiro", "F33": "financeiro",
+    "F47": "financeiro", "FTES": "financeiro", "FAJ": "financeiro", "F15": "capital", "F25": "capital", "F48": "apuracao",
+    "F21": "geral",
 }
 
 
@@ -148,7 +158,7 @@ def classe_conta(conta: str) -> str:
 
 
 def contexto(evento: dict | None, docs: list[dict], lancs, regras: list[str], correcao: dict | None,
-             com_valores: bool | None = None, normas: list | None = None) -> str:
+             com_valores: bool | None = None, normas: list | None = None, mes: str = "2026-01") -> str:
     """com_valores: mostra os valores dos lançamentos da dupla (só depois do fechamento). Antes, vão só contas e lados,
     para a IA não repetir o valor digitado como se fosse a resposta."""
     if com_valores is None:
@@ -269,7 +279,8 @@ LEMBRETE = ("\n\n(Lembrete ao tutor: não informe nem calcule valores com os nú
 async def responder(pergunta: str, ctx: str, historico: list[tuple[str, str]], fechado: bool,
                     evento: str | None = None) -> tuple[str, str]:
     """Devolve (texto, origem). origem = 'ia' ou 'roteiro'."""
-    sistema = SISTEMA.format(regra_correcao=REGRA_DEPOIS if fechado else REGRA_ANTES)
+    mes_nome = ("fevereiro" if (evento or "").upper().startswith("F") else "janeiro") if evento else "janeiro e fevereiro"
+    sistema = SISTEMA.format(regra_correcao=REGRA_DEPOIS if fechado else REGRA_ANTES, mes_nome=mes_nome)
     msgs = [{"role": "system", "content": sistema + "\n\nContexto da dupla:\n" + ctx}]
     for papel, texto in historico[-6:]:
         msgs.append({"role": "user" if papel == "aluno" else "assistant", "content": texto})

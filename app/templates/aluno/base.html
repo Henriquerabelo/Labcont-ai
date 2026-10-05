@@ -12,6 +12,7 @@
   <a href="/aluno/demonstracoes" class="{{ 'ativo' if menu == 'demonstracoes' }}">DRE e BP</a>
   <a href="/aluno/tutor" class="{{ 'ativo' if menu == 'tutor' }}">Tutor</a>
   <a href="/aluno/normas" class="{{ 'ativo' if menu == 'normas' }}">Normas</a>
+  {% if meses %}<span class="mes-sel" role="group" aria-label="Mês de trabalho">{% for m, i in meses.items() %}<a href="/aluno/mes/{{ m }}?volta={{ request.url.path }}" class="{{ 'ativo' if m == mes }}" {{ 'aria-current=true' if m == mes }}>{{ i.curto }}</a>{% endfor %}</span>{% endif %}
   <span class="nav-usuario">{% if not visualizacao %}<a href="/aluno/senha" class="{{ 'ativo' if menu == 'senha' }}">Senha</a>{% endif %}<a href="/aluno/sair">{{ 'Sair da visualização' if visualizacao else 'Sair' }}</a></span>
   {% endif %}
 </nav>

@@ -7,9 +7,10 @@
 <div class="breadcrumb"><a href="/duplas">Grupos</a> / <a href="/turmas/{{ t.id }}/duplas">{{ t.disciplina.codigo }} · Turma {{ t.codigo }}</a> / Painel da turma</div>
 <div class="page-head">
   <div><div class="eyebrow">{{ t.rotulo }} · Learning Analytics</div><h1>Painel da turma</h1>
-  <p class="lead">Acompanhamento de janeiro a partir dos dados do próprio sistema: progresso de cada grupo, alertas precoces, onde a turma mais erra e mais pergunta, engajamento diário e notas para homologação.</p></div>
-  <div class="acoes"><a class="btn btn-dark" href="/turmas/{{ t.id }}/notas">Notas de janeiro</a><a class="btn" href="/turmas/{{ t.id }}/duplas">Grupos e códigos</a></div>
+  <p class="lead">Acompanhamento de {{ mes_info.nome }} a partir dos dados do próprio sistema: progresso de cada grupo, alertas precoces, onde a turma mais erra e mais pergunta, engajamento diário e notas para homologação.</p></div>
+  <div class="acoes"><a class="btn btn-dark" href="/turmas/{{ t.id }}/notas?mes={{ mes }}">Notas de {{ mes_info.nome }}</a><a class="btn" href="/turmas/{{ t.id }}/duplas">Grupos e códigos</a></div>
 </div>
+{% include "_mes_abas.html" %}
 
 <div class="aviso {{ 'aviso-ok' if ia.ok else 'aviso-roteiro' }}" role="note">
   {% if ia.ok %}<span><strong>Tutor com IA local ativo</strong> · modelo <span class="mono-sm">{{ ia.modelo }}</span>.</span>
@@ -19,7 +20,7 @@
 <div class="stats stats-7" style="margin:24px 0 16px">
   <div class="stat"><div class="num">{{ r.grupos }}</div><div class="lbl">Grupos</div></div>
   <div class="stat"><div class="num">{{ r.progresso_medio }}<span class="unid">%</span></div><div class="lbl">Progresso médio</div></div>
-  <div class="stat"><div class="num">{{ r.enviados }}<span class="muted unid"> / {{ r.grupos }}</span></div><div class="lbl">Janeiro enviado</div></div>
+  <div class="stat"><div class="num">{{ r.enviados }}<span class="muted unid"> / {{ r.grupos }}</span></div><div class="lbl">{{ mes_info.nome|capitalize }} enviado</div></div>
   <div class="stat"><div class="num">{{ r.media_oficial if r.media_oficial is not none else '—' }}{% if r.media_oficial is not none %}<span class="unid">%</span>{% endif %}</div><div class="lbl">Acerto médio (enviados)</div></div>
   <div class="stat"><div class="num">{{ r.tempo_medio|n(1) if r.tempo_medio is not none else '—' }}{% if r.tempo_medio is not none %}<span class="unid"> d</span>{% endif %}</div><div class="lbl">Tempo médio até o envio</div></div>
   <div class="stat"><div class="num">{{ r.ativos7 }}<span class="muted unid"> / {{ r.grupos }}</span></div><div class="lbl">Ativos em 7 dias</div></div>
@@ -33,7 +34,7 @@
 <section class="card secao" id="visao">
   <div class="card-head"><h3>Visão geral dos grupos</h3><span class="muted mono-sm">ordenado por risco · {% if ve_previa %}% correto = oficial (enviado) ou prévia (calculada agora, a dupla não vê){% else %}correção visível só depois do envio{% endif %}</span></div>
   <div class="table-wrap"><table class="mini">
-    <thead><tr><th>Grupo</th><th style="width:18%">Eventos lançados</th><th style="width:16%">% correto</th><th>Janeiro</th><th>Última atividade</th><th class="num">Perguntas</th><th>Alertas</th><th></th></tr></thead>
+    <thead><tr><th>Grupo</th><th style="width:18%">Eventos lançados</th><th style="width:16%">% correto</th><th>{{ mes_info.nome|capitalize }}</th><th>Última atividade</th><th class="num">Perguntas</th><th>Alertas</th><th></th></tr></thead>
     <tbody>{% for g in an.grupos %}{% set d = g.d %}
       <tr><td><strong>{{ d.rotulo }}</strong><div class="muted mono-sm">{% for mat, nome in g.membros %}{{ nome.split(' ')[0]|title }}{% if not loop.last %} · {% endif %}{% endfor %}</div></td>
         <td><div class="barra" title="{{ g.lancados }} de {{ g.total }} eventos"><span style="width:{{ g.progresso }}%"></span></div><span class="mono-sm">{{ g.lancados }}/{{ g.total }}</span></td>

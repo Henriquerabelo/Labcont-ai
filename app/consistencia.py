@@ -11,29 +11,36 @@ from datetime import date
 
 from . import plano_contas as pc
 from .gabarito import r2
+from .periodos import MESES, mes_do_evento
 
 NIVEIS = {"erro": "Erro estrutural", "aviso": "Aviso", "info": "Informativo"}
-SEM_DATA_FIXA = {"TES", "AJ", "J40"}  # eventos com lançamentos em datas variadas
+SEM_DATA_FIXA = {"TES", "AJ", "J40", "FTES", "FAJ", "F48"}  # eventos com lançamentos em datas variadas
 
 
 def _fmt(v: float) -> str:
     return f"{abs(v):,.2f}".replace(",", "X").replace(".", ",").replace("X", ".")
 
 
-def verificar(saldos_ini: dict[str, float], lancs, datas_evento: dict[str, date] | None = None) -> list[dict]:
+def verificar(saldos_ini: dict[str, float], lancs, datas_evento: dict[str, date] | None = None,
+              mes: str = "2026-01") -> list[dict]:
+    """lancs: lançamentos até o fim do mês (saldos acumulados). Datas e repetições são conferidas só nos do mês."""
     avisos: list[dict] = []
     datas_evento = datas_evento or {}
-    lancados = {l.evento for l in lancs}
+    info_mes = MESES.get(mes, MESES["2026-01"])
+    ini_mes, fim_mes, nome_mes = info_mes["inicio"], info_mes["fim"], info_mes["nome"]
+    do_mes = [l for l in lancs if mes_do_evento(l.evento) == mes]
+    lancados = {l.evento for l in do_mes}
     faltam = [e for e in datas_evento if e not in lancados]
     ressalva = (f" Ainda faltam {len(faltam)} evento(s) do mês: se algum deles movimenta esta conta, o saldo pode se ajustar "
                 "quando for lançado.") if faltam else ""
 
     vistos = {}
-    for l in lancs:
+    for l in do_mes:
         ref = {"lancamento_id": l.id, "evento": l.evento}
-        if not (date(2026, 1, 1) <= l.data <= date(2026, 1, 31)):
-            avisos.append({"nivel": "aviso", "titulo": f"{l.evento}: data fora de janeiro",
-                           "texto": f"O lançamento está em {l.data:%d/%m/%Y}. Janeiro/2026 só aceita fatos de 01 a 31/01 (regime de competência).", **ref})
+        if not (ini_mes <= l.data <= fim_mes):
+            avisos.append({"nivel": "aviso", "titulo": f"{l.evento}: data fora de {nome_mes}",
+                           "texto": f"O lançamento está em {l.data:%d/%m/%Y}. {nome_mes.capitalize()}/2026 só aceita fatos de "
+                                    f"{ini_mes:%d/%m} a {fim_mes:%d/%m} (regime de competência).", **ref})
         elif l.evento in datas_evento and l.evento not in SEM_DATA_FIXA and l.data != datas_evento[l.evento]:
             avisos.append({"nivel": "info", "titulo": f"{l.evento}: data diferente da do evento",
                            "texto": f"O evento é de {datas_evento[l.evento]:%d/%m}; o lançamento está em {l.data:%d/%m}. Confira a data de competência.", **ref})
@@ -62,7 +69,7 @@ def verificar(saldos_ini: dict[str, float], lancs, datas_evento: dict[str, date]
         lado = "credor" if v < 0 else "devedor"
         if c.startswith(("1", "2")):
             avisos.append({"nivel": "erro", "titulo": f"{info['nome']}: saldo {lado}",
-                           "texto": f"A conta é de natureza {'devedora' if info['natureza'] == 'D' else 'credora'} e terminou janeiro com saldo {lado} de R$ {_fmt(v)}. "
+                           "texto": f"A conta é de natureza {'devedora' if info['natureza'] == 'D' else 'credora'} e terminou {nome_mes} com saldo {lado} de R$ {_fmt(v)}. "
                                     "Isso impede o fechamento do balanço — confira os lançamentos desta conta no Razão." + ressalva, "conta": c})
         else:
             avisos.append({"nivel": "aviso", "titulo": f"{info['nome']}: saldo {lado}",
@@ -77,7 +84,7 @@ def verificar(saldos_ini: dict[str, float], lancs, datas_evento: dict[str, date]
     s = float(saldos_ini.get(pc.BANCO, 0.0))
     for dia in sorted(por_dia):
         s += por_dia[dia]
-        if r2(s) < -0.05:
+        if r2(s) < -0.05 and dia >= ini_mes:
             avisos.append({"nivel": "erro", "titulo": f"Banco com saldo negativo em {dia:%d/%m}",
                            "texto": f"Pelos seus lançamentos, o Banco Rico terminou o dia {dia:%d/%m} devendo R$ {_fmt(s)}. "
                                     "Uma conta corrente não fica negativa sem cobertura: releia os contratos financeiros da empresa." + ressalva, "conta": pc.BANCO})

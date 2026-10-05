@@ -1,4 +1,4 @@
-"""Central de documentos (Etapa 4): documentos-fonte de cada evento de janeiro, com os valores da dupla.
+"""Central de documentos (Etapa 4): documentos-fonte de cada evento de janeiro e fevereiro, com os valores da dupla.
 
 Os documentos trazem só os dados de origem (quantidades, preços, impostos destacados, vencimentos) —
 nunca a contabilização. Quando o próprio exercício pede que a dupla calcule um valor (preço pelo mark-up,
@@ -9,7 +9,7 @@ from __future__ import annotations
 
 import hashlib
 
-from .gabarito import ALIQ_IPI, ICMS_INTERESTADUAL, ISS_FORTALEZA, IRRF_SERVICOS, CSRF, ICMS_INTERNO_CE, r2
+from .gabarito import ALIQ_IPI, ICMS_INTERESTADUAL, ISS_CONSTRUCAO, ISS_FORTALEZA, IRRF_SERVICOS, CSRF, ICMS_INTERNO_CE, r2
 from .caso_servico import fmt
 from .orientacao import Valores
 
@@ -149,7 +149,7 @@ def gerar_documentos(valores: dict) -> list[dict]:
         add(evento="J26", data="2026-01-22", tipo="nfse", titulo="NFS-e - construção civil (empreitada com material)", numero="6.300",
             emitente=_parte("Construtor Express Ltda.", "CE", "Fortaleza"), destinatario=empresa,
             servico="Reforma do galpão industrial - parcela inicial de 50% do contrato", codigo_servico="7.02 - Execução de obras de construção civil",
-            valor=parc, materiais=r2(parc * pm / 100), mao_de_obra=r2(parc * (1 - pm / 100)), aliq_iss=ISS_FORTALEZA * 100,
+            valor=parc, materiais=r2(parc * pm / 100), mao_de_obra=r2(parc * (1 - pm / 100)), aliq_iss=ISS_CONSTRUCAO * 100,
             iss=None, iss_retido=True, retencoes=[("INSS (retenção pelo tomador)", None), ("ISS (retenção pelo tomador)", None)],
             liquido=None, vencimento="2026-01-22",
             obs=f"Contrato total de R$ {tot:,.2f}".replace(",", "X").replace(".", ",").replace("X", ".") +
@@ -201,5 +201,80 @@ def gerar_documentos(valores: dict) -> list[dict]:
             valor=h, aliq_iss=ISS_FORTALEZA * 100, iss=r2(h * ISS_FORTALEZA), iss_retido=False,
             retencoes=[("IRRF (1,5%)", r2(h * IRRF_SERVICOS)), ("CSRF - PIS/COFINS/CSLL (4,65%)", r2(h * CSRF))],
             liquido=r2(h - h * IRRF_SERVICOS - h * CSRF), vencimento="2026-02-10")
+    # ================================================================== fevereiro (Etapa 8a)
+    brl = lambda v: f"R$ {v:,.2f}".replace(",", "X").replace(".", ",").replace("X", ".")  # noqa: E731
+    tot = p("evento", "F01", "valor total")
+    if tot:
+        tarifa = p("evento", "F01", "tarifa", 1.432)
+        add(evento="F01", data="2026-02-02", tipo="fatura", titulo="Conta de energia elétrica (modelo 6)", numero="988.333",
+            emitente=_parte("Luz do Sertão Energia S.A. (fictícia)", "CE", "Fortaleza"), destinatario=empresa,
+            classe="B3 - Demais classes (comercial, industrial e poder público)", referencia="02/2026", vencimento="2026-02-12",
+            itens=[{"descricao": "Consumo de energia ativa", "quantidade": round(tot / tarifa, 3), "unidade": "kWh",
+                    "unitario": tarifa, "total": tot}], total=tot,
+            obs="A distribuição do consumo entre as áreas e os setores de produção está na orientação da dupla.")
+    tot = p("evento", "F02", "valor total")
+    if tot:
+        tarifa = p("evento", "F02", "tarifa", 23.62)
+        add(evento="F02", data="2026-02-02", tipo="fatura", titulo="Fatura de água e esgoto", numero="322.666",
+            emitente=_parte("Águas do Litoral Saneamento S.A. (fictícia)", "CE", "Fortaleza"), destinatario=empresa,
+            classe="Industrial - demanda mínima de 15 m³ de água e 12 m³ de esgoto", referencia="02/2026", vencimento="2026-02-12",
+            itens=[{"descricao": "Água e esgoto", "quantidade": round(tot / tarifa, 4), "unidade": "m³", "unitario": tarifa,
+                    "total": tot}], total=tot,
+            obs="A orientação da dupla traz o consumo das áreas administrativa e comercial; o restante é da área industrial.")
+    for desc, emit, val, venc in (("Telefone fixo", "Operadora de Telefonia Fixa", p("evento", "F03", "telefone"), "2026-02-13"),
+                                  ("Celulares em comodato", "Cell Telefonia Ltda.", p("contrato", "C08", "mensalidade", 480), "2026-03-09"),
+                                  ("Internet (cable modem em comodato)", "Internet & Comunicação Ltda.", p("contrato", "C07", "mensalidade", 350), "2026-03-10")):
+        if val:
+            add(evento="F03", data="2026-02-02", tipo="fatura", titulo=f"Nota fiscal de serviço de comunicação - {desc.lower()}",
+                numero="", emitente=_parte(emit, "CE", "Fortaleza"), destinatario=empresa, referencia="02/2026", vencimento=venc,
+                itens=[{"descricao": desc, "quantidade": 1, "unidade": "mês", "unitario": val, "total": val}], total=val)
+    v = p("evento", "F08", "comissão")
+    if v:
+        add(evento="F08", data="2026-02-06", tipo="nfse", titulo="NFS-e - representação comercial", numero="003", emitida_pela_empresa=True,
+            emitente=empresa, destinatario=_parte("Algodão Doce Ltda.", "CE", "Fortaleza"),
+            servico="Comissão pela representação comercial da mercadoria Beta - fevereiro/2026",
+            codigo_servico="10.09 - Representação de qualquer natureza",
+            valor=v, aliq_iss=ISS_FORTALEZA * 100, iss=r2(v * ISS_FORTALEZA), iss_retido=False,
+            retencoes=[("IRRF (1,5%)", r2(v * IRRF_SERVICOS))], liquido=r2(v - v * IRRF_SERVICOS), vencimento="2026-02-08")
+    vm = p("evento", "F27", "valor") or p("contrato", "C10", "valor")
+    if vm:
+        add(evento="F27", data="2026-02-20", tipo="contrato", titulo="Contrato de mútuo com sócia (resumo) e comprovante de transferência",
+            numero="C10", emitente=empresa, destinatario={"nome": "Cassilda Apedeuta (sócia)", "uf": "CE", "cidade": "Fortaleza", "cnpj": "pessoa física"},
+            clausulas=[("Partes", "A empresa (mutuante) empresta à sócia Cassilda Apedeuta (mutuária) - parte relacionada"),
+                       ("Valor transferido em 20/02/2026", brl(vm)),
+                       ("Juros", f"{p('contrato', 'C10', 'taxa', 4):.1f}% ao mês, juros compostos, apropriados por fração diária".replace(".", ",")),
+                       ("Vencimento", "Sem prazo de vencimento; juros compensados com dividendos futuros"),
+                       ("Forma", "Transferência da conta corrente no Banco Rico")])
+    tot, pm = p("contrato", "C12", "valor"), p("contrato", "C12", "material", 40)
+    if tot:
+        parc = r2(tot - r2(tot * 0.5))
+        add(evento="F32", data="2026-02-23", tipo="nfse", titulo="NFS-e - construção civil (empreitada com material)", numero="6.320",
+            emitente=_parte("Construtor Express Ltda.", "CE", "Fortaleza"), destinatario=empresa,
+            servico="Reforma do galpão industrial - 2ª e última parcela (50%); obra concluída e entregue",
+            codigo_servico="7.02 - Execução de obras de construção civil",
+            valor=parc, materiais=r2(parc * pm / 100), mao_de_obra=r2(parc * (1 - pm / 100)), aliq_iss=ISS_CONSTRUCAO * 100,
+            iss=None, iss_retido=True, retencoes=[("INSS (retenção pelo tomador)", None), ("ISS (retenção pelo tomador)", None)],
+            liquido=None, vencimento="2026-02-23",
+            obs="Vencimento na apresentação. Retenções a calcular pelo tomador sobre a mão de obra.")
+    h = p("contrato", "C05", "honor", 8800)
+    if h:
+        add(evento="F41", data="2026-02-26", tipo="nfse", titulo="NFS-e - recrutamento e seleção de pessoal", numero="345",
+            emitente=_parte("Recrutamento S/S", "CE", "Fortaleza"), destinatario=empresa,
+            servico="Recrutamento e seleção de pessoal - contrato de janeiro e fevereiro/2026",
+            codigo_servico="17.04 - Recrutamento, agenciamento, seleção e colocação de mão de obra",
+            valor=h, aliq_iss=ISS_FORTALEZA * 100, iss=r2(h * ISS_FORTALEZA), iss_retido=False,
+            retencoes=[("IRRF (retenção pelo tomador)", None)], liquido=None, vencimento="2026-02-24",
+            obs="Honorários contratados para os dois meses (metade por mês). Retenções na fonte a calcular pelo tomador.")
+    h0 = p("contrato", "C06", "honorário", 5500)
+    if h0:
+        reaj = p("contrato", "C06", "reajuste", 25.45)
+        h = round(h0 * (1 + reaj / 100) / 100) * 100
+        add(evento="F45", data="2026-02-27", tipo="nfse", titulo="NFS-e - assessoria contábil", numero="024",
+            emitente=_parte("Contador Formado S/S", "CE", "Fortaleza"), destinatario=empresa,
+            servico="Serviços de assessoria contábil - competência fevereiro/2026 (honorário reajustado conforme contrato)",
+            codigo_servico="17.19 - Contabilidade",
+            valor=h, aliq_iss=ISS_FORTALEZA * 100, iss=r2(h * ISS_FORTALEZA), iss_retido=False,
+            retencoes=[("IRRF (1,5%)", r2(h * IRRF_SERVICOS)), ("CSRF - PIS/COFINS/CSLL (4,65%)", r2(h * CSRF))],
+            liquido=r2(h - h * IRRF_SERVICOS - h * CSRF), vencimento="2026-03-05")
     docs.sort(key=lambda d: (d["data"], d["evento"]))
     return docs

@@ -19,7 +19,7 @@ router = APIRouter()
 OPERACOES = {
     "lancamentos": "Excluir todos os lançamentos dos grupos selecionados",
     "tutor": "Excluir as conversas com o tutor dos grupos selecionados",
-    "reabrir": "Reabrir o fechamento de janeiro dos grupos selecionados",
+    "reabrir": "Reabrir os fechamentos enviados (janeiro e fevereiro) dos grupos selecionados",
     "contas": "Excluir as senhas (contas) dos alunos selecionados — farão o primeiro acesso de novo",
     "discentes": "Excluir os discentes selecionados do sistema (com matrículas, grupos e contas)",
 }

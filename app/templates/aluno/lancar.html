@@ -2,9 +2,9 @@
 {% set menu = 'lancar' %}
 {% block titulo %}{{ 'Editar lançamento' if lanc_id else 'Novo lançamento' }}{% endblock %}
 {% block conteudo %}
-<div class="page-head" style="margin-bottom:24px"><div><div class="eyebrow">{{ d.empresa.valores.empresa.nome }} · escrituração de janeiro/2026</div>
+<div class="page-head" style="margin-bottom:24px"><div><div class="eyebrow">{{ d.empresa.valores.empresa.nome }} · escrituração de {{ mes_info.nome }}/2026</div>
   <h1>{{ 'Editar lançamento' if lanc_id else 'Novo lançamento' }}</h1></div>
-  <div class="acoes">{% if dados.evento %}<a class="btn" href="/aluno/documentos">Documentos</a>{% endif %}<a class="btn" href="/aluno">Voltar ao painel</a></div></div>
+  <div class="acoes">{% if dados.evento %}<a class="btn" href="/aluno/documentos?mes={{ mes }}">Documentos</a>{% endif %}<a class="btn" href="/aluno?mes={{ mes }}">Voltar ao painel</a></div></div>
 
 <form class="card lanc" method="post" action="{{ '/aluno/lancamentos/%s/editar'|format(lanc_id) if lanc_id else '/aluno/lancar' }}" id="form-lanc">
   <div class="form-grid">
@@ -12,7 +12,7 @@
       <select id="evento" name="evento" required><option value="">Escolha o evento…</option>
         {% for e in eventos %}<option value="{{ e.codigo }}" data-data="{{ e.data.isoformat() }}" {{ 'selected' if e.codigo == dados.evento }}>{{ e.codigo }} · {{ e.data.strftime('%d/%m') }} · {{ e.descricao[:90] }}</option>{% endfor %}
       </select></div>
-    <div class="field"><label for="data">Data</label><input id="data" type="date" name="data" value="{{ dados.data or '' }}" min="2026-01-01" max="2026-01-31" required></div>
+    <div class="field"><label for="data">Data</label><input id="data" type="date" name="data" value="{{ dados.data or '' }}" min="{{ mes_info.inicio.isoformat() }}" max="{{ mes_info.fim.isoformat() }}" required></div>
     <div class="field full"><label for="historico">Histórico</label><input id="historico" name="historico" value="{{ dados.historico or '' }}" placeholder="Ex.: Compra de mercadorias conforme NF 3.369 de Comercial Elegante" required></div>
   </div>
   <datalist id="contas">{% for c in contas %}<option value="{{ c }}">{% endfor %}</datalist>

@@ -3,9 +3,10 @@
 {% block conteudo %}
 <div class="breadcrumb"><a href="/duplas">Duplas</a> / <a href="/turmas/{{ d.turma.id }}/duplas">{{ d.turma.disciplina.codigo }} · Turma {{ d.turma.codigo }}</a> / <a href="{{ voltar_url }}">{{ d.rotulo }}</a> / Gabarito</div>
 <div class="page-head">
-  <div><div class="eyebrow">Gabarito de janeiro/2026 · uso do professor</div><h1>{{ titulo }}</h1>
-  <p class="lead">Lançamentos corretos de cada evento de janeiro com os valores desta dupla, memória de cálculo e balancete de 31/01. Base para a auditoria da escrituração (Etapa 5).</p></div>
+  <div><div class="eyebrow">Gabarito de {{ mes_info.nome }}/2026 · uso do professor</div><h1>{{ titulo }}</h1>
+  <p class="lead">Lançamentos corretos de cada evento de {{ mes_info.nome }} com os valores desta dupla, memória de cálculo e balancete de {{ mes_info.fim.strftime('%d/%m') }}. Base para a auditoria da escrituração.</p></div>
   <div class="acoes"><a class="btn" href="{{ voltar_url }}">Voltar à empresa</a><a class="btn btn-sm" href="{{ xlsx }}" title="Cópia opcional para arquivo">Exportar .xlsx</a></div>
 </div>
+{% include "_mes_abas.html" %}
 {% include "gabarito/_conteudo.html" %}
 {% endblock %}

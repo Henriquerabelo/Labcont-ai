@@ -15,11 +15,31 @@ from datetime import date
 
 from . import plano_contas as pc
 from .gabarito import Gabarito, r2
+from .periodos import MESES, do_mes
 
 TOLERANCIA = 0.05  # R$ por conta, para diferenças de arredondamento
 ESPECIAIS = {"TES": "Tesouraria: resgates automáticos e conta garantida", "AJ": "Ajustes de fim de mês (apropriações e juros)",
-             "J40": "Apuração dos tributos de janeiro"}
-NIVEIS = {"correto": "Correto", "valor": "Valor divergente", "conta": "Conta errada", "pendente": "Pendente"}
+             "J40": "Apuração dos tributos de janeiro",
+             "FTES": "Tesouraria de fevereiro: resgates automáticos e conta garantida",
+             "FAJ": "Ajustes de fim de fevereiro (apropriações e juros)", "F48": "Apuração dos tributos de fevereiro"}
+NIVEIS = {"correto": "Correto", "valor": "Valor divergente", "conta": "Conta errada", "pendente": "Pendente",
+          "preparo": "Correção em preparação"}
+
+
+def eventos_mes(caso=None, mes: str = "2026-01") -> list[dict]:
+    if mes != "2026-02":
+        return eventos_janeiro(caso)
+    desc = {e.codigo: e.descricao for e in caso.eventos if e.data and e.data.month == 2} if caso else {}
+    out = [{"codigo": ev, "data": date(2026, 2, min(dia, 28)), "descricao": desc.get(ev, ESPECIAIS.get(ev, ev))}
+           for ev, (dia, _) in sorted(Gabarito.EVENTOS_FEV.items(), key=lambda kv: (kv[1][0], kv[0]))]
+    out.append({"codigo": "FTES", "data": date(2026, 2, 28), "descricao": ESPECIAIS["FTES"]})
+    out.append({"codigo": "FAJ", "data": date(2026, 2, 28), "descricao": ESPECIAIS["FAJ"]})
+    return out
+
+
+def eventos_ate(caso=None, mes: str = "2026-01") -> list[dict]:
+    """Eventos de todos os meses até o informado (para validar códigos digitados)."""
+    return [e for m in MESES if m <= mes for e in eventos_mes(caso, m)]
 
 
 def eventos_janeiro(caso=None) -> list[dict]:
@@ -84,6 +104,8 @@ def dica(r: dict) -> str:
         return "Lançamento confere com o gabarito."
     if r["nivel"] == "pendente":
         return "Evento ainda não escriturado."
+    if r["nivel"] == "preparo":
+        return "A correção automática deste evento ainda está em preparação; o professor confere no fechamento."
     partes = []
     if r["sobram"]:
         partes.append("conta(s) que não se aplicam a este evento: " + ", ".join(nome(c) for c in r["sobram"]))
@@ -98,17 +120,27 @@ def dica(r: dict) -> str:
 
 
 def auditar(g: dict, lancs, caso=None) -> dict:
+    """Correção do mês do gabarito (g["mes"]); só os lançamentos dos eventos desse mês entram."""
+    mes = g.get("mes", "2026-01")
+    lancs = do_mes(lancs, mes)
     ng, na = net_gabarito(g), net_aluno(lancs)
+    preparo, sem_efeito = set(g.get("sem_gabarito") or []), set(g.get("sem_efeito") or [])
+    vazio = {"linhas": [], "faltam": [], "sobram": [], "trocadas": [], "divergentes": []}
     eventos = []
-    for e in eventos_janeiro(caso):
+    for e in eventos_mes(caso, mes):
         ev = e["codigo"]
-        if ev not in na:
-            r = {"nivel": "pendente", "linhas": [], "faltam": [], "sobram": [], "trocadas": [], "divergentes": []}
+        if ev in preparo:
+            r = {"nivel": "preparo", **vazio}
+        elif ev not in na:
+            r = {"nivel": "correto" if ev in sem_efeito else "pendente", **vazio}
         else:
             r = comparar(ng.get(ev, {}), na[ev])
         r.update(e)
         r["dica"] = dica(r)
-        r["sem_gabarito"] = ev not in ng
+        if ev in sem_efeito and ev not in na:
+            r["dica"] = "Não havia valor a registrar neste evento."
+        r["sem_gabarito"] = ev in preparo or (ev not in ng and ev not in sem_efeito)
+        r["lancado"] = ev in na
         eventos.append(r)
     for ev in sorted(set(na) - {e["codigo"] for e in eventos}):  # evento digitado que não existe
         r = comparar({}, na[ev])
@@ -116,7 +148,8 @@ def auditar(g: dict, lancs, caso=None) -> dict:
         eventos.append(r)
     cont = defaultdict(int)
     for r in eventos:
-        cont[r["nivel"]] += 1
+        if not r.get("sem_gabarito"):
+            cont[r["nivel"]] += 1
     total = sum(1 for e in eventos if not e.get("sem_gabarito"))
     return {"eventos": eventos, "contagem": dict(cont), "total": total,
             "percentual": round(100 * cont["correto"] / total) if total else 0}

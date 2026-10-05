@@ -56,13 +56,55 @@ FICHAS = [
                "antecipação parcial das entradas de outros estados.",
          palavras="aliquota interna ceara 20 modal icms geral",
          eventos="J08,J15,J27,J35"),
-    dict(codigo="ISS-FOR", titulo="ISS em Fortaleza", fonte="Lei Complementar municipal 159/2013 (Código Tributário do Município de Fortaleza); LC 116/2003",
-         texto="Em Fortaleza o ISS segue o Código Tributário do Município, que reproduz a lista de serviços da LC 116/2003 e "
-               "define alíquotas, responsáveis tributários e retenção na fonte. Quando o tomador é o responsável (por exemplo, em "
-               "obras de construção civil ou serviços de autônomo sem inscrição), ele retém o ISS do valor pago e o recolhe ao "
-               "município; o prestador que fatura serviço registra o ISS como dedução da receita.",
-         palavras="iss fortaleza codigo tributario municipal retencao responsavel aliquota servico autonomo construcao",
-         eventos="J12,J16,J23,J26"),
+    dict(codigo="ISS-FOR", titulo="ISS em Fortaleza: fato gerador, contribuinte, base e alíquotas",
+         fonte="Código Tributário do Município de Fortaleza (LC municipal 159/2013, atualizado até a LC 452/2025), arts. 223, § 2º, III, 229, 240 e 245; LC 116/2003",
+         texto="O ISS incide sobre a prestação dos serviços da lista do Anexo I do CTM e o fato gerador independe do "
+               "recebimento do preço (art. 223, § 2º, III): o imposto é reconhecido na competência em que a nota de serviço é "
+               "emitida. O contribuinte é o prestador (art. 229) e a base de cálculo é o preço do serviço (art. 240). As alíquotas "
+               "(art. 245) são 2% para alguns subitens (ex.: 8.1, 16.1), 3% para os itens 4 e 5 e os subitens 7.2, 7.4 e 7.5 "
+               "(construção civil e afins) e 5% para os demais serviços, como representação comercial (subitem 10.9). Para quem "
+               "presta o serviço, o ISS é dedução da receita bruta contra ISS a recolher; o pagamento segue os prazos do regulamento (art. 255).",
+         palavras="iss issqn fortaleza ctm codigo tributario municipal aliquota 5 3 2 lista servicos anexo representacao comissao nfse prestador competencia deducao",
+         eventos="J12,J16,J40"),
+    dict(codigo="ISS-FOR-02", titulo="Retenção do ISS na fonte pelo tomador (Fortaleza)",
+         fonte="Código Tributário do Município de Fortaleza (LC municipal 159/2013, atualizado até a LC 452/2025), arts. 230, 232, 233, 236, 237 e 239",
+         texto="Em certos casos quem contrata o serviço retém o ISS do valor pago e o recolhe ao município. São substitutos "
+               "tributários (art. 230, II) pessoas jurídicas de alguns ramos, entre elas construtoras e indústrias de transformação; "
+               "o art. 232 dispensa a retenção quando o prestador é, por exemplo, autônomo inscrito e em dia com o imposto, "
+               "sociedade de profissionais em dia com o valor fixo, MEI ou concessionária de serviço público. Também é "
+               "responsável (art. 233) quem toma serviço de autônomo sem inscrição ou sem prova de quitação (inciso IV) e de "
+               "prestador de fora que não emite documento fiscal (inciso VI). O tomador responde pelo imposto mesmo que não o "
+               "tenha retido (art. 236), e quem não é substituto nem responsável não pode reter (art. 239). Contabilmente o valor "
+               "retido sai do valor pago ao prestador e vira obrigação (ISS retido a recolher) do tomador.",
+         palavras="retencao retido fonte tomador substituto responsavel tributario iss issqn recolher autonomo rpa construtora industria dispensa",
+         eventos="J23,J26,J39"),
+    dict(codigo="ISS-FOR-03", titulo="ISS na construção civil: materiais, alíquota e local",
+         fonte="Código Tributário do Município de Fortaleza (LC municipal 159/2013, atualizado até a LC 452/2025), arts. 224, § 1º, III, 240, §§ 4º, I, e 5º, e 245, II",
+         texto="Nas obras de construção civil e reformas (subitens 7.2 e 7.5 da lista), o valor dos materiais fornecidos pelo "
+               "prestador não entra na base de cálculo do ISS (art. 240, § 4º, I): o imposto incide sobre a parcela de serviço "
+               "(mão de obra). A alíquota desses subitens em Fortaleza é de 3% (art. 245, II), e o imposto é devido no local da "
+               "obra (art. 224, § 1º, III). Nenhuma dedução pode levar a carga abaixo de 2% do preço (art. 240, § 5º).",
+         palavras="construcao civil obra reforma empreitada material materiais mao obra galpao 3 base deducao local execucao",
+         eventos="J26"),
+    dict(codigo="ISS-FOR-04", titulo="ISS do profissional autônomo",
+         fonte="Código Tributário do Município de Fortaleza (LC municipal 159/2013, atualizado até a LC 452/2025), arts. 233, IV, e 246 a 248",
+         texto="O autônomo inscrito no cadastro municipal e em dia paga o ISS por valor fixo anual (art. 246; R$ 600 quando a "
+               "profissão exige nível superior) e, nesse caso, o tomador não retém. Se não for inscrito, ou se inscrito não "
+               "comprovar a quitação do valor fixo, o tomador retém o ISS sobre o preço do serviço pela alíquota da atividade "
+               "(arts. 233, IV, e 246, § 3º), e essa retenção é tributação definitiva (art. 246, § 4º). Pessoa física não inscrita "
+               "é equiparada à pessoa jurídica para fins do imposto (art. 247, § 2º).",
+         palavras="autonomo rpa recibo pagamento pessoa fisica valor fixo anual inscricao cadastro quitacao arquiteto profissional liberal retencao",
+         eventos="J23"),
+    dict(codigo="ICMS-09", titulo="Como consultar o Regulamento do ICMS do Ceará (RICMS-CE)",
+         fonte="Decretos estaduais 33.327/2019, 35.061/2022, 34.605/2022 e 24.569/1997; portal Sefaz Legis (sefazlegis.sefaz.ce.gov.br)",
+         texto="O RICMS-CE não está mais em um arquivo único: foi dividido em livros, cada um em um decreto. Livro I, parte geral "
+               "(fato gerador, base de cálculo, alíquotas, isenções, créditos): Decreto 33.327/2019. Livro II, obrigações acessórias "
+               "(cadastro CGF, documentos fiscais, escrituração digital): Decreto 35.061/2022. Livro IV, fiscalização, infrações, "
+               "penalidades e consulta: Decreto 34.605/2022. Procedimentos especiais, como substituição tributária e regimes "
+               "especiais, seguem nos dispositivos e anexos remanescentes do Decreto 24.569/1997. Os textos oficiais e "
+               "atualizados ficam no portal de legislação da Sefaz-CE (Sefaz Legis); a lei do imposto é a Lei estadual 12.670/1996.",
+         palavras="ricms regulamento icms ceara decreto consultar onde legislacao sefaz livro cgf substituicao tributaria penalidade",
+         eventos="J15,J29,J35,J40"),
     # ---------------------------------------------------------------- PL e destinação
     dict(codigo="PL-01", titulo="Capital subscrito e capital a integralizar", fonte="Lei 6.404/76, art. 182; Código Civil, arts. 1.052 e 1.055",
          texto="O capital social é apresentado pelo valor subscrito e, por dedução, a parcela ainda não realizada (capital a "
@@ -140,7 +182,7 @@ FICHAS = [
                "de destino a diferença entre a sua alíquota interna e a interestadual. O DIFAL é recolhido pelo adquirente e, "
                "quando não há crédito, integra o custo do bem.",
          palavras="difal diferencial aliquota uso consumo ativo destino adquirente", eventos="J08,J35"),
-    dict(codigo="ICMS-05", titulo="Antecipação parcial do ICMS", fonte="Lei estadual 12.670/1996 e RICMS-CE (Decreto 33.327/2019)",
+    dict(codigo="ICMS-05", titulo="Antecipação parcial do ICMS", fonte="Lei estadual 12.670/1996 e RICMS-CE, Livro I (Decreto 33.327/2019)",
          texto="Na entrada interestadual de mercadoria para revenda, o Ceará exige o recolhimento antecipado de parte do imposto: "
                "a diferença entre a alíquota interna e a interestadual sobre a base da operação. O valor recolhido não é custo: "
                "é crédito aproveitado na apuração do ICMS.",

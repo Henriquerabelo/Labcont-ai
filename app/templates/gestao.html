@@ -4,7 +4,7 @@
 <div class="page-head">
   <div><div class="eyebrow">{{ usuario.rotulo_perfis if usuario and not usuario.dev else 'Gestão' }} · Learning Analytics</div>
   <h1>{% if usuario and usuario.gestor %}Painel de Gestão{% else %}Olá, {{ usuario.nome.split(' ')[0]|title }}{% endif %}</h1>
-  <p class="lead">{% if usuario and usuario.gestor %}Todas as turmas em andamento: adesão dos alunos, progresso de janeiro, envios, acerto, uso do tutor e notas homologadas. Abra o painel de uma turma para os alertas, a matriz de calor e o engajamento.{% elif usuario and 'visitante' in usuario.perfis and usuario.so_leitura %}Modo de avaliação: navegue pela turma de demonstração (dados fictícios). Nada pode ser alterado.{% elif usuario and usuario.so_leitura %}Turmas que você acompanha, em modo de leitura.{% else %}Suas turmas. Em cada uma: painel com alertas e matriz de calor, grupos, escrituração, tutor e notas.{% endif %}</p></div>
+  <p class="lead">{% if usuario and usuario.gestor %}Todas as turmas em andamento: adesão dos alunos, progresso de janeiro e fevereiro, envios, acerto, uso do tutor e notas homologadas. Abra o painel de uma turma para os alertas, a matriz de calor e o engajamento.{% elif usuario and 'visitante' in usuario.perfis and usuario.so_leitura %}Modo de avaliação: navegue pela turma de demonstração (dados fictícios). Nada pode ser alterado.{% elif usuario and usuario.so_leitura %}Turmas que você acompanha, em modo de leitura.{% else %}Suas turmas. Em cada uma: painel com alertas e matriz de calor, grupos, escrituração, tutor e notas.{% endif %}</p></div>
 </div>
 
 <div class="stats stats-7" style="margin-bottom:24px">
@@ -20,14 +20,14 @@
 <section class="card secao">
   <div class="card-head"><h3>Turmas</h3><span class="muted mono-sm">tutor: {{ 'IA local ativa (' ~ ia.modelo ~ ')' if ia.ok else 'modo roteiro' }}</span></div>
   <div class="table-wrap"><table class="mini">
-    <thead><tr><th>Turma</th><th class="num">Grupos</th><th style="width:13%">Adesão</th><th style="width:15%">Progresso de janeiro</th><th class="num">Enviados</th><th class="num">Tempo médio</th><th class="num">Acerto</th><th class="num">Perguntas</th><th class="num">Notas</th><th>Última atividade</th><th></th></tr></thead>
+    <thead><tr><th>Turma</th><th class="num">Grupos</th><th style="width:13%">Adesão</th><th style="width:15%">Progresso (jan + fev)</th><th class="num">Enviados (jan · fev)</th><th class="num">Tempo médio</th><th class="num">Acerto</th><th class="num">Perguntas</th><th class="num">Notas</th><th>Última atividade</th><th></th></tr></thead>
     <tbody>{% for x in linhas %}{% set t = x.t %}
       <tr><td><a href="/turmas/{{ t.id }}"><strong>{{ t.disciplina.codigo }} · Turma {{ t.codigo }}</strong></a><div class="muted mono-sm">{{ t.periodo }} · {{ x.matriculados }} matriculados
           {% if x.status and x.status.encerrada_em %}<span class="tag">encerrada</span>{% endif %}{% if x.status and x.status.demonstracao %}<span class="tag tag-ok">demonstração</span>{% endif %}</div></td>
         <td class="num">{{ x.grupos }}</td>
         <td><div class="barra" title="{{ x.contas }} de {{ x.alunos }} alunos com senha"><span style="width:{{ x.adesao }}%"></span></div><span class="mono-sm">{{ x.adesao }}%</span></td>
         <td><div class="barra" title="eventos lançados / eventos do mês × grupos"><span style="width:{{ x.progresso }}%"></span></div><span class="mono-sm">{{ x.progresso }}%</span></td>
-        <td class="num">{{ x.enviados }}/{{ x.grupos }}</td><td class="num">{{ (x.tempo_medio|n(1) ~ ' d') if x.tempo_medio is not none else '—' }}</td><td class="num">{{ (x.media ~ '%') if x.media is not none else '—' }}</td>
+        <td class="num" title="janeiro · fevereiro">{{ x.enviados }} · {{ x.enviados_fev }}/{{ x.grupos }}</td><td class="num">{{ (x.tempo_medio|n(1) ~ ' d') if x.tempo_medio is not none else '—' }}</td><td class="num">{{ (x.media ~ '%') if x.media is not none else '—' }}</td>
         <td class="num">{{ x.perguntas }}</td><td class="num">{{ x.homologadas or '—' }}</td>
         <td class="mono-sm">{{ x.ultima.strftime('%d/%m %H:%M') if x.ultima else '—' }}{% if x.parada %} <span class="alerta alerta-alto" title="Sem atividade dos grupos há mais de 7 dias">▲ parada</span>{% endif %}</td>
         <td class="num" style="white-space:nowrap">{% if x.grupos %}<a class="btn btn-sm btn-dark" href="/turmas/{{ t.id }}/painel">Painel</a> {% endif %}<a class="btn btn-sm" href="/turmas/{{ t.id }}/duplas">Grupos</a></td></tr>

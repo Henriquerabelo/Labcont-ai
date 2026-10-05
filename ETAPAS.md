@@ -229,4 +229,66 @@ Entrada da equipe em **/entrar** (login + senha); alunos em **/aluno** (matrícu
 - **A4 · Tempo até o envio:** do primeiro lançamento ao fechamento, por grupo, por turma e no Painel de Gestão.
 - **A5 · Privacidade (LGPD):** página `/privacidade`, link no rodapé e ciência obrigatória no primeiro acesso do aluno (registrada no histórico). Contato configurável em `APP_CONTATO_PRIVACIDADE` no `.env`.
 - **A6 · Sem marcas reais:** Enel e Cagece substituídas por concessionárias fictícias nos eventos do caso (inclusive nos casos já cadastrados), nos documentos, nos históricos do gabarito e no modelo da orientação .docx.
-- **A7 · Repositório público anônimo:** `python deploy/exportar_publico.py` gera a pasta `LABCONT-AI Publico` sem dados pessoais, sem arquivos internos, sem o nome do repositório privado nem o IP do servidor e com metadados dos .docx limpos.
+- **A7 · Repositório público:** `python deploy/exportar_publico.py` atualiza https://github.com/Henriquerabelo/labcont-ai-ai a partir da pasta `LABCONT-AI Publico`, sem dados pessoais, sem arquivos internos e sem o IP do servidor.
+
+### Base normativa com artigos (05/10)
+
+- **CTM de Fortaleza (LC 159/2013, atualizado até a LC 452/2025)**, conferido no texto consolidado:
+  - **ISS-FOR**: fato gerador independe do recebimento (art. 223, § 2º, III), contribuinte (229), base (240), alíquotas 2/3/5% (245).
+  - **ISS-FOR-02**: retenção pelo tomador (arts. 230, 232, 233, 236, 237, 239).
+  - **ISS-FOR-03**: construção civil, materiais fora da base, alíquota de 3% e local da obra (arts. 224, § 1º, III; 240, §§ 4º e 5º; 245, II).
+  - **ISS-FOR-04**: autônomo, valor fixo anual ou retenção (arts. 233, IV; 246 a 248).
+- **ICMS-09 · Como consultar o RICMS-CE:**
+  - Livro I: Decreto 33.327/2019;
+  - Livro II: Decreto 35.061/2022;
+  - Livro IV: Decreto 34.605/2022;
+  - remanescentes do Decreto 24.569/1997;
+  - portal Sefaz Legis.
+- **P12 corrigida:** a premissa P12 (reforma do galpão, J26) passou de ISS 5% para **3%** sobre a mão de obra (art. 245, II, do CTM, subitem 7.2; materiais fora da base pelo art. 240, § 4º, I). O exercício manda consultar a alíquota específica do serviço. A NFS-e da Construtor Express também mostra 3%. No caso-base o ISS retido da 1ª parcela cai de R$ 3.420,00 para R$ 2.052,00. Como o gabarito é calculado na hora, todas as duplas já veem o valor novo.
+
+---
+
+## Etapa 8 · Fevereiro (em 5 partes)
+
+Decisões do professor (05/10): fevereiro completo, em etapas; **os dois meses livres desde o início**, cada um com o seu fechamento; a escrituração de fevereiro **continua a do próprio grupo**: os saldos de abertura vêm dos lançamentos de janeiro da dupla, e a correção continua sendo feita por evento.
+
+### 8a · Mês no sistema e eventos sem produção
+
+- **Meses:**
+  - `app/periodos.py`: o mês sai do código do evento (J.., TES, AJ = janeiro; F.., FTES, FAJ = fevereiro).
+  - Na área do aluno, o seletor **Jan | Fev** fica no menu e o mês escolhido é lembrado.
+  - Painel, lançar, diário, balancete (abertura = 31/12/2025 + janeiro do grupo), DRE e BP (acumulado), documentos, tutor e conferência imediata funcionam por mês.
+  - A data do lançamento precisa estar no mês do evento.
+- **Fechamento por mês:**
+  - O envio de fevereiro é independente do de janeiro.
+  - Enviar um mês bloqueia só esse mês.
+  - O professor reabre cada mês separadamente.
+  - A operação em lote "Reabrir" vale para os dois meses.
+- **Equipe (abas Janeiro/2026 | Fevereiro/2026):**
+  - Escrituração do grupo, gabarito (tela e .xlsx), DRE e Balanço, painel da turma (Learning Analytics) e notas (homologação por mês).
+  - A tela de grupos mostra o andamento de fevereiro; o Painel de Gestão mostra o progresso dos dois meses e os envios de janeiro e de fevereiro.
+- **Gabarito de fevereiro** (`gerar_gabarito(valores, "2026-02")`):
+  - Roda janeiro e continua dos saldos de 31/01.
+  - Eventos prontos: F01–F03, F06–F09, F11–F19, F24, F25, F27, F29–F33, F37–F43, F45–F47.
+  - Os demais ficam "em preparação": podem ser lançados, mas ficam fora da correção.
+  - FTES e FAJ ficam provisórios até a 8e.
+  - Um evento sem nada a lançar (ex.: aplicação sem saldo) conta como correto se o grupo não lançar nada.
+- **Premissas novas P27–P37** (a validar):
+  - pagamentos da competência 01 pelos saldos de 31/01; IRRF e CSRF de 12/2025 sem evento de pagamento;
+  - CIF e utilidades com área industrial;
+  - Ar Frio 45% e NF 23.456 30%;
+  - reforma concluída e transferida para Edifícios;
+  - parcela SAC do leasing com juros desde 20/01 e reclassificação longo → curto prazo;
+  - mútuo à sócia no Realizável a Longo Prazo, com juros por fração diária;
+  - recrutamento com IRRF 1,5% e sem CSRF (SC Disit/SRRF08 8.048/2018);
+  - contador reajustado;
+  - VT e VA de março;
+  - rendimentos e resgate.
+- **Plano de contas:**
+  - CIF a apropriar (energia, água, telefones e internet);
+  - Água e Esgoto - Vendas;
+  - Mútuo a Receber - sócia (Realizável a Longo Prazo);
+  - Juros Ativos - Mútuo.
+- **Documentos de fevereiro:** energia, água, telefonia, NFS-e 003 (comissão), contrato de mútuo, NFS-e 6.320 (reforma), NFS-e 345 (recrutamento), NFS-e 024 (contador).
+- **Turma de demonstração:** os grupos que enviaram janeiro já têm parte de fevereiro lançada.
+- **Testes:** `tests/test_fevereiro.py`; 63 passando.

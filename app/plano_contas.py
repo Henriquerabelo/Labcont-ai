@@ -23,9 +23,12 @@ SINTETICAS = {
     "1.01.15": "Estoques",
     "1.01.15.01.01": "Estoque de Mercadorias",
     "1.01.15.01.02": "Estoque de Matérias-Primas e Materiais",
+    "1.01.15.03": "Custos Indiretos de Fabricação a Apropriar",
     "1.01.17": "Despesas Antecipadas do Exercício Vigente",
     "1.01.17.01.01": "Despesas Antecipadas",
     "1.07": "Ativo não Circulante",
+    "1.07.01": "Realizável a Longo Prazo",
+    "1.07.01.03": "Créditos com Pessoas Ligadas",
     "1.07.04": "Imobilizado",
     "1.07.04.01": "Bens em Operação",
     "1.07.04.01.01": "Bens Utilizados na Produção e/ou Prestação de Serviços",
@@ -91,7 +94,12 @@ ANALITICAS: list[tuple[str, str, str, float]] = [
     ("1.01.05.01.07.0004-0", "Vale-Alimentação", "D", 1773.00),
     ("1.01.15.01.01.0001-5", "Mercadorias para Revenda - ALPHA", "D", 8680.00),
     ("1.01.15.01.02.0001", "Matéria-Prima A (MP-A)", "D", 0),
+    ("1.01.15.03.0001", "Energia Elétrica - CIF", "D", 0),
+    ("1.01.15.03.0002", "Água e Esgoto - CIF", "D", 0),
+    ("1.01.15.03.0003", "Telefones e Internet - CIF", "D", 0),
     ("1.01.17.01.01.0001-1", "Prêmios de Seguros a Apropriar", "D", 5250.00),
+    # ----- Realizável a longo prazo
+    ("1.07.01.03.0001", "Mútuo a Receber - Cassilda Apedeuta (sócia)", "D", 0),
     # ----- Imobilizado
     ("1.07.04.01.01.0001-8", "Terrenos", "D", 310000.00),
     ("1.07.04.01.01.0002-6", "Edifícios e Construções", "D", 125000.00),
@@ -194,9 +202,11 @@ ANALITICAS: list[tuple[str, str, str, float]] = [
     ("3.01.01.07.02.0018", "Energia Elétrica - Vendas", "D", 0),
     ("3.01.01.07.02.0019", "Telefones e Internet - Vendas", "D", 0),
     ("3.01.01.07.02.0020", "Depreciação - Vendas", "D", 0),
+    ("3.01.01.07.02.0021", "Água e Esgoto - Vendas", "D", 0),
     ("3.01.01.07.03.0001", "ICMS - Auto de Infração", "D", 0),
     ("3.01.01.07.03.0002", "Multas Fiscais (indedutíveis)", "D", 0),
     ("3.01.01.09.01.0001", "Rendimentos de Aplicações Financeiras", "C", 0),
+    ("3.01.01.09.01.0002", "Juros Ativos - Mútuo com Sócia", "C", 0),
     ("3.01.01.09.02.0001", "Juros - Conta Garantida", "D", 0),
     ("3.01.01.09.02.0002", "Juros - Arrendamento Financeiro", "D", 0),
     ("3.02.01.01.01.0001-0", "Contribuição Social sobre o Lucro Líquido", "D", 0),
@@ -248,6 +258,8 @@ DED_ICMS, DED_COFINS, DED_PIS, DED_ISS = (
 CMV = "3.01.01.03.03.0001-9"
 SERV_PJ, SEGUROS, ASSESSORIA = "3.01.01.07.01.0009-6", "3.01.01.07.01.0056-8", "3.01.01.07.01.0068-1"
 AGUA = "3.01.01.07.01.0049-5"
+CIF_ENERGIA, CIF_AGUA, CIF_TELEFONE = "1.01.15.03.0001", "1.01.15.03.0002", "1.01.15.03.0003"
+MUTUO_SOCIA, JUROS_MUTUO = "1.07.01.03.0001", "3.01.01.09.01.0002"
 DESP_ICMS_AUTO, MULTAS = "3.01.01.07.03.0001", "3.01.01.07.03.0002"
 REND_APLIC, JUROS_GARANTIDA, JUROS_LEASING = "3.01.01.09.01.0001", "3.01.01.09.02.0001", "3.01.01.09.02.0002"
 CSLL_DESP, IRPJ_DESP = "3.02.01.01.01.0001-0", "3.02.01.01.01.0002-9"
@@ -265,6 +277,7 @@ POR_AREA = {
     "energia": ("3.01.01.07.01.0048-7", "3.01.01.07.02.0018"),
     "telefone": ("3.01.01.07.01.0050-9", "3.01.01.07.02.0019"),
     "depreciacao": ("3.01.01.07.01.0030-4", "3.01.01.07.02.0020"),
+    "agua": ("3.01.01.07.01.0049-5", "3.01.01.07.02.0021"),
 }
 COMISSOES = "3.01.01.07.02.0015"
 CAPITAL = {  # sócio -> (capital subscrito, a integralizar)
