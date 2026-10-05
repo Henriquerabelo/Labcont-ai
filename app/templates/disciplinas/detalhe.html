@@ -1,0 +1,32 @@
+{% extends "base.html" %}
+{% from "_macros.html" import excluir, situacao_tag %}
+{% block titulo %}{{ d.codigo }}{% endblock %}
+{% block conteudo %}
+<div class="breadcrumb"><a href="/disciplinas">Disciplinas</a> / {{ d.codigo }}</div>
+<div class="page-head">
+  <div><div class="eyebrow">{{ d.codigo }} · {{ d.nivel or 'Disciplina' }}</div><h1>{{ d.nome }}</h1></div>
+  <div class="acoes"><a class="btn btn-primary" href="/turmas/nova?disciplina_id={{ d.id }}">Nova turma</a><a class="btn" href="/disciplinas/{{ d.id }}/editar">Editar</a>
+  {{ excluir('/disciplinas/%s/excluir'|format(d.id), 'Excluir a disciplina ' ~ d.codigo ~ ' e TODAS as suas turmas e vínculos?') }}</div>
+</div>
+<div class="grid grid-2" style="margin-bottom:24px">
+  <div class="card"><dl class="dados">
+    <dt>Carga horária</dt><dd>{{ d.carga_horaria ~ 'h' if d.carga_horaria else '—' }}</dd>
+    <dt>Departamento</dt><dd>{{ d.departamento or '—' }}</dd>
+    <dt>Observações</dt><dd>{{ d.observacoes or '—' }}</dd>
+  </dl></div>
+</div>
+<div class="card">
+  <div class="card-head"><h3>Turmas</h3><span class="muted mono-sm">{{ d.turmas|length }} turma(s)</span></div>
+  <div class="table-wrap"><table>
+    <thead><tr><th>Período</th><th>Turma</th><th>Docente(s)</th><th>Horário</th><th>Local</th><th class="num">Discentes</th><th>Situação</th></tr></thead>
+    <tbody>
+    {% for t in d.turmas %}
+      <tr><td>{{ t.periodo }}</td><td><a href="/turmas/{{ t.id }}">Turma {{ t.codigo }}</a></td>
+      <td>{% for v in t.docentes %}<a href="/docentes/{{ v.docente.id }}">{{ v.docente.nome }}</a>{% if not loop.last %}<br>{% endif %}{% else %}<span class="muted">A definir</span>{% endfor %}</td>
+      <td class="mono-sm">{{ t.horario or '—' }}</td><td class="mono-sm">{{ t.local or '—' }}</td>
+      <td class="num">{{ t.matriculas|length }}{% if t.capacidade %}<span class="muted">/{{ t.capacidade }}</span>{% endif %}</td><td>{{ situacao_tag(t.situacao) }}</td></tr>
+    {% else %}<tr><td colspan="7" class="vazio">Nenhuma turma cadastrada.</td></tr>{% endfor %}
+    </tbody>
+  </table></div>
+</div>
+{% endblock %}

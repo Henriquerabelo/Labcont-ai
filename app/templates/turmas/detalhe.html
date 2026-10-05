@@ -1,0 +1,72 @@
+{% extends "base.html" %}
+{% from "_macros.html" import excluir, situacao_tag %}
+{% block titulo %}{{ t.disciplina.codigo }} · {{ t.codigo }}{% endblock %}
+{% block conteudo %}
+{% set gestor = usuario and usuario.gestor %}
+{% set ve_email = usuario and (usuario.gestor or 'professor' in usuario.perfis) %}
+<div class="breadcrumb">{% if gestor %}<a href="/disciplinas">Disciplinas</a> / <a href="/disciplinas/{{ t.disciplina.id }}">{{ t.disciplina.codigo }}</a>{% else %}<a href="/">Minhas turmas</a> / {{ t.disciplina.codigo }}{% endif %} / Turma {{ t.codigo }}</div>
+<div class="page-head">
+  <div><div class="eyebrow">{{ t.disciplina.codigo }} · Turma {{ t.codigo }} · {{ t.periodo }}</div><h1>{{ t.disciplina.nome }}</h1></div>
+  <div class="acoes"><a class="btn btn-dark" href="/turmas/{{ t.id }}/duplas">Duplas e empresas</a><a class="btn" href="/turmas/{{ t.id }}/painel">Painel da turma</a>{% if gestor %}<a class="btn" href="/turmas/{{ t.id }}/editar">Editar turma</a>{{ excluir('/turmas/%s/excluir'|format(t.id), 'Excluir esta turma e seus vínculos com docentes e discentes?') }}{% endif %}</div>
+</div>
+{% if (status and (status.encerrada_em or status.demonstracao)) or gestor %}
+<div class="aviso" role="note" style="justify-content:space-between;flex-wrap:wrap">
+  <span>{% if status and status.encerrada_em %}<strong>Turma encerrada</strong> em {{ status.encerrada_em.strftime('%d/%m/%Y') }} ({{ status.encerrada_por }}): somente leitura para professores e alunos.{% else %}Turma em andamento.{% endif %}
+    {% if status and status.demonstracao %} · <strong>Turma de demonstração</strong>: visível para visitantes (avaliadores).{% endif %}</span>
+  {% if gestor %}<span class="acoes-inline">
+    {% if not (status and status.encerrada_em) %}<form class="inline" method="post" action="/turmas/{{ t.id }}/encerrar" data-confirmar="Encerrar a turma? Professores e alunos passam a ter somente leitura."><button class="btn btn-sm" type="submit">Encerrar turma</button></form>
+    {% elif usuario.admin %}<form class="inline" method="post" action="/turmas/{{ t.id }}/reabrir"><button class="btn btn-sm" type="submit">Reabrir turma</button></form>{% endif %}
+    {% if usuario.admin %}<form class="inline" method="post" action="/turmas/{{ t.id }}/demonstracao"><button class="btn btn-sm" type="submit">{{ 'Desmarcar demonstração' if status and status.demonstracao else 'Marcar como demonstração' }}</button></form>{% endif %}
+  </span>{% endif %}
+</div>{% endif %}
+
+<div class="grid grid-2">
+  <div class="card"><dl class="dados">
+    <dt>Situação</dt><dd>{{ situacao_tag(t.situacao) }} <span class="muted">{{ t.tipo or '' }}</span></dd>
+    <dt>Horário</dt><dd>{{ t.horario or '—' }}</dd>
+    <dt>Vigência</dt><dd>{{ t.data_inicio|data }} a {{ t.data_fim|data }}</dd>
+    <dt>Local</dt><dd>{{ t.local or '—' }}</dd>
+    <dt>Ocupação</dt><dd>{{ matriculas|length }} cadastrados{% if t.capacidade %} · capacidade {{ t.capacidade }}{% endif %}{% if t.matriculados_sigaa is not none %} · SIGAA: {{ t.matriculados_sigaa }}{% endif %}</dd>
+  </dl></div>
+
+  <div class="card">
+    <div class="card-head"><h3>Docentes</h3></div>
+    <table><tbody>
+    {% for v in t.docentes %}
+      <tr><td>{% if gestor %}<a href="/docentes/{{ v.docente.id }}">{{ v.docente.nome }}</a>{% else %}{{ v.docente.nome }}{% endif %}{% if ve_email %}<div class="muted mono-sm">{{ v.docente.email or '' }}</div>{% endif %}</td>
+      <td class="num mono-sm">{{ v.carga_horaria ~ 'h' if v.carga_horaria else '' }}</td>
+      <td class="num">{% if gestor %}<form class="inline" method="post" action="/turmas/{{ t.id }}/docentes/{{ v.id }}/remover" data-confirmar="Remover {{ v.docente.nome }} desta turma?"><button class="btn btn-sm" type="submit">Remover</button></form>{% endif %}</td></tr>
+    {% else %}<tr><td class="vazio">Nenhum docente vinculado.</td></tr>{% endfor %}
+    </tbody></table>
+    {% if gestor %}<form class="linha-form" method="post" action="/turmas/{{ t.id }}/docentes" style="margin-top:20px">
+      <div class="field"><label for="docente_id">Vincular docente</label><select id="docente_id" name="docente_id"><option value="">Selecione…</option>{% for d in docentes %}<option value="{{ d.id }}">{{ d.nome }}</option>{% endfor %}</select></div>
+      <div class="field" style="flex:0 1 110px"><label for="ch">CH (h)</label><input id="ch" type="number" name="carga_horaria"></div>
+      <button class="btn btn-dark" type="submit">Vincular</button>
+    </form>
+    <p class="muted mono-sm">Docente ainda não cadastrado? <a href="/docentes/novo">Cadastrar docente</a>.</p>{% endif %}
+  </div>
+</div>
+
+<div class="card" style="margin-top:24px">
+  <div class="card-head"><h3>Discentes</h3><span class="muted mono-sm">{{ matriculas|selectattr('situacao','equalto','ATIVO')|list|length }} ativos · {{ matriculas|length }} no total</span></div>
+  {% if gestor %}<form class="linha-form" method="post" action="/turmas/{{ t.id }}/discentes" style="margin-bottom:28px">
+    <div class="field" style="flex:0 1 160px"><label for="m_mat">Matrícula *</label><input id="m_mat" name="matricula" inputmode="numeric" required></div>
+    <div class="field"><label for="m_nome">Nome (se for novo)</label><input id="m_nome" name="nome"></div>
+    <div class="field"><label for="m_email">E-mail (se for novo)</label><input id="m_email" type="email" name="email"></div>
+    <div class="field" style="flex:0 1 150px"><label for="m_turno">Turno</label><select id="m_turno" name="turno"><option value=""></option><option>DIURNO</option><option>NOTURNO</option></select></div>
+    <input type="hidden" name="curso" value="CIÊNCIAS CONTÁBEIS">
+    <button class="btn btn-dark" type="submit">Incluir na turma</button>
+  </form>{% endif %}
+  <div class="table-wrap"><table>
+    <thead><tr><th>Matrícula</th><th>Nome</th>{% if ve_email %}<th>E-mail</th>{% endif %}<th>Turno</th><th>Situação na turma</th><th></th></tr></thead>
+    <tbody>
+    {% for m in matriculas %}
+      <tr><td>{{ m.discente.matricula }}</td><td>{% if ve_email %}<a href="/discentes/{{ m.discente.id }}">{{ m.discente.nome }}</a>{% else %}{{ m.discente.nome }}{% endif %}</td>{% if ve_email %}<td class="mono-sm">{{ m.discente.email or '—' }}</td>{% endif %}<td class="mono-sm">{{ m.discente.turno or '' }}</td>
+      <td>{% if gestor %}<form class="inline" method="post" action="/turmas/{{ t.id }}/matriculas/{{ m.id }}/situacao">
+        <select name="situacao" onchange="this.form.submit()" aria-label="Situação de {{ m.discente.nome }}" style="padding:6px 12px;width:auto">{% for s in situacoes %}<option {{ 'selected' if s == m.situacao }}>{{ s }}</option>{% endfor %}</select></form>{% else %}{{ m.situacao }}{% endif %}</td>
+      <td class="num">{% if gestor %}<form class="inline" method="post" action="/turmas/{{ t.id }}/matriculas/{{ m.id }}/remover" data-confirmar="Remover {{ m.discente.nome }} desta turma? O cadastro do discente é mantido."><button class="btn btn-sm" type="submit">Remover</button></form>{% endif %}</td></tr>
+    {% else %}<tr><td colspan="6" class="vazio">Nenhum discente nesta turma. Inclua pela matrícula ou importe a Lista de participantes do SIGAA.</td></tr>{% endfor %}
+    </tbody>
+  </table></div>
+</div>
+{% endblock %}

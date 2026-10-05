@@ -1,0 +1,2283 @@
+{
+  "caso": "EH0012 - Laboratório de Prática Contábil - 2026.2",
+  "fonte": "Exercício EH-0012 2026.2 (docx)",
+  "empresa": {
+    "nome": "Empresa LAB",
+    "cnae_principal": "2670-1/02 - Fabricação de equipamentos e instrumentos ópticos, fotográficos e cinematográficos",
+    "cnae_secundarios": [
+      "4789-0/08 - Comércio varejista de artigos fotográficos e para filmagem",
+      "4619-2/00 - Representantes comerciais e agentes do comércio de mercadorias em geral"
+    ],
+    "uf": "CE",
+    "municipio": "Fortaleza",
+    "regime_federal": "Lucro Real Anual - estimativa mensal (balancete de suspensão/redução)",
+    "pis_cofins": "Não cumulativo (1,65% / 7,60%)",
+    "ipi": "Contribuinte - alíquotas da TIPI",
+    "icms": "Regime normal - recolhimento no mês subsequente; crédito CIAP 1/48 só para imobilizado industrial",
+    "iss": "Fortaleza - 5,00%",
+    "centro_custo": "01 - Matriz",
+    "estoques": "Custo médio ponderado móvel",
+    "fpas": "507 - Indústria (encargos INSS+RAT+Terceiros 27,80%; FGTS 8,00%)",
+    "destinacao_resultado": {
+      "participacao_empregados_admin_pct": {
+        "nome": "Participação de empregados e administradores (% do lucro após IR/CS)",
+        "base": 8.0,
+        "unidade": "%",
+        "min": 5.0,
+        "max": 10.0,
+        "passo": 0.5
+      },
+      "reserva_legal_pct": {
+        "base": 5.0,
+        "regra": "Lei 6.404/76, art. 193 - fixo (limite 20% do capital)"
+      },
+      "dividendos_pct": {
+        "nome": "Dividendos (% do lucro líquido ajustado)",
+        "base": 60.0,
+        "unidade": "%",
+        "min": 25.0,
+        "max": 60.0,
+        "passo": 5.0
+      },
+      "reserva_estatutaria": "saldo remanescente"
+    },
+    "capital_social": {
+      "nome": "Capital social subscrito",
+      "base": 1096000.0,
+      "unidade": "R$",
+      "min": 900000.0,
+      "max": 1300000.0,
+      "passo": 1000.0,
+      "regra": "cotas de R$ 1,00; soma das cotas dos sócios"
+    }
+  },
+  "socios": [
+    {
+      "nome": "Adalberto Cantareira",
+      "funcao": "Sócio administrador/financeiro",
+      "cotas": 385000,
+      "a_integralizar": 35000.0,
+      "integralizacao_evento": "F25",
+      "pro_labore_jan": 9600.0,
+      "pro_labore_fev": 9600.0,
+      "dependentes": "2 filhos (2 e 8 anos)"
+    },
+    {
+      "nome": "Marconde Sobreira",
+      "funcao": "Sócio industrial",
+      "cotas": 166000,
+      "a_integralizar": 31000.0,
+      "integralizacao_evento": "F15",
+      "pro_labore_jan": 0.0,
+      "pro_labore_fev": 8600.0,
+      "dependentes": "1 filho (7 anos)"
+    },
+    {
+      "nome": "Marcela Soares",
+      "funcao": "Sócia comercial",
+      "cotas": 460000,
+      "a_integralizar": 25000.0,
+      "integralizacao_evento": "J20",
+      "pro_labore_jan": 7700.0,
+      "pro_labore_fev": 7700.0,
+      "dependentes": "1 filho (14 anos)"
+    },
+    {
+      "nome": "Cassilda Apedeuta",
+      "funcao": "Sócia investidora",
+      "cotas": 85000,
+      "a_integralizar": 85000.0,
+      "integralizacao_evento": "J34",
+      "pro_labore_jan": 0.0,
+      "pro_labore_fev": 0.0,
+      "dependentes": "-"
+    }
+  ],
+  "parametros_socios": [
+    {
+      "nome": "Participação de cada sócio no capital",
+      "base": "35,13% / 15,15% / 41,97% / 7,76%",
+      "unidade": "%",
+      "min": 5.0,
+      "max": 50.0,
+      "passo": 0.01,
+      "regra": "soma = 100%; cotas inteiras"
+    },
+    {
+      "nome": "Percentual a integralizar por sócio",
+      "base": "9,09% / 18,67% / 5,43% / 100%",
+      "unidade": "%",
+      "min": 0.0,
+      "max": 100.0,
+      "passo": 1000.0,
+      "regra": "valor a integralizar arredondado a R$ 1.000; ao menos 1 sócio com 100% a integralizar"
+    },
+    {
+      "nome": "Pró-labore sócio administrador",
+      "base": 9600.0,
+      "unidade": "R$",
+      "min": 7000.0,
+      "max": 12000.0,
+      "passo": 100.0
+    },
+    {
+      "nome": "Pró-labore sócio comercial",
+      "base": 7700.0,
+      "unidade": "R$",
+      "min": 6000.0,
+      "max": 10000.0,
+      "passo": 100.0
+    },
+    {
+      "nome": "Pró-labore sócio industrial (a partir de fevereiro)",
+      "base": 8600.0,
+      "unidade": "R$",
+      "min": 6000.0,
+      "max": 11000.0,
+      "passo": 100.0
+    }
+  ],
+  "saldos_iniciais": {
+    "data": "2025-12-31",
+    "observacao": "Balanço de abertura. Na geração por dupla, os saldos ligados a contratos e folha são recalculados a partir dos parâmetros sorteados e o saldo bancário (Banco Rico) fecha a equação Ativo = Passivo + PL.",
+    "ativo": {
+      "Banco Rico - conta corrente": {
+        "valor": 359250.65,
+        "regra": "conta de fechamento (plug)"
+      },
+      "ICMS antecipado a recuperar": {
+        "valor": 13258.52
+      },
+      "Vale-transporte (adiantamento)": {
+        "valor": 172.8,
+        "regra": "dias úteis × 2 × tarifa × empregados"
+      },
+      "Vale-alimentação (adiantamento)": {
+        "valor": 1773.0
+      },
+      "Mercadoria ALPHA (620 un × R$ 14,00)": {
+        "valor": 8680.0,
+        "regra": "qtd 400–900 (passo 10); custo 12,00–16,00"
+      },
+      "Prêmios de seguros a apropriar": {
+        "valor": 5250.0,
+        "regra": "prêmio × 10/12"
+      },
+      "Terrenos": {
+        "valor": 310000.0
+      },
+      "Edifícios e construções (galpão)": {
+        "valor": 125000.0
+      },
+      "Máquinas e equipamentos industriais": {
+        "valor": 262000.0,
+        "obs": "diverge da tabela de bens (R$ 62.000,00) - ver inconsistências"
+      },
+      "Veículos": {
+        "valor": 135000.0
+      },
+      "(-) Depreciação acumulada": {
+        "valor": -10408.33
+      }
+    },
+    "passivo": {
+      "Fornecedores de serviços": {
+        "Seguro Verdade": 2100.0,
+        "Contador Formado": 5161.75,
+        "Internet & Comunicação": 410.0,
+        "Cell Telefonia": 580.0
+      },
+      "INSS a recolher": 12822.74,
+      "FGTS a recolher": 1552.64,
+      "Salários a pagar": 15760.64,
+      "ICMS a recolher": 43361.81,
+      "ISS a recolher": 7615.0,
+      "PIS a recolher": 5045.29,
+      "COFINS a recolher": 23238.9,
+      "IRRF a recolher": 348.93,
+      "CSRF a recolher": 255.75,
+      "ICMS antecipado a recolher": 13258.52,
+      "IRPJ estimativa": 33198.47,
+      "CSLL estimativa": 12671.45,
+      "Telefone a pagar": 350.0,
+      "Energia a pagar": 1480.0,
+      "Água a pagar": 420.0,
+      "Pró-labores a pagar": 13008.92,
+      "Provisões trabalhistas (férias, encargos)": 2411.86
+    },
+    "patrimonio_liquido": {
+      "Capital social": 1096000.0,
+      "(-) Capital a integralizar": -176000.0,
+      "Lucros acumulados (resultado 2025)": 94923.97
+    }
+  },
+  "imobilizado": [
+    {
+      "bem": "Máquina de uso no parque industrial",
+      "ncm": "9010",
+      "aquisicao": "2025-11-05",
+      "valor": 62000.0,
+      "taxa_fiscal_aa": 10.0,
+      "classe": "Máquinas e Equipamentos",
+      "vida_util_anos": 8,
+      "residual_pct": 20
+    },
+    {
+      "bem": "Veículo utilitário 0 km",
+      "ncm": "8704",
+      "aquisicao": "2025-11-12",
+      "valor": 135000.0,
+      "taxa_fiscal_aa": 25.0,
+      "classe": "Veículo - Utilitário",
+      "vida_util_anos": 5,
+      "residual_pct": 40
+    },
+    {
+      "bem": "Terreno",
+      "ncm": "",
+      "aquisicao": "2025-11-18",
+      "valor": 310000.0,
+      "taxa_fiscal_aa": 0.0,
+      "classe": "Terreno",
+      "vida_util_anos": null,
+      "residual_pct": null
+    },
+    {
+      "bem": "Galpão",
+      "ncm": "7610",
+      "aquisicao": "2025-12-01",
+      "valor": 125000.0,
+      "taxa_fiscal_aa": 4.0,
+      "classe": "Prédio / Imóvel / Galpão",
+      "vida_util_anos": 20,
+      "residual_pct": 80
+    }
+  ],
+  "vida_util": [
+    {
+      "classe": "Equipamentos de Informática",
+      "anos": 3,
+      "residual_pct": 0
+    },
+    {
+      "classe": "Móveis e Utensílios",
+      "anos": 12,
+      "residual_pct": 10
+    },
+    {
+      "classe": "Prédio / Imóvel / Galpão",
+      "anos": 20,
+      "residual_pct": 80
+    },
+    {
+      "classe": "Máquinas e Equipamentos",
+      "anos": 8,
+      "residual_pct": 20
+    },
+    {
+      "classe": "Veículo - Utilitário",
+      "anos": 5,
+      "residual_pct": 40
+    },
+    {
+      "classe": "Veículo - Caminhão",
+      "anos": 6,
+      "residual_pct": 30
+    },
+    {
+      "classe": "Veículo - Moto",
+      "anos": 2,
+      "residual_pct": 50
+    }
+  ],
+  "rateio_areas": [
+    {
+      "item": "Depreciação - Equipamentos de Informática",
+      "adm": 50,
+      "com": 17,
+      "ind": 33
+    },
+    {
+      "item": "Depreciação - Móveis e Utensílios",
+      "adm": 45,
+      "com": 35,
+      "ind": 20
+    },
+    {
+      "item": "Depreciação - Prédio",
+      "adm": 10,
+      "com": 25,
+      "ind": 65
+    },
+    {
+      "item": "Depreciação - Máquinas e Equipamentos",
+      "adm": 0,
+      "com": 0,
+      "ind": 100
+    },
+    {
+      "item": "Depreciação - Veículo Utilitário",
+      "adm": 70,
+      "com": 30,
+      "ind": 0
+    },
+    {
+      "item": "Depreciação - Veículo Caminhão",
+      "adm": 0,
+      "com": 0,
+      "ind": 100
+    },
+    {
+      "item": "Depreciação - Veículo Moto",
+      "adm": 40,
+      "com": 45,
+      "ind": 15
+    },
+    {
+      "item": "Internet",
+      "adm": 40,
+      "com": 50,
+      "ind": 10
+    },
+    {
+      "item": "Telefone / Celular",
+      "adm": 20,
+      "com": 60,
+      "ind": 20
+    },
+    {
+      "item": "Material de Expediente",
+      "adm": 60,
+      "com": 30,
+      "ind": 10
+    },
+    {
+      "item": "Transporte de empregados",
+      "adm": "nº de funcionários",
+      "com": "",
+      "ind": ""
+    },
+    {
+      "item": "Alimentação",
+      "adm": "nº de funcionários",
+      "com": "",
+      "ind": ""
+    }
+  ],
+  "contratos": [
+    {
+      "id": "C01",
+      "tipo": "Financeiro - Conta garantida",
+      "parte": "Banco Rico S/A",
+      "inicio": "2025-09-15",
+      "descricao": "Limite rotativo para cobrir saldo negativo; juros compostos com capitalização diária a partir do dia seguinte ao uso; amortização imediata quando houver saldo em conta ou aplicação.",
+      "parametros": [
+        {
+          "nome": "Limite",
+          "base": 970000.0,
+          "unidade": "R$",
+          "min": 800000.0,
+          "max": 1200000.0,
+          "passo": 10000.0
+        },
+        {
+          "nome": "Taxa de juros",
+          "base": 3.5,
+          "unidade": "% a.m.",
+          "min": 3.0,
+          "max": 4.0,
+          "passo": 0.1
+        }
+      ],
+      "eventos": [
+        "uso automático sempre que o caixa ficar negativo"
+      ]
+    },
+    {
+      "id": "C02",
+      "tipo": "Financeiro - Aplicação de liquidez imediata (INVEST LIQUID)",
+      "parte": "Banco Rico S/A",
+      "inicio": "2025-09-20",
+      "descricao": "Rendimento prefixado com capitalização diária; resgate automático quando a conta corrente precisar; aplicação só por solicitação.",
+      "parametros": [
+        {
+          "nome": "Taxa de rendimento",
+          "base": 1.6,
+          "unidade": "% a.m.",
+          "min": 1.2,
+          "max": 2.0,
+          "passo": 0.1
+        }
+      ],
+      "eventos": [
+        "J04",
+        "F47"
+      ]
+    },
+    {
+      "id": "C03",
+      "tipo": "Financeiro - CDB Renda Mais",
+      "parte": "Banco Rico S/A",
+      "inicio": "2026-01-12",
+      "descricao": "Título de renda fixa com vencimento em 12 meses (IR regressivo no resgate).",
+      "parametros": [
+        {
+          "nome": "Valor aplicado",
+          "base": 9000.0,
+          "unidade": "R$",
+          "min": 6000.0,
+          "max": 12000.0,
+          "passo": 500.0
+        },
+        {
+          "nome": "Taxa",
+          "base": 1.6,
+          "unidade": "% a.m.",
+          "min": 1.2,
+          "max": 2.0,
+          "passo": 0.1
+        }
+      ],
+      "eventos": [
+        "J14",
+        "F07"
+      ]
+    },
+    {
+      "id": "C04",
+      "tipo": "Financeiro - Leasing financeiro (SAC)",
+      "parte": "Banco Rico S/A",
+      "inicio": "2026-01-19",
+      "descricao": "Arrendamento de 2 máquinas do parque industrial, com opção de compra (CPC 06 R2). Juros compostos, ano civil.",
+      "parametros": [
+        {
+          "nome": "Valor das máquinas",
+          "base": 300000.0,
+          "unidade": "R$",
+          "min": 250000.0,
+          "max": 400000.0,
+          "passo": 5000.0
+        },
+        {
+          "nome": "Taxa de juros",
+          "base": 10.0,
+          "unidade": "% a.a.",
+          "min": 8.0,
+          "max": 14.0,
+          "passo": 0.5
+        },
+        {
+          "nome": "Prazo",
+          "base": 18,
+          "unidade": "meses",
+          "min": 12,
+          "max": 24,
+          "passo": 6,
+          "regra": "valores admitidos: 12, 18 ou 24"
+        }
+      ],
+      "eventos": [
+        "J24",
+        "F33"
+      ]
+    },
+    {
+      "id": "C05",
+      "tipo": "Serviço - Recrutamento e seleção",
+      "parte": "Recrutamento S/S",
+      "inicio": "2026-01-04",
+      "descricao": "Vigência jan-fev/2026; apropriação de 50% por mês; pagamento único em 24/02/2026 (sujeito a retenções).",
+      "parametros": [
+        {
+          "nome": "Honorários brutos",
+          "base": 8800.0,
+          "unidade": "R$",
+          "min": 6000.0,
+          "max": 12000.0,
+          "passo": 100.0
+        }
+      ],
+      "eventos": [
+        "F41"
+      ]
+    },
+    {
+      "id": "C06",
+      "tipo": "Serviço - Assessoria contábil",
+      "parte": "Contador Formado S/S (Fortaleza)",
+      "inicio": "2025-09-01",
+      "descricao": "Honorários mensais pagos no dia 10 do mês seguinte, com retenções (IRRF 1,5% + CSRF 4,65%). Reajuste a partir de 01/02/2026.",
+      "parametros": [
+        {
+          "nome": "Honorário mensal",
+          "base": 5500.0,
+          "unidade": "R$",
+          "min": 4500.0,
+          "max": 7000.0,
+          "passo": 100.0
+        },
+        {
+          "nome": "Reajuste a partir de fevereiro",
+          "base": 25.45,
+          "unidade": "%",
+          "min": 10.0,
+          "max": 30.0,
+          "passo": 0.5,
+          "regra": "novo valor arredondado a R$ 100"
+        }
+      ],
+      "eventos": [
+        "J11",
+        "J39",
+        "F17",
+        "F45"
+      ]
+    },
+    {
+      "id": "C07",
+      "tipo": "Comodato - Internet (cable modem)",
+      "parte": "Internet & Comunicação Ltda.",
+      "inicio": "2025-10-10",
+      "descricao": "Mensalidade paga no dia 10 do mês seguinte.",
+      "parametros": [
+        {
+          "nome": "Mensalidade",
+          "base": 350.0,
+          "unidade": "R$",
+          "min": 250.0,
+          "max": 500.0,
+          "passo": 10.0
+        }
+      ],
+      "eventos": [
+        "J05",
+        "J13",
+        "F03",
+        "F18"
+      ]
+    },
+    {
+      "id": "C08",
+      "tipo": "Comodato - 5 aparelhos celulares",
+      "parte": "Cell Telefonia Ltda.",
+      "inicio": "2025-10-09",
+      "descricao": "Mensalidade paga no dia 9 do mês seguinte.",
+      "parametros": [
+        {
+          "nome": "Mensalidade",
+          "base": 480.0,
+          "unidade": "R$",
+          "min": 300.0,
+          "max": 700.0,
+          "passo": 10.0
+        },
+        {
+          "nome": "Quantidade de aparelhos",
+          "base": 5,
+          "unidade": "un",
+          "min": 3,
+          "max": 8,
+          "passo": 1
+        }
+      ],
+      "eventos": [
+        "J05",
+        "J10",
+        "F03",
+        "F14"
+      ]
+    },
+    {
+      "id": "C09",
+      "tipo": "Seguro contra incêndio",
+      "parte": "Seguro Verdade Ltda.",
+      "inicio": "2025-10-16",
+      "descricao": "Cobertura de 12 meses; prêmio em parcelas mensais (última em 17/01/2026); apropriação mensal pro rata.",
+      "parametros": [
+        {
+          "nome": "Prêmio total",
+          "base": 6300.0,
+          "unidade": "R$",
+          "min": 4800.0,
+          "max": 8400.0,
+          "passo": 100.0
+        },
+        {
+          "nome": "Número de parcelas",
+          "base": 4,
+          "unidade": "un",
+          "min": 3,
+          "max": 4,
+          "passo": 1
+        }
+      ],
+      "eventos": [
+        "J21"
+      ]
+    },
+    {
+      "id": "C10",
+      "tipo": "Mútuo cedido a sócia (parte relacionada)",
+      "parte": "Cassilda Apedeuta",
+      "inicio": "2026-02-18",
+      "descricao": "Empréstimo da empresa à sócia; juros compostos apropriados por fração diária; sem vencimento; juros compensados com dividendos.",
+      "parametros": [
+        {
+          "nome": "Valor do mútuo",
+          "base": 20000.0,
+          "unidade": "R$",
+          "min": 15000.0,
+          "max": 40000.0,
+          "passo": 1000.0
+        },
+        {
+          "nome": "Taxa de juros",
+          "base": 4.0,
+          "unidade": "% a.m.",
+          "min": 2.0,
+          "max": 5.0,
+          "passo": 0.5
+        }
+      ],
+      "eventos": [
+        "F27"
+      ]
+    },
+    {
+      "id": "C11",
+      "tipo": "Serviço - Projeto de arquitetura (autônomo, RPA)",
+      "parte": "Arquiteto autônomo (contribuinte de Fortaleza)",
+      "inicio": "2026-01-20",
+      "descricao": "Pagamento em 17/02/2026; retenções de INSS, IRRF e ISS do autônomo; encargo patronal de 20%.",
+      "parametros": [
+        {
+          "nome": "Valor bruto",
+          "base": 10600.0,
+          "unidade": "R$",
+          "min": 8000.0,
+          "max": 14000.0,
+          "passo": 100.0
+        }
+      ],
+      "eventos": [
+        "J23",
+        "F30"
+      ]
+    },
+    {
+      "id": "C12",
+      "tipo": "Serviço - Reforma do galpão industrial",
+      "parte": "Construtor Express Ltda.",
+      "inicio": "2026-01-22",
+      "descricao": "Contrato em 2 parcelas de 50% (22/01 e 22/02); parte material e parte mão de obra (base de ISS/retenções).",
+      "parametros": [
+        {
+          "nome": "Valor total",
+          "base": 228000.0,
+          "unidade": "R$",
+          "min": 180000.0,
+          "max": 300000.0,
+          "passo": 1000.0
+        },
+        {
+          "nome": "Parcela de material",
+          "base": 40.0,
+          "unidade": "%",
+          "min": 30.0,
+          "max": 50.0,
+          "passo": 5.0
+        }
+      ],
+      "eventos": [
+        "J26",
+        "F32"
+      ]
+    }
+  ],
+  "folha_regras": {
+    "processamento": {
+      "jan": "2026-01-15",
+      "fev": "2026-02-13"
+    },
+    "pagamento": "dia 05 do mês subsequente",
+    "admissoes": "somente no 1º dia do mês",
+    "vale_transporte": {
+      "tarifa": 5.4,
+      "por_dia": 2,
+      "desconto": "6% do salário-base (limitado ao benefício recebido)"
+    },
+    "vale_alimentacao": {
+      "valor_dia": 26.0,
+      "por_dia": 1,
+      "desconto": "5% do benefício"
+    },
+    "dias_uteis": {
+      "fev/2026": 18,
+      "mar/2026": 20
+    },
+    "encargos": "INSS patronal + RAT + Terceiros 27,80%; FGTS 8,00% (sobre folha, férias e 13º)",
+    "provisoes": "Férias + 1/3 e 13º salário (1/12 por mês), com encargos",
+    "tabelas": "INSS, IRRF e salário-família vigentes em 2026"
+  },
+  "parametros_folha": [
+    {
+      "nome": "Salário-base de cada empregado",
+      "base": "conforme tabela",
+      "unidade": "% sobre a base",
+      "min": -20.0,
+      "max": 20.0,
+      "passo": 10.0,
+      "regra": "arredondar a R$ 10; nunca abaixo do salário mínimo vigente; manter a hierarquia entre cargos"
+    },
+    {
+      "nome": "Horas extras (valor)",
+      "base": "conforme tabela",
+      "unidade": "% do salário",
+      "min": 0.0,
+      "max": 10.0,
+      "passo": 1.0,
+      "regra": "pelo menos 1/3 dos empregados com HE"
+    },
+    {
+      "nome": "Comissões (área comercial)",
+      "base": "conforme tabela",
+      "unidade": "% do salário",
+      "min": 0.0,
+      "max": 15.0,
+      "passo": 1.0
+    },
+    {
+      "nome": "Número de dependentes (filhos)",
+      "base": "conforme tabela",
+      "unidade": "un",
+      "min": 0,
+      "max": 3,
+      "passo": 1,
+      "regra": "idades coerentes entre jan e fev"
+    },
+    {
+      "nome": "Dias úteis para VT/VA",
+      "base": 18,
+      "unidade": "dias",
+      "regra": "fixo pelo calendário (fev/2026 = 18; mar/2026 = 20)"
+    }
+  ],
+  "funcionarios": [
+    {
+      "setor": "Administração",
+      "nome": "Alves Africano",
+      "admissao": "anterior",
+      "salario_jan": 5920.0,
+      "he_jan": 280.0,
+      "comissao_jan": null,
+      "dependentes_jan": "2 (20 e 16 anos)",
+      "salario_fev": 5920.0,
+      "he_fev": 458.0,
+      "comissao_fev": null,
+      "dependentes_fev": "2 (11 e 15 anos)"
+    },
+    {
+      "setor": "Administração",
+      "nome": "Venâncio Australiano",
+      "admissao": "anterior",
+      "salario_jan": 1621.0,
+      "he_jan": 45.0,
+      "comissao_jan": null,
+      "dependentes_jan": "1 (9 anos)",
+      "salario_fev": 1621.0,
+      "he_fev": null,
+      "comissao_fev": null,
+      "dependentes_fev": "1 (7 anos)"
+    },
+    {
+      "setor": "Administração",
+      "nome": "Tiago Espanhol",
+      "admissao": "anterior",
+      "salario_jan": 4100.0,
+      "he_jan": null,
+      "comissao_jan": null,
+      "dependentes_jan": "1 (7 anos)",
+      "salario_fev": 4100.0,
+      "he_fev": 373.0,
+      "comissao_fev": null,
+      "dependentes_fev": "1 (8 anos)"
+    },
+    {
+      "setor": "Comercial",
+      "nome": "Ângela Peruana",
+      "admissao": "anterior",
+      "salario_jan": 2100.0,
+      "he_jan": 100.0,
+      "comissao_jan": 400.0,
+      "dependentes_jan": "2 (10 e 14 anos)",
+      "salario_fev": 1530.0,
+      "he_fev": null,
+      "comissao_fev": 77.0,
+      "dependentes_fev": "2 (12 e 14 anos)"
+    },
+    {
+      "setor": "Comercial",
+      "nome": "Marena Russa",
+      "admissao": "anterior",
+      "salario_jan": 2500.0,
+      "he_jan": 200.0,
+      "comissao_jan": 500.0,
+      "dependentes_jan": "1 (9 anos)",
+      "salario_fev": 5700.0,
+      "he_fev": 389.0,
+      "comissao_fev": 285.0,
+      "dependentes_fev": "1 (6 anos)"
+    },
+    {
+      "setor": "Comercial",
+      "nome": "Vitor Canadense",
+      "admissao": "2026-02-01",
+      "salario_jan": null,
+      "he_jan": null,
+      "comissao_jan": null,
+      "dependentes_jan": null,
+      "salario_fev": 4000.0,
+      "he_fev": 273.0,
+      "comissao_fev": null,
+      "dependentes_fev": "1 (16 anos)"
+    },
+    {
+      "setor": "Industrial - MOD Produto X",
+      "nome": "Eurico Canadense",
+      "admissao": "2026-02-01",
+      "salario_jan": null,
+      "he_jan": null,
+      "comissao_jan": null,
+      "dependentes_jan": null,
+      "salario_fev": 3600.0,
+      "he_fev": 246.0,
+      "comissao_fev": null,
+      "dependentes_fev": "1 (3 anos)"
+    },
+    {
+      "setor": "Industrial - MOD Produto X",
+      "nome": "Pedro Algarve",
+      "admissao": "2026-02-01",
+      "salario_jan": null,
+      "he_jan": null,
+      "comissao_jan": null,
+      "dependentes_jan": null,
+      "salario_fev": 6200.0,
+      "he_fev": null,
+      "comissao_fev": null,
+      "dependentes_fev": "2 (12 e 9 anos)"
+    },
+    {
+      "setor": "Industrial - MOD Produto X",
+      "nome": "Regina Italiana",
+      "admissao": "2026-02-01",
+      "salario_jan": null,
+      "he_jan": null,
+      "comissao_jan": null,
+      "dependentes_jan": null,
+      "salario_fev": 1680.0,
+      "he_fev": 115.0,
+      "comissao_fev": null,
+      "dependentes_fev": "2 (7 e 8 anos)"
+    },
+    {
+      "setor": "Industrial - MOD Produto X",
+      "nome": "Renato Português",
+      "admissao": "2026-02-01",
+      "salario_jan": null,
+      "he_jan": null,
+      "comissao_jan": null,
+      "dependentes_jan": null,
+      "salario_fev": null,
+      "he_fev": null,
+      "comissao_fev": null,
+      "dependentes_fev": "2 (8 e 10 anos)"
+    },
+    {
+      "setor": "Industrial - MOD Produto Y",
+      "nome": "Gustavo Equatoriano",
+      "admissao": "2026-02-01",
+      "salario_jan": null,
+      "he_jan": null,
+      "comissao_jan": null,
+      "dependentes_jan": null,
+      "salario_fev": 5450.0,
+      "he_fev": 372.0,
+      "comissao_fev": null,
+      "dependentes_fev": "1 (5 anos)"
+    },
+    {
+      "setor": "Industrial - MOD Produto Y",
+      "nome": "Rubens Irlandês",
+      "admissao": "2026-02-01",
+      "salario_jan": null,
+      "he_jan": null,
+      "comissao_jan": null,
+      "dependentes_jan": null,
+      "salario_fev": 1720.0,
+      "he_fev": null,
+      "comissao_fev": null,
+      "dependentes_fev": "1 (3 anos)"
+    },
+    {
+      "setor": "Industrial - MOD Produto Y",
+      "nome": "Vitor Veneza",
+      "admissao": "2026-02-01",
+      "salario_jan": null,
+      "he_jan": null,
+      "comissao_jan": null,
+      "dependentes_jan": null,
+      "salario_fev": 2500.0,
+      "he_fev": 171.0,
+      "comissao_fev": null,
+      "dependentes_fev": "0"
+    },
+    {
+      "setor": "Industrial - MOI",
+      "nome": "Breno Alemão",
+      "admissao": "2026-02-01",
+      "salario_jan": null,
+      "he_jan": null,
+      "comissao_jan": null,
+      "dependentes_jan": null,
+      "salario_fev": 5300.0,
+      "he_fev": 362.0,
+      "comissao_fev": null,
+      "dependentes_fev": "0"
+    },
+    {
+      "setor": "Industrial - MOI",
+      "nome": "Cleide Ucraniana",
+      "admissao": "2026-02-01",
+      "salario_jan": null,
+      "he_jan": null,
+      "comissao_jan": null,
+      "dependentes_jan": null,
+      "salario_fev": 1830.0,
+      "he_fev": null,
+      "comissao_fev": null,
+      "dependentes_fev": "3 (5, 8 e 14 anos)"
+    }
+  ],
+  "itens": [
+    {
+      "codigo": "MP-A",
+      "descricao": "Matéria-prima A",
+      "tipo": "Matéria-prima",
+      "ncm": "9002.11.11",
+      "custo_base": 9.0867,
+      "custo_min": 7.7,
+      "custo_max": 10.5
+    },
+    {
+      "codigo": "MP-B",
+      "descricao": "Matéria-prima B",
+      "tipo": "Matéria-prima",
+      "ncm": "9007.20.20",
+      "custo_base": 11.2986,
+      "custo_min": 9.6,
+      "custo_max": 13.0
+    },
+    {
+      "codigo": "MS-Z",
+      "descricao": "Material secundário Z",
+      "tipo": "Material secundário",
+      "ncm": "9002.20.10",
+      "custo_base": 10.06,
+      "custo_min": 8.5,
+      "custo_max": 11.6
+    },
+    {
+      "codigo": "MS-Q",
+      "descricao": "Material secundário Q",
+      "tipo": "Material secundário",
+      "ncm": "9008.50.00",
+      "custo_base": 11.5536,
+      "custo_min": 9.8,
+      "custo_max": 13.3
+    },
+    {
+      "codigo": "MS-R",
+      "descricao": "Material secundário R",
+      "tipo": "Material secundário",
+      "ncm": "9013.20.00",
+      "custo_base": 12.5751,
+      "custo_min": 10.7,
+      "custo_max": 14.5
+    },
+    {
+      "codigo": "MS-K",
+      "descricao": "Material secundário K",
+      "tipo": "Material secundário",
+      "ncm": "9011.20.20",
+      "custo_base": 13.2894,
+      "custo_min": 11.3,
+      "custo_max": 15.3
+    },
+    {
+      "codigo": "ME-H",
+      "descricao": "Material de embalagem H",
+      "tipo": "Embalagem",
+      "ncm": "3923.21.10",
+      "custo_base": 5.6589,
+      "custo_min": 4.8,
+      "custo_max": 6.5
+    },
+    {
+      "codigo": "X",
+      "descricao": "Produto X",
+      "tipo": "Produto acabado",
+      "ncm": "9006.53.20",
+      "custo_base": null,
+      "custo_min": null,
+      "custo_max": null
+    },
+    {
+      "codigo": "Y",
+      "descricao": "Produto Y",
+      "tipo": "Produto acabado",
+      "ncm": "9007.10.00",
+      "custo_base": null,
+      "custo_min": null,
+      "custo_max": null
+    },
+    {
+      "codigo": "ALPHA",
+      "descricao": "Mercadoria para revenda ALPHA",
+      "tipo": "Mercadoria",
+      "ncm": "9032.10.10",
+      "custo_base": 19.6703,
+      "custo_min": 17.5,
+      "custo_max": 22.0
+    }
+  ],
+  "ficha_tecnica": {
+    "X": {
+      "MP-A": 4,
+      "MP-B": 2,
+      "MS-Z": 5,
+      "MS-Q": 1,
+      "MS-K": 3,
+      "ME-H": 1
+    },
+    "Y": {
+      "MP-A": 3,
+      "MP-B": 5,
+      "MS-Z": 2,
+      "MS-R": 2,
+      "MS-K": 4,
+      "ME-H": 1
+    }
+  },
+  "plano_producao": {
+    "mes": "2026-02",
+    "X": 19300,
+    "Y": 18700,
+    "inicio": "dia útil seguinte à compra do ME-H (19/02/2026)",
+    "duracao": "3 dias úteis (término 23/02/2026)"
+  },
+  "parametros_producao": [
+    {
+      "nome": "Quantidade produzida - Produto X",
+      "base": 19300,
+      "unidade": "un",
+      "min": 15000,
+      "max": 25000,
+      "passo": 100
+    },
+    {
+      "nome": "Quantidade produzida - Produto Y",
+      "base": 18700,
+      "unidade": "un",
+      "min": 15000,
+      "max": 25000,
+      "passo": 100
+    },
+    {
+      "nome": "Coeficientes da ficha técnica",
+      "base": "conforme ficha",
+      "unidade": "un/produto",
+      "min": -1,
+      "max": 1,
+      "passo": 1,
+      "regra": "variação de ±1 unidade por insumo, mínimo 1; ME-H sempre 1 por produto"
+    },
+    {
+      "nome": "Sobra de compra sobre a necessidade",
+      "base": "140 a 280 un",
+      "unidade": "un",
+      "min": 100,
+      "max": 300,
+      "passo": 10,
+      "regra": "quantidade comprada = necessidade da ficha técnica + sobra (MP-A: + devolução)"
+    },
+    {
+      "nome": "Custo unitário de compra de cada insumo",
+      "base": "ver itens",
+      "unidade": "%",
+      "min": -15.0,
+      "max": 15.0,
+      "passo": 0.0001
+    },
+    {
+      "nome": "Percentual vendido da produção",
+      "base": "99,4% (X) / 99,0% (Y)",
+      "unidade": "%",
+      "min": 98.5,
+      "max": 99.8,
+      "passo": 0.1,
+      "regra": "quantidade vendida inteira, menor que a produzida"
+    }
+  ],
+  "markup": {
+    "ICMS": 20.0,
+    "PIS": 1.65,
+    "COFINS": 7.6,
+    "margem_contribuicao": 45.0,
+    "divisor": 0.2575,
+    "multiplicador": 3.8835,
+    "parametro": {
+      "nome": "Margem de contribuição",
+      "base": 45.0,
+      "unidade": "%",
+      "min": 40.0,
+      "max": 50.0,
+      "passo": 1.0,
+      "regra": "ICMS, PIS e COFINS seguem a legislação (não variam)"
+    }
+  },
+  "eventos": [
+    {
+      "id": "J01",
+      "data": "2026-01-02",
+      "grupo": "Societário",
+      "descricao": "Destinação do resultado do exercício de 2025 (participações, reserva legal, dividendos, reserva estatutária)",
+      "natureza": "D"
+    },
+    {
+      "id": "J02",
+      "data": "2026-01-02",
+      "grupo": "Utilidades",
+      "descricao": "NF Energia Luz do Sertão n.º 987321 - consumo jan; vencimento 14/01",
+      "natureza": "V",
+      "parametros": [
+        {
+          "nome": "Valor total",
+          "base": 2520.0,
+          "unidade": "R$",
+          "min": 2200.0,
+          "max": 2900.0,
+          "passo": 10.0
+        },
+        {
+          "nome": "Parcela da área administrativa",
+          "base": 46.4,
+          "unidade": "%",
+          "min": 40.0,
+          "max": 55.0,
+          "passo": 0.1
+        },
+        {
+          "nome": "Tarifa",
+          "base": 1.4316,
+          "unidade": "R$/un",
+          "regra": "fixa; consumo (kWh) = valor ÷ tarifa"
+        }
+      ]
+    },
+    {
+      "id": "J03",
+      "data": "2026-01-05",
+      "grupo": "Utilidades",
+      "descricao": "Fatura de água Águas do Litoral n.º 321654 - consumo jan; vencimento 14/01",
+      "natureza": "V",
+      "parametros": [
+        {
+          "nome": "Valor total",
+          "base": 590.0,
+          "unidade": "R$",
+          "min": 500.0,
+          "max": 700.0,
+          "passo": 10.0
+        },
+        {
+          "nome": "Tarifa",
+          "base": 23.62,
+          "unidade": "R$/un",
+          "regra": "fixa; m³ = valor ÷ tarifa"
+        }
+      ],
+      "obs": "Tabela original só informa a área administrativa (R$ 210,00); faltam R$ 380,00 sem área."
+    },
+    {
+      "id": "J04",
+      "data": "2026-01-05",
+      "grupo": "Financeiro",
+      "descricao": "Aplicação no INVEST LIQUID (Banco Rico)",
+      "natureza": "V",
+      "parametros": [
+        {
+          "nome": "Valor aplicado",
+          "base": 18000.0,
+          "unidade": "R$",
+          "min": 15000.0,
+          "max": 25000.0,
+          "passo": 500.0
+        }
+      ],
+      "contrato": "C02"
+    },
+    {
+      "id": "J05",
+      "data": "2026-01-06",
+      "grupo": "Utilidades",
+      "descricao": "NFs de telefonia fixa, celular e internet - competência jan",
+      "natureza": "V",
+      "parametros": [
+        {
+          "nome": "Telefone fixo",
+          "base": 687.0,
+          "unidade": "R$",
+          "min": 600.0,
+          "max": 800.0,
+          "passo": 1.0
+        }
+      ],
+      "contrato": "C07/C08",
+      "obs": "Celular e internet seguem os contratos C08 e C07."
+    },
+    {
+      "id": "J06",
+      "data": "2026-01-06",
+      "grupo": "Pagamento",
+      "descricao": "Pagamento da folha e do pró-labore de 12/2025",
+      "natureza": "D"
+    },
+    {
+      "id": "J07",
+      "data": "2026-01-07",
+      "grupo": "Pagamento",
+      "descricao": "Pagamento do FGTS e FGTS sobre 13º de 12/2025",
+      "natureza": "D"
+    },
+    {
+      "id": "J08",
+      "data": "2026-01-08",
+      "grupo": "Compra - imobilizado",
+      "descricao": "NF 7.852 Ar Frio Ltda. (MA, CFOP 6.102) - ar-condicionados para a administração; 20% à vista e 2 parcelas (07/02 e 07/03)",
+      "natureza": "V",
+      "parametros": [
+        {
+          "nome": "Quantidade",
+          "base": 5,
+          "unidade": "un",
+          "min": 3,
+          "max": 8,
+          "passo": 1
+        },
+        {
+          "nome": "Valor unitário",
+          "base": 4400.0,
+          "unidade": "R$",
+          "min": 3800.0,
+          "max": 5200.0,
+          "passo": 50.0
+        },
+        {
+          "nome": "Entrada à vista",
+          "base": 20.0,
+          "unidade": "%",
+          "min": 10.0,
+          "max": 30.0,
+          "passo": 5.0
+        }
+      ],
+      "obs": "Gera DIFAL e crédito/estorno conforme destinação (uso administrativo)."
+    },
+    {
+      "id": "J09",
+      "data": "2026-01-08",
+      "grupo": "Compra - frete",
+      "descricao": "CT-e 322.123 Rodovia Transportes - frete da NF 7.852, à vista",
+      "natureza": "V",
+      "parametros": [
+        {
+          "nome": "Valor do frete",
+          "base": 1050.0,
+          "unidade": "R$",
+          "min": 800.0,
+          "max": 1300.0,
+          "passo": 10.0
+        }
+      ]
+    },
+    {
+      "id": "J10",
+      "data": "2026-01-09",
+      "grupo": "Pagamento",
+      "descricao": "Pagamento Cell Telefonia - competência 12/2025",
+      "natureza": "D",
+      "contrato": "C08"
+    },
+    {
+      "id": "J11",
+      "data": "2026-01-09",
+      "grupo": "Pagamento",
+      "descricao": "Pagamento Contador Formado - dezembro/2025",
+      "natureza": "D",
+      "contrato": "C06"
+    },
+    {
+      "id": "J12",
+      "data": "2026-01-09",
+      "grupo": "Tributos",
+      "descricao": "Pagamento do ISS de 12/2025",
+      "natureza": "D"
+    },
+    {
+      "id": "J13",
+      "data": "2026-01-09",
+      "grupo": "Pagamento",
+      "descricao": "Pagamento Internet & Comunicação - 12/2025",
+      "natureza": "D",
+      "contrato": "C07"
+    },
+    {
+      "id": "J14",
+      "data": "2026-01-12",
+      "grupo": "Financeiro",
+      "descricao": "Aplicação no CDB Renda Mais (12 meses)",
+      "natureza": "V",
+      "contrato": "C03"
+    },
+    {
+      "id": "J15",
+      "data": "2026-01-12",
+      "grupo": "Compra - mercadoria",
+      "descricao": "NF 3.369 Comercial Elegante (PB, CFOP 6.102) - mercadoria ALPHA, desconto incondicional, 20% à vista e saldo em 14/02; CT-e 423.765 frete FOB (venc. 18/01)",
+      "natureza": "V",
+      "parametros": [
+        {
+          "nome": "Quantidade",
+          "base": 18075,
+          "unidade": "un",
+          "min": 15000,
+          "max": 21000,
+          "passo": 25
+        },
+        {
+          "nome": "Custo unitário",
+          "base": 19.6703,
+          "unidade": "R$",
+          "min": 17.5,
+          "max": 22.0,
+          "passo": 0.0001
+        },
+        {
+          "nome": "Desconto incondicional",
+          "base": 5.0,
+          "unidade": "%",
+          "min": 3.0,
+          "max": 7.0,
+          "passo": 0.5
+        },
+        {
+          "nome": "Frete",
+          "base": 1720.0,
+          "unidade": "R$",
+          "min": 1400.0,
+          "max": 2100.0,
+          "passo": 10.0
+        }
+      ]
+    },
+    {
+      "id": "J16",
+      "data": "2026-01-13",
+      "grupo": "Receita - serviço",
+      "descricao": "NFS-e 002 para Algodão Doce - comissão de representação (Beta); recebimento 20/01",
+      "natureza": "V",
+      "parametros": [
+        {
+          "nome": "Valor da comissão",
+          "base": 98000.0,
+          "unidade": "R$",
+          "min": 80000.0,
+          "max": 115000.0,
+          "passo": 500.0
+        }
+      ]
+    },
+    {
+      "id": "J17",
+      "data": "2026-01-14",
+      "grupo": "Pagamento",
+      "descricao": "Pagamento de água, energia e telefone - competência 01/2026",
+      "natureza": "D"
+    },
+    {
+      "id": "J18",
+      "data": "2026-01-15",
+      "grupo": "Folha",
+      "descricao": "Processamento da folha e pró-labore de janeiro + provisões",
+      "natureza": "D"
+    },
+    {
+      "id": "J19",
+      "data": "2026-01-15",
+      "grupo": "Depreciação",
+      "descricao": "Depreciação de janeiro",
+      "natureza": "D"
+    },
+    {
+      "id": "J20",
+      "data": "2026-01-16",
+      "grupo": "Societário",
+      "descricao": "Integralização de capital - Marcela Soares",
+      "natureza": "D"
+    },
+    {
+      "id": "J21",
+      "data": "2026-01-19",
+      "grupo": "Pagamento",
+      "descricao": "Pagamento da 4ª parcela do seguro (Seguro Verdade)",
+      "natureza": "D",
+      "contrato": "C09"
+    },
+    {
+      "id": "J22",
+      "data": "2026-01-19",
+      "grupo": "Pagamento",
+      "descricao": "Pagamento do CT-e 423.765",
+      "natureza": "D"
+    },
+    {
+      "id": "J23",
+      "data": "2026-01-20",
+      "grupo": "Serviço tomado",
+      "descricao": "Contratação de arquiteto autônomo (RPA) - pagamento em 17/02",
+      "natureza": "V",
+      "contrato": "C11"
+    },
+    {
+      "id": "J24",
+      "data": "2026-01-20",
+      "grupo": "Financeiro",
+      "descricao": "Liberação do leasing para aquisição de 2 máquinas industriais",
+      "natureza": "V",
+      "contrato": "C04"
+    },
+    {
+      "id": "J25",
+      "data": "2026-01-21",
+      "grupo": "Recebimento",
+      "descricao": "Recebimento da comissão (NFS-e 002)",
+      "natureza": "D"
+    },
+    {
+      "id": "J26",
+      "data": "2026-01-22",
+      "grupo": "Serviço tomado",
+      "descricao": "NFS-e 6.300 Construtor Express - 1ª parcela (50%) da reforma do galpão",
+      "natureza": "V",
+      "contrato": "C12"
+    },
+    {
+      "id": "J27",
+      "data": "2026-01-23",
+      "grupo": "Venda - mercadoria",
+      "descricao": "NF 001 Comercial Caribe (CE, CFOP 5.102) - venda de ALPHA, preço pelo mark-up, boleto em 25/01",
+      "natureza": "V",
+      "parametros": [
+        {
+          "nome": "Quantidade vendida",
+          "base": 8200,
+          "unidade": "un",
+          "min": 7000,
+          "max": 9500,
+          "passo": 50,
+          "regra": "não pode superar o estoque disponível"
+        }
+      ]
+    },
+    {
+      "id": "J28",
+      "data": "2026-01-23",
+      "grupo": "Tributos",
+      "descricao": "Pagamento da GPS (INSS) de 12/2025",
+      "natureza": "D"
+    },
+    {
+      "id": "J29",
+      "data": "2026-01-26",
+      "grupo": "Tributos - infração",
+      "descricao": "Auto de infração SEFAZ-CE (mercadorias sem nota) - pagamento em 05/02 com redução de multa",
+      "natureza": "V",
+      "parametros": [
+        {
+          "nome": "Base de cálculo",
+          "base": 70000.0,
+          "unidade": "R$",
+          "min": 50000.0,
+          "max": 90000.0,
+          "passo": 1000.0
+        },
+        {
+          "nome": "Alíquota aplicada",
+          "base": 18.0,
+          "unidade": "%",
+          "regra": "ICMS = base × alíquota; multa = 75% do ICMS (conforme o caso)"
+        }
+      ]
+    },
+    {
+      "id": "J30",
+      "data": "2026-01-26",
+      "grupo": "Compra - insumo",
+      "descricao": "NF 23.456 Indústria Sofisticada (MG, CFOP 6.101) - MP-A; 25% à vista, 30% em 26/02 e 45% em 24/03; CT-e 423.951 frete CIF",
+      "natureza": "V",
+      "parametros": [
+        {
+          "nome": "Quantidade",
+          "base": 133900,
+          "unidade": "un",
+          "regra": "derivada: necessidade de MP-A + sobra + devolução (F28)"
+        },
+        {
+          "nome": "Custo unitário",
+          "base": 9.0867,
+          "unidade": "R$",
+          "min": 7.7,
+          "max": 10.5,
+          "passo": 0.0001
+        },
+        {
+          "nome": "Frete",
+          "base": 2050.0,
+          "unidade": "R$",
+          "min": 1700.0,
+          "max": 2400.0,
+          "passo": 10.0
+        }
+      ]
+    },
+    {
+      "id": "J31",
+      "data": "2026-01-27",
+      "grupo": "Tributos",
+      "descricao": "Pagamento de PIS e COFINS de 12/2025",
+      "natureza": "D"
+    },
+    {
+      "id": "J32",
+      "data": "2026-01-27",
+      "grupo": "Pagamento",
+      "descricao": "Pagamento de telefone fixo, energia e água de 12/2025",
+      "natureza": "D"
+    },
+    {
+      "id": "J33",
+      "data": "2026-01-28",
+      "grupo": "Recebimento",
+      "descricao": "Recebimento de Comercial Caribe (NF 001)",
+      "natureza": "D"
+    },
+    {
+      "id": "J34",
+      "data": "2026-01-28",
+      "grupo": "Societário",
+      "descricao": "Integralização de capital - Cassilda Apedeuta",
+      "natureza": "D"
+    },
+    {
+      "id": "J35",
+      "data": "2026-01-29",
+      "grupo": "Tributos",
+      "descricao": "Pagamento de ICMS (normal, antecipado, DIFAL) de 12/2025",
+      "natureza": "D"
+    },
+    {
+      "id": "J36",
+      "data": "2026-01-30",
+      "grupo": "Folha - benefício",
+      "descricao": "Compra de vale-transporte para fevereiro (Sindiônibus 14.320)",
+      "natureza": "D"
+    },
+    {
+      "id": "J37",
+      "data": "2026-01-30",
+      "grupo": "Folha - benefício",
+      "descricao": "Compra de vale-alimentação para fevereiro (Ticket 4.310)",
+      "natureza": "D"
+    },
+    {
+      "id": "J38",
+      "data": "2026-01-30",
+      "grupo": "Tributos",
+      "descricao": "Pagamento de IRPJ e CSLL de 12/2025",
+      "natureza": "D"
+    },
+    {
+      "id": "J39",
+      "data": "2026-01-30",
+      "grupo": "Serviço tomado",
+      "descricao": "NFS-e 023 Contador Formado - janeiro, pagamento em 10/02",
+      "natureza": "D",
+      "contrato": "C06"
+    },
+    {
+      "id": "J40",
+      "data": "2026-01-30",
+      "grupo": "Apuração",
+      "descricao": "Apuração de ICMS, ISS, PIS, COFINS, IPI, IRPJ e CSLL de janeiro",
+      "natureza": "D"
+    },
+    {
+      "id": "F01",
+      "data": "2026-02-02",
+      "grupo": "Utilidades",
+      "descricao": "NF Energia Luz do Sertão n.º 988.333 - consumo fev; vencimento 12/02",
+      "natureza": "V",
+      "parametros": [
+        {
+          "nome": "Valor total",
+          "base": 3400.0,
+          "unidade": "R$",
+          "min": 3000.0,
+          "max": 3900.0,
+          "passo": 10.0
+        },
+        {
+          "nome": "Rateio Adm/Com/Ind X/Ind Y",
+          "base": "15,6/17,4/31,5/35,6",
+          "unidade": "%",
+          "regra": "percentuais sorteados ±5 p.p., soma 100%"
+        },
+        {
+          "nome": "Tarifa",
+          "base": 1.432,
+          "unidade": "R$/un",
+          "regra": "fixa"
+        }
+      ],
+      "obs": "Tabela original não traz a área administrativa (R$ 530,00 faltantes)."
+    },
+    {
+      "id": "F02",
+      "data": "2026-02-02",
+      "grupo": "Utilidades",
+      "descricao": "Fatura de água Águas do Litoral n.º 322.666 - consumo fev; vencimento 12/02",
+      "natureza": "V",
+      "parametros": [
+        {
+          "nome": "Valor total",
+          "base": 1780.0,
+          "unidade": "R$",
+          "min": 1500.0,
+          "max": 2100.0,
+          "passo": 10.0
+        },
+        {
+          "nome": "Tarifa",
+          "base": 23.62,
+          "unidade": "R$/un",
+          "regra": "fixa"
+        }
+      ],
+      "obs": "Tabela original só traz administrativa (280) e comercial (320); faltam R$ 1.180,00 da área industrial."
+    },
+    {
+      "id": "F03",
+      "data": "2026-02-02",
+      "grupo": "Utilidades",
+      "descricao": "NFs de telefonia fixa, celular e internet - competência fev",
+      "natureza": "V",
+      "parametros": [
+        {
+          "nome": "Telefone fixo",
+          "base": 690.0,
+          "unidade": "R$",
+          "min": 600.0,
+          "max": 800.0,
+          "passo": 1.0
+        }
+      ],
+      "contrato": "C07/C08"
+    },
+    {
+      "id": "F04",
+      "data": "2026-02-03",
+      "grupo": "Venda - mercadoria",
+      "descricao": "NF 337 - venda de ALPHA a consumidor final em São Luís-MA, PIX, preço pelo mark-up (DIFAL)",
+      "natureza": "V",
+      "parametros": [
+        {
+          "nome": "Quantidade",
+          "base": 40,
+          "unidade": "un",
+          "min": 20,
+          "max": 80,
+          "passo": 5
+        }
+      ]
+    },
+    {
+      "id": "F05",
+      "data": "2026-02-04",
+      "grupo": "Compra - insumo",
+      "descricao": "NF 12.380 Indústria Zalego (TO) - MP-B; 35% à vista, saldo em 03/03; desconto financeiro condicional; CT-e 424.110 (venc. 13/02)",
+      "natureza": "V",
+      "parametros": [
+        {
+          "nome": "Quantidade",
+          "base": 132310,
+          "unidade": "un",
+          "regra": "derivada: necessidade de MP-B + sobra"
+        },
+        {
+          "nome": "Custo unitário",
+          "base": 11.2986,
+          "unidade": "R$",
+          "min": 9.6,
+          "max": 13.0,
+          "passo": 0.0001
+        },
+        {
+          "nome": "Desconto financeiro condicional",
+          "base": 4.0,
+          "unidade": "%",
+          "min": 3.0,
+          "max": 5.0,
+          "passo": 0.5
+        },
+        {
+          "nome": "Frete",
+          "base": 1980.0,
+          "unidade": "R$",
+          "min": 1600.0,
+          "max": 2300.0,
+          "passo": 10.0
+        }
+      ]
+    },
+    {
+      "id": "F06",
+      "data": "2026-02-04",
+      "grupo": "Tributos - infração",
+      "descricao": "Pagamento do auto de infração",
+      "natureza": "D"
+    },
+    {
+      "id": "F07",
+      "data": "2026-02-05",
+      "grupo": "Financeiro",
+      "descricao": "Apropriação do rendimento do CDB Renda Mais",
+      "natureza": "D",
+      "contrato": "C03"
+    },
+    {
+      "id": "F08",
+      "data": "2026-02-06",
+      "grupo": "Receita - serviço",
+      "descricao": "NFS-e 003 para Algodão Doce - comissão de representação (Beta); recebimento 08/02",
+      "natureza": "V",
+      "parametros": [
+        {
+          "nome": "Valor da comissão",
+          "base": 82000.0,
+          "unidade": "R$",
+          "min": 70000.0,
+          "max": 100000.0,
+          "passo": 500.0
+        }
+      ]
+    },
+    {
+      "id": "F09",
+      "data": "2026-02-06",
+      "grupo": "Pagamento",
+      "descricao": "Pagamento da folha e pró-labore de 01/2026",
+      "natureza": "D"
+    },
+    {
+      "id": "F10",
+      "data": "2026-02-09",
+      "grupo": "Compra - insumo",
+      "descricao": "NF 9.147 Distribuidor Verde Oliva (RJ) - materiais secundários Z, Q, R e K; 15% à vista e 2 parcelas (07/03, 07/04); frete CIF",
+      "natureza": "V",
+      "parametros": [
+        {
+          "nome": "Quantidades",
+          "base": "134.130 / 19.440 / 37.560 / 132.870",
+          "unidade": "un",
+          "regra": "derivadas: necessidade + sobra"
+        },
+        {
+          "nome": "Custos unitários",
+          "base": "10,06 / 11,55 / 12,58 / 13,29",
+          "unidade": "R$",
+          "regra": "faixas na tabela de itens"
+        }
+      ]
+    },
+    {
+      "id": "F11",
+      "data": "2026-02-09",
+      "grupo": "Pagamento",
+      "descricao": "Pagamento parcial da NF 7.852 (Ar Frio)",
+      "natureza": "D"
+    },
+    {
+      "id": "F12",
+      "data": "2026-02-10",
+      "grupo": "Tributos",
+      "descricao": "Pagamento do FGTS de 01/2026",
+      "natureza": "D"
+    },
+    {
+      "id": "F13",
+      "data": "2026-02-10",
+      "grupo": "Recebimento",
+      "descricao": "Recebimento da comissão (NFS-e 003)",
+      "natureza": "D"
+    },
+    {
+      "id": "F14",
+      "data": "2026-02-11",
+      "grupo": "Pagamento",
+      "descricao": "Pagamento Cell Telefonia - janeiro",
+      "natureza": "D",
+      "contrato": "C08"
+    },
+    {
+      "id": "F15",
+      "data": "2026-02-11",
+      "grupo": "Societário",
+      "descricao": "Integralização de capital - Marconde Sobreira",
+      "natureza": "D"
+    },
+    {
+      "id": "F16",
+      "data": "2026-02-12",
+      "grupo": "Tributos",
+      "descricao": "Pagamento do ISSQN de 01/2026",
+      "natureza": "D"
+    },
+    {
+      "id": "F17",
+      "data": "2026-02-12",
+      "grupo": "Pagamento",
+      "descricao": "Pagamento da NFS-e 023 (contabilidade de janeiro)",
+      "natureza": "D",
+      "contrato": "C06"
+    },
+    {
+      "id": "F18",
+      "data": "2026-02-13",
+      "grupo": "Pagamento",
+      "descricao": "Pagamento Internet & Comunicação - janeiro",
+      "natureza": "D",
+      "contrato": "C07"
+    },
+    {
+      "id": "F19",
+      "data": "2026-02-13",
+      "grupo": "Pagamento",
+      "descricao": "Pagamento de água, energia e telefone - competência 02/2026",
+      "natureza": "D"
+    },
+    {
+      "id": "F20",
+      "data": "2026-02-13",
+      "grupo": "Folha",
+      "descricao": "Processamento da folha e pró-labore de fevereiro + provisões",
+      "natureza": "D"
+    },
+    {
+      "id": "F21",
+      "data": "2026-02-13",
+      "grupo": "Depreciação",
+      "descricao": "Depreciação de fevereiro",
+      "natureza": "D"
+    },
+    {
+      "id": "F22",
+      "data": "2026-02-18",
+      "grupo": "Compra - insumo",
+      "descricao": "NF 1.747 Embalagens Comerciais (AM) - ME-H; 30% à vista, saldo em 13/03; CT-e 425.130 (venc. 22/02)",
+      "natureza": "V",
+      "parametros": [
+        {
+          "nome": "Quantidade",
+          "base": 38150,
+          "unidade": "un",
+          "regra": "derivada: produção X + Y + sobra"
+        },
+        {
+          "nome": "Custo unitário",
+          "base": 5.6589,
+          "unidade": "R$",
+          "min": 4.8,
+          "max": 6.5,
+          "passo": 0.0001
+        },
+        {
+          "nome": "Frete",
+          "base": 1410.0,
+          "unidade": "R$",
+          "min": 1100.0,
+          "max": 1700.0,
+          "passo": 10.0
+        }
+      ]
+    },
+    {
+      "id": "F23",
+      "data": "2026-02-18",
+      "grupo": "Pagamento",
+      "descricao": "Pagamento do CT-e 424.110",
+      "natureza": "D"
+    },
+    {
+      "id": "F24",
+      "data": "2026-02-18",
+      "grupo": "Pagamento",
+      "descricao": "Pagamento do saldo da NF 3.369 (Comercial Elegante)",
+      "natureza": "D"
+    },
+    {
+      "id": "F25",
+      "data": "2026-02-19",
+      "grupo": "Societário",
+      "descricao": "Integralização de capital - Adalberto Cantareira",
+      "natureza": "D"
+    },
+    {
+      "id": "F26",
+      "data": "2026-02-19",
+      "grupo": "Venda - mercadoria",
+      "descricao": "NF 003 Comercial Caribe (CE, CFOP 5.102) - venda de ALPHA pelo mark-up; boleto em 28/02",
+      "natureza": "V",
+      "parametros": [
+        {
+          "nome": "Quantidade vendida",
+          "base": 10400,
+          "unidade": "un",
+          "min": 9000,
+          "max": 11000,
+          "passo": 50,
+          "regra": "não pode superar o estoque disponível"
+        }
+      ]
+    },
+    {
+      "id": "F27",
+      "data": "2026-02-20",
+      "grupo": "Financeiro",
+      "descricao": "Cessão de mútuo à sócia Cassilda Apedeuta",
+      "natureza": "V",
+      "contrato": "C10"
+    },
+    {
+      "id": "F28",
+      "data": "2026-02-20",
+      "grupo": "Devolução de compra",
+      "descricao": "NF 004 (CFOP 6.201) - devolução de MP-A com defeito à Indústria Sofisticada",
+      "natureza": "V",
+      "parametros": [
+        {
+          "nome": "Quantidade devolvida",
+          "base": 320,
+          "unidade": "un",
+          "min": 150,
+          "max": 500,
+          "passo": 10
+        }
+      ]
+    },
+    {
+      "id": "F29",
+      "data": "2026-02-20",
+      "grupo": "Tributos",
+      "descricao": "Pagamento do IRRF de 01/2026",
+      "natureza": "D"
+    },
+    {
+      "id": "F30",
+      "data": "2026-02-23",
+      "grupo": "Pagamento",
+      "descricao": "Quitação do arquiteto (RPA)",
+      "natureza": "D",
+      "contrato": "C11"
+    },
+    {
+      "id": "F31",
+      "data": "2026-02-23",
+      "grupo": "Tributos",
+      "descricao": "Pagamento da GPS (INSS) de 01/2026",
+      "natureza": "D"
+    },
+    {
+      "id": "F32",
+      "data": "2026-02-23",
+      "grupo": "Serviço tomado",
+      "descricao": "NFS-e 6.320 Construtor Express - 2ª parcela da reforma",
+      "natureza": "D",
+      "contrato": "C12"
+    },
+    {
+      "id": "F33",
+      "data": "2026-02-23",
+      "grupo": "Financeiro",
+      "descricao": "Pagamento da 1ª parcela do leasing (SAC)",
+      "natureza": "D",
+      "contrato": "C04"
+    },
+    {
+      "id": "P01",
+      "data": "2026-02-19",
+      "grupo": "Produção",
+      "descricao": "Requisição de materiais e início da produção de X e Y (dia útil seguinte à compra do ME-H)",
+      "natureza": "D",
+      "obs": "Evento implícito nas regras do caso; não aparece na lista original."
+    },
+    {
+      "id": "P02",
+      "data": "2026-02-23",
+      "grupo": "Produção",
+      "descricao": "Término da produção (3 dias úteis) e transferência para produtos acabados",
+      "natureza": "D",
+      "obs": "Evento implícito nas regras do caso."
+    },
+    {
+      "id": "F34",
+      "data": "2026-02-24",
+      "grupo": "Venda - produção",
+      "descricao": "NF 005 Comercial Roma (PA, CFOP 6.101) - Produtos X e Y pelo mark-up; 80% na emissão e 20% em 22/03; desconto financeiro sobre Y",
+      "natureza": "V",
+      "parametros": [
+        {
+          "nome": "Quantidade vendida X",
+          "base": 19190,
+          "unidade": "un",
+          "regra": "produção de X × percentual vendido"
+        },
+        {
+          "nome": "Quantidade vendida Y",
+          "base": 18520,
+          "unidade": "un",
+          "regra": "produção de Y × percentual vendido"
+        },
+        {
+          "nome": "Desconto financeiro sobre Y",
+          "base": 3.0,
+          "unidade": "%",
+          "min": 2.0,
+          "max": 4.0,
+          "passo": 0.5
+        },
+        {
+          "nome": "Recebimento na emissão",
+          "base": 80.0,
+          "unidade": "%",
+          "min": 70.0,
+          "max": 90.0,
+          "passo": 5.0
+        }
+      ]
+    },
+    {
+      "id": "F35",
+      "data": "2026-02-24",
+      "grupo": "Pagamento",
+      "descricao": "Pagamento do CT-e 425.130",
+      "natureza": "D"
+    },
+    {
+      "id": "F36",
+      "data": "2026-02-24",
+      "grupo": "Devolução de venda",
+      "descricao": "NF 1.320 Comercial Caribe - devolução de ALPHA (abate o boleto)",
+      "natureza": "V",
+      "parametros": [
+        {
+          "nome": "Quantidade devolvida",
+          "base": 70,
+          "unidade": "un",
+          "min": 40,
+          "max": 120,
+          "passo": 5
+        }
+      ]
+    },
+    {
+      "id": "F37",
+      "data": "2026-02-25",
+      "grupo": "Pagamento",
+      "descricao": "Pagamento de 30% da NF 23.456 (Indústria Sofisticada)",
+      "natureza": "D"
+    },
+    {
+      "id": "F38",
+      "data": "2026-02-25",
+      "grupo": "Folha - benefício",
+      "descricao": "Compra de vale-transporte para março (Sindiônibus 15.520)",
+      "natureza": "D"
+    },
+    {
+      "id": "F39",
+      "data": "2026-02-25",
+      "grupo": "Folha - benefício",
+      "descricao": "Compra de vale-alimentação para março (Ticket 5.410)",
+      "natureza": "D"
+    },
+    {
+      "id": "F40",
+      "data": "2026-02-26",
+      "grupo": "Tributos",
+      "descricao": "Pagamento de ICMS (normal, antecipado, DIFAL) de 01/2026",
+      "natureza": "D"
+    },
+    {
+      "id": "F41",
+      "data": "2026-02-26",
+      "grupo": "Serviço tomado",
+      "descricao": "NFS-e 345 Recrutamento S/S - seleção de pessoal (jan-fev)",
+      "natureza": "D",
+      "contrato": "C05"
+    },
+    {
+      "id": "F42",
+      "data": "2026-02-26",
+      "grupo": "Tributos",
+      "descricao": "Pagamento de PIS e COFINS de 01/2026",
+      "natureza": "D"
+    },
+    {
+      "id": "F43",
+      "data": "2026-02-27",
+      "grupo": "Tributos",
+      "descricao": "Pagamento das CSRF de 01/2026",
+      "natureza": "D"
+    },
+    {
+      "id": "F44",
+      "data": "2026-02-27",
+      "grupo": "Recebimento",
+      "descricao": "Recebimento de Comercial Caribe (NF 003, líquido da devolução)",
+      "natureza": "D"
+    },
+    {
+      "id": "F45",
+      "data": "2026-02-27",
+      "grupo": "Serviço tomado",
+      "descricao": "NFS-e 024 Contador Formado - fevereiro (valor reajustado)",
+      "natureza": "D",
+      "contrato": "C06"
+    },
+    {
+      "id": "F46",
+      "data": "2026-02-27",
+      "grupo": "Tributos",
+      "descricao": "Pagamento de IRPJ e CSLL por estimativa de 01/2026",
+      "natureza": "D"
+    },
+    {
+      "id": "F47",
+      "data": "2026-02-27",
+      "grupo": "Financeiro",
+      "descricao": "Resgate do rendimento da aplicação, líquido de IR",
+      "natureza": "D",
+      "contrato": "C02"
+    },
+    {
+      "id": "F48",
+      "data": "2026-02-27",
+      "grupo": "Apuração",
+      "descricao": "Apuração de ICMS, ISS, PIS, COFINS, IPI, IRPJ e CSLL de fevereiro",
+      "natureza": "D"
+    }
+  ],
+  "inconsistencias": [
+    {
+      "onde": "Conta garantida (C01)",
+      "descricao": "Limite escrito como \"R$ 970.000,00 (novecentos mil reais)\"; número e extenso divergem."
+    },
+    {
+      "onde": "Leasing (C04, J24, F33)",
+      "descricao": "Contrato \"assinado e liberado em 19/01\"; o evento de liberação é 20/01. A tabela de bens não traz as 2 máquinas arrendadas."
+    },
+    {
+      "onde": "Arquiteto (C11, J23, F30)",
+      "descricao": "Contratado em 20/01 com pagamento em 17/02; a quitação (23/02) diz \"contratado em 19/01\"."
+    },
+    {
+      "onde": "Recrutamento (C05, F41)",
+      "descricao": "Honorários pagos em 24/02, mas a NFS-e 345 só é emitida em 26/02. Não há evento de pagamento."
+    },
+    {
+      "onde": "Mútuo (C10, F27)",
+      "descricao": "Contrato de 18/02 de R$ 30.000,00; o evento de 20/02 cede R$ 20.000,00. O título diz \"com os sócios\", mas a empresa é a credora."
+    },
+    {
+      "onde": "Seguro (C09, J21)",
+      "descricao": "Prêmio de R$ 6.300,00 em 4 parcelas (R$ 1.575,00); o balanço mostra R$ 2.100,00 a pagar (equivale a 3 parcelas). Última parcela em 17/01 vs. pagamento em 19/01."
+    },
+    {
+      "onde": "Contabilidade (C06)",
+      "descricao": "Razão social \"Contador Formado S/S\" e \"S/A\" (J39). Contrato prevê pagamento no dia 10; NFS-e 024 indica 05/03."
+    },
+    {
+      "onde": "Comodatos (C07, C08)",
+      "descricao": "Contratos de R$ 350,00 e R$ 480,00, mas o balanço registra R$ 410,00 (internet) e R$ 580,00 (celular) a pagar."
+    },
+    {
+      "onde": "Frete MP-A (J30)",
+      "descricao": "Frete CIF (pago pelo vendedor), mas há CT-e cobrado da empresa; vencimento \"24.02.2025\" (ano errado)."
+    },
+    {
+      "onde": "NF 23.456 (J30, F37)",
+      "descricao": "Evento em 26/01; o pagamento de 25/02 diz \"emitida em 24/01/2026\"."
+    },
+    {
+      "onde": "Auto de infração (J29, F06)",
+      "descricao": "TIF n.º 20230001/00 no auto e 20220001/00 \"de 12/01/2026\" no pagamento; pagamento previsto em 05/02 e evento em 04/02; multa digitada \"9,450,00\"; ICMS de 18% (alíquota interna do CE é 20% desde 2024); não fica claro se a redução de 70% já está no valor."
+    },
+    {
+      "onde": "Aplicações (J04, J14, F07, F47)",
+      "descricao": "CDB \"realizado em 11/01\" vs. evento em 12/01; resgate de \"aplicação realizada em 03/01\" vs. INVEST LIQUID em 05/01."
+    },
+    {
+      "onde": "Ar Frio (J08, F11)",
+      "descricao": "Evento em 08/01; pagamento de 09/02 cita \"emitida em 05/01\" e paga 45%, enquanto o contrato prevê 2 parcelas iguais de 40% (07/02 e 07/03)."
+    },
+    {
+      "onde": "Vendas ALPHA (J27, J33, F26, F36, F44)",
+      "descricao": "Boleto da NF 001 em 25/01 e recebimento em 28/01; NF 003 emitida em 19/02 mas citada como \"de 15/02\"; vencimento 28/02 vs. \"27/02\"."
+    },
+    {
+      "onde": "Comissões (J16, J25, F08, F13)",
+      "descricao": "Recebimentos previstos em 20/01 e 08/02; eventos de recebimento em 21/01 e 10/02."
+    },
+    {
+      "onde": "Folha (funcionários)",
+      "descricao": "Idades dos dependentes diminuem de janeiro para fevereiro (ex.: 20 e 16 → 11 e 15 anos); salários de Ângela (2.100 → 1.530) e Marena (2.500 → 5.700) mudam sem evento; Renato Português sem salário; valor digitado \"2.500.00\"."
+    },
+    {
+      "onde": "Energia e água (J03, F01, F02)",
+      "descricao": "Tabelas de rateio incompletas: água/jan sem R$ 380,00; energia/fev sem a área administrativa (R$ 530,00); água/fev sem R$ 1.180,00 (área industrial)."
+    },
+    {
+      "onde": "Encargos (FPAS)",
+      "descricao": "Texto usa 27,80%; a planilha de apoio traz FPAS 507 com RAT 3% (= 28,80%)."
+    },
+    {
+      "onde": "Imobilizado",
+      "descricao": "Balanço: Máquinas R$ 262.000,00; tabela de bens: máquina de R$ 62.000,00."
+    },
+    {
+      "onde": "Materiais secundários (F10)",
+      "descricao": "Total digitado \"3.812.0,4537\"; planilha de apoio cita \"MP-Z\" e \"MS-W\", inexistentes na ficha técnica."
+    }
+  ]
+}

@@ -1,0 +1,16 @@
+{% macro campo(nome, rotulo, valor=None, tipo='text', full=False, required=False, placeholder='') -%}
+<div class="field{{ ' full' if full }}">
+  <label for="{{ nome }}">{{ rotulo }}{% if required %} *{% endif %}</label>
+  <input type="{{ tipo }}" id="{{ nome }}" name="{{ nome }}" value="{{ valor if valor is not none else '' }}"{% if required %} required{% endif %}{% if placeholder %} placeholder="{{ placeholder }}"{% endif %}>
+</div>
+{%- endmacro %}
+
+{% macro excluir(acao, texto, rotulo='Excluir') -%}
+<form class="inline" method="post" action="{{ acao }}" data-confirmar="{{ texto }}">
+  <button class="btn" type="submit">{{ rotulo }}</button>
+</form>
+{%- endmacro %}
+
+{% macro situacao_tag(s) -%}
+{% if s == 'ATIVO' or s == 'ABERTA' %}<span class="tag tag-ok">{{ s }}</span>{% elif s %}<span class="tag tag-alerta">{{ s }}</span>{% endif %}
+{%- endmacro %}

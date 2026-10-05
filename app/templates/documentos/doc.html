@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+{% block titulo %}{{ tipos[doc.tipo] }} {{ doc.numero }} · {{ d.rotulo }}{% endblock %}
+{% from "documentos/_macros.html" import data %}
+{% block conteudo %}
+<div class="breadcrumb noprint"><a href="/duplas">Duplas</a> / <a href="/duplas/{{ d.id }}/empresa">{{ d.rotulo }}</a> / <a href="/duplas/{{ d.id }}/documentos">Documentos</a> / {{ tipos[doc.tipo] }} {{ doc.numero }}</div>
+<div class="page-head noprint" style="margin-bottom:24px">
+  <div><div class="eyebrow">{{ doc.evento }} · {{ data(doc.data) }}</div><h1 style="font-size:40px">{{ doc.titulo }}</h1></div>
+  <div class="acoes">
+    {% if anterior %}<a class="btn" href="/duplas/{{ d.id }}/documentos/{{ anterior }}">← Anterior</a>{% endif %}
+    {% if proximo %}<a class="btn" href="/duplas/{{ d.id }}/documentos/{{ proximo }}">Próximo →</a>{% endif %}
+    <button class="btn" type="button" onclick="window.print()">Imprimir</button>
+  </div>
+</div>
+
+{% include "documentos/_doc.html" %}
+{% endblock %}

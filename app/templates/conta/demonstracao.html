@@ -1,0 +1,29 @@
+{% extends "base.html" %}
+{% block titulo %}Demonstração{% endblock %}
+{% block conteudo %}
+<div class="page-head"><div><div class="eyebrow">Etapa 7 · edital</div><h1>Turma de demonstração</h1>
+  <p class="lead">Uma turma com 20 alunos e 10 grupos <strong>fictícios</strong> (nenhum dado real, LGPD), cada grupo em um estágio diferente — completo e correto, com erros, travado no leasing, inativo, sem acesso, participação desigual, buscando respostas prontas — para os avaliadores e o vídeo mostrarem o sistema completo.</p></div></div>
+
+{% if res %}
+<section class="card secao">
+  <div class="card-head"><h3>Acessos de demonstração</h3><span class="muted mono-sm">as senhas aparecem só agora; recriar gera senhas novas</span></div>
+  <div class="senha-gerada">
+    <div><span class="muted mono-sm">Visitante / avaliador (somente leitura) · {{ request.base_url }}entrar</span><strong>{{ res.credenciais.visitante.login }} · <span class="mono">{{ res.credenciais.visitante.senha }}</span></strong></div>
+    <div><span class="muted mono-sm">Professor da turma de demonstração · {{ request.base_url }}entrar</span><strong>{{ res.credenciais.professor.login }} · <span class="mono">{{ res.credenciais.professor.senha }}</span></strong></div>
+    <div><span class="muted mono-sm">Aluno ({{ res.credenciais.aluno.grupo }}, em andamento) · {{ request.base_url }}aluno</span><strong>{{ res.credenciais.aluno.login }} · <span class="mono">{{ res.credenciais.aluno.senha }}</span></strong></div>
+  </div>
+  <p class="mono-sm muted">Use o acesso de visitante no formulário do edital. O professor e o aluno de demonstração podem alterar dados da turma DEMO; para voltar ao estado inicial, recrie.</p>
+</section>
+{% endif %}
+
+<section class="card secao">
+  <div class="card-head"><h3>Situação</h3></div>
+  {% if t %}<p>Turma <strong>{{ t.disciplina.codigo }} · {{ t.codigo }}</strong> criada, com {{ grupos }} grupos. <a href="/turmas/{{ t.id }}/painel">Abrir o painel</a> · <a href="/turmas/{{ t.id }}/duplas">Grupos</a> · <a href="/turmas/{{ t.id }}/notas">Notas</a></p>
+  <p class="mono-sm muted">Acessos: {{ login_vis }} (visitante) e {{ login_prof }} (professor). Senhas esquecidas: recrie a demonstração ou gere senha provisória em Usuários.</p>
+  {% else %}<p class="muted">A turma de demonstração ainda não existe.</p>{% endif %}
+  <form method="post" action="/admin/demonstracao" class="form-acoes" data-confirmar="{{ 'Recriar a turma de demonstração? Tudo o que foi feito nela será apagado e novas senhas serão geradas.' if t else 'Criar a turma de demonstração?' }}">
+    <button class="btn btn-primary" type="submit" name="acao" value="criar">{{ 'Recriar demonstração' if t else 'Criar demonstração' }}</button>
+  </form>
+  {% if t %}<form method="post" action="/admin/demonstracao" class="form-acoes" data-confirmar="Apagar a turma de demonstração e os acessos de demonstração?"><button class="btn" type="submit" name="acao" value="apagar">Apagar demonstração</button></form>{% endif %}
+</section>
+{% endblock %}

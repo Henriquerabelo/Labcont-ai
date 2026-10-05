@@ -1,0 +1,8 @@
+{% extends "casos/_base.html" %}
+{% block aba %}
+<div class="aviso" role="note" style="justify-content:space-between;flex-wrap:wrap">
+  <span>Gabarito de janeiro com os <strong>valores do caso-base</strong> (sem sorteio), para conferência. Valide as premissas aqui mesmo, na aba <a href="#premissas" data-ir="premissas">Premissas</a>; o gabarito de cada dupla fica na página da empresa da dupla.</span>
+  <a class="btn btn-sm" href="{{ xlsx }}" title="Cópia opcional para arquivo">Exportar .xlsx</a>
+</div>
+{% include "gabarito/_conteudo.html" %}
+{% endblock %}

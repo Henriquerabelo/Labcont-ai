@@ -1,0 +1,64 @@
+{% extends "aluno/base.html" %}
+{% set menu = 'lancar' %}
+{% block titulo %}{{ 'Editar lançamento' if lanc_id else 'Novo lançamento' }}{% endblock %}
+{% block conteudo %}
+<div class="page-head" style="margin-bottom:24px"><div><div class="eyebrow">{{ d.empresa.valores.empresa.nome }} · escrituração de janeiro/2026</div>
+  <h1>{{ 'Editar lançamento' if lanc_id else 'Novo lançamento' }}</h1></div>
+  <div class="acoes">{% if dados.evento %}<a class="btn" href="/aluno/documentos">Documentos</a>{% endif %}<a class="btn" href="/aluno">Voltar ao painel</a></div></div>
+
+<form class="card lanc" method="post" action="{{ '/aluno/lancamentos/%s/editar'|format(lanc_id) if lanc_id else '/aluno/lancar' }}" id="form-lanc">
+  <div class="form-grid">
+    <div class="field" style="grid-column:span 2"><label for="evento">Evento</label>
+      <select id="evento" name="evento" required><option value="">Escolha o evento…</option>
+        {% for e in eventos %}<option value="{{ e.codigo }}" data-data="{{ e.data.isoformat() }}" {{ 'selected' if e.codigo == dados.evento }}>{{ e.codigo }} · {{ e.data.strftime('%d/%m') }} · {{ e.descricao[:90] }}</option>{% endfor %}
+      </select></div>
+    <div class="field"><label for="data">Data</label><input id="data" type="date" name="data" value="{{ dados.data or '' }}" min="2026-01-01" max="2026-01-31" required></div>
+    <div class="field full"><label for="historico">Histórico</label><input id="historico" name="historico" value="{{ dados.historico or '' }}" placeholder="Ex.: Compra de mercadorias conforme NF 3.369 de Comercial Elegante" required></div>
+  </div>
+  <datalist id="contas">{% for c in contas %}<option value="{{ c }}">{% endfor %}</datalist>
+  <div class="table-wrap" style="margin-top:24px"><table class="tbl-edit partidas">
+    <thead><tr><th>Conta (digite código ou nome)</th><th class="c">D / C</th><th class="num">Valor (R$)</th><th></th></tr></thead>
+    <tbody id="linhas">
+    {% set ps = dados.partidas or [] %}
+    {% for i in range([ps|length, 2]|max) %}{% set p = ps[i] if i < ps|length else {} %}
+      <tr><td><input name="conta" list="contas" value="{{ p.texto or '' }}" class="conta" aria-label="Conta"></td>
+        <td class="c"><select name="natureza" aria-label="Débito ou crédito"><option value="D" {{ 'selected' if p.natureza == 'D' or (not p and i == 0) }}>Débito</option><option value="C" {{ 'selected' if p.natureza == 'C' or (not p and i == 1) }}>Crédito</option></select></td>
+        <td><input name="valor" value="{{ p.valor|n(2) if p.valor else '' }}" class="w-sm num" inputmode="decimal" aria-label="Valor"></td>
+        <td class="c"><button type="button" class="btn-link remover" aria-label="Remover linha">remover</button></td></tr>
+    {% endfor %}
+    </tbody>
+  </table></div>
+  <div class="totais"><button type="button" class="btn btn-sm" id="mais">+ linha</button>
+    <span>Débitos <strong id="td">0,00</strong></span><span>Créditos <strong id="tc">0,00</strong></span><span id="dif" class="muted"></span></div>
+  <div class="form-acoes"><button class="btn btn-primary" type="submit">Salvar lançamento</button>
+    {% if lanc_id %}<span class="muted mono-sm">A conferência é refeita ao salvar.</span>{% endif %}</div>
+</form>
+{% if lanc_id %}
+<form method="post" action="/aluno/lancamentos/{{ lanc_id }}/excluir" data-confirmar="Excluir este lançamento?" style="margin-top:12px"><button class="btn btn-sm" type="submit">Excluir lançamento</button></form>
+{% endif %}
+<script>
+(() => {
+  const tb = document.getElementById('linhas');
+  const num = s => { s = (s || '').replace(/\s|R\$/g, ''); if (s.includes(',')) s = s.replace(/\./g, '').replace(',', '.'); const v = parseFloat(s); return isNaN(v) ? 0 : v; };
+  const br = v => v.toLocaleString('pt-BR', {minimumFractionDigits: 2, maximumFractionDigits: 2});
+  const soma = () => {
+    let d = 0, c = 0;
+    tb.querySelectorAll('tr').forEach(tr => { const v = num(tr.querySelector('[name=valor]').value); tr.querySelector('[name=natureza]').value === 'D' ? d += v : c += v; });
+    document.getElementById('td').textContent = br(d); document.getElementById('tc').textContent = br(c);
+    const dif = Math.round((d - c) * 100) / 100, el = document.getElementById('dif');
+    el.textContent = dif ? 'diferença ' + br(Math.abs(dif)) : (d ? 'débitos = créditos ✓' : '');
+    el.className = dif ? 'alerta-dif' : 'muted';
+  };
+  tb.addEventListener('input', soma); tb.addEventListener('change', soma);
+  tb.addEventListener('click', e => { if (e.target.classList.contains('remover') && tb.rows.length > 2) { e.target.closest('tr').remove(); soma(); } });
+  document.getElementById('mais').addEventListener('click', () => {
+    const tr = tb.rows[tb.rows.length - 1].cloneNode(true);
+    tr.querySelectorAll('input').forEach(i => i.value = ''); tb.appendChild(tr); tr.querySelector('input').focus();
+  });
+  const ev = document.getElementById('evento'), dt = document.getElementById('data');
+  ev.addEventListener('change', () => { const o = ev.selectedOptions[0]; if (o && o.dataset.data && !dt.dataset.mexeu) dt.value = o.dataset.data; });
+  dt.addEventListener('input', () => dt.dataset.mexeu = 1);
+  soma();
+})();
+</script>
+{% endblock %}

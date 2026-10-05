@@ -1,0 +1,28 @@
+{% extends "base.html" %}
+{% block titulo %}{{ 'Editar' if u and u.id else 'Novo' }} usuário{% endblock %}
+{% block conteudo %}
+{% set tem = u.nomes_perfis if u and u.id else [] %}
+{% set mon = (u.perfis|selectattr('perfil','equalto','monitor')|map(attribute='turma_id')|list) if u and u.id else [] %}
+<div class="breadcrumb"><a href="/usuarios">Usuários</a>{% if u and u.id %} / {{ u.nome }}{% endif %}</div>
+<div class="page-head"><h1>{{ 'Editar usuário' if u and u.id else 'Novo usuário' }}</h1>
+  {% if not (u and u.id) %}<p class="lead">Ao salvar, o sistema gera uma senha provisória para você entregar à pessoa. Ela troca a senha no primeiro acesso.</p>{% endif %}</div>
+<form class="card" method="post">
+  <div class="form-grid">
+    <div class="field"><label for="nome">Nome</label><input id="nome" name="nome" value="{{ u.nome if u else '' }}" required></div>
+    <div class="field"><label for="login">Login (e-mail)</label><input id="login" name="login" value="{{ u.login if u else '' }}" required></div>
+    <div class="field full"><label>Perfis</label>
+      <div class="perfis-escolha">{% for p in concediveis %}<label class="check"><input type="checkbox" name="perfil" value="{{ p }}" {{ 'checked' if p in tem }}> {{ perfis[p] }}</label>{% endfor %}</div></div>
+    <div class="field full"><label for="docente_id">Docente (obrigatório para o perfil professor)</label>
+      <select id="docente_id" name="docente_id"><option value="">—</option>{% for d in docentes %}<option value="{{ d.id }}" {{ 'selected' if u and u.docente_id == d.id }}>{{ d.nome }}</option>{% endfor %}</select></div>
+    <div class="field full"><label>Turmas acompanhadas (perfil monitor)</label>
+      <div class="perfis-escolha">{% for t in turmas %}<label class="check"><input type="checkbox" name="turma_monitor" value="{{ t.id }}" {{ 'checked' if t.id in mon }}> {{ t.disciplina.codigo }} · {{ t.codigo }} ({{ t.periodo }})</label>{% endfor %}</div></div>
+    {% if u and u.id %}<div class="field full"><label class="check"><input type="checkbox" name="ativo" {{ 'checked' if u.ativo }}> Usuário ativo</label></div>{% endif %}
+  </div>
+  <div class="form-acoes"><button class="btn btn-primary" type="submit">Salvar</button><a class="btn" href="/usuarios">Cancelar</a></div>
+</form>
+{% if u and u.id %}
+<div class="form-acoes" style="margin-top:16px">
+  <form class="inline" method="post" action="/usuarios/{{ u.id }}/senha" data-confirmar="Gerar nova senha provisória para {{ u.nome }}? A senha atual deixa de valer."><button class="btn" type="submit">Gerar senha provisória</button></form>
+  {% if u.id != usuario.id %}<form class="inline" method="post" action="/usuarios/{{ u.id }}/excluir" data-confirmar="Excluir o usuário {{ u.nome }}?"><button class="btn" type="submit">Excluir usuário</button></form>{% endif %}
+</div>{% endif %}
+{% endblock %}

@@ -1,0 +1,27 @@
+{% extends "aluno/base.html" %}
+{% block titulo %}Área do grupo{% endblock %}
+{% block conteudo %}
+<section class="hero" style="max-width:860px;margin:0 auto 40px">
+  <div class="eyebrow">Laboratório de Prática Contábil · área do grupo</div>
+  <h1>Entrar na empresa do seu grupo</h1>
+  <p class="lead">Entre com a sua matrícula e senha. No primeiro acesso, crie a sua senha usando o código do grupo informado pelo professor.</p>
+  <div class="entrar-grid">
+    <form method="post" action="/aluno/entrar" class="card">
+      <h3>Já tenho senha</h3>
+      <div class="field"><label for="matricula">Matrícula</label><input id="matricula" name="matricula" value="{{ matricula or '' }}" inputmode="numeric" autocomplete="username" required></div>
+      <div class="field"><label for="senha">Senha</label><input id="senha" name="senha" type="password" autocomplete="current-password" required></div>
+      <div class="form-acoes"><button class="btn btn-primary" type="submit">Entrar</button></div>
+    </form>
+    <form method="post" action="/aluno/primeiro-acesso" class="card" id="primeiro">
+      <h3>Primeiro acesso</h3>
+      <div class="field"><label for="matricula_pa">Matrícula</label><input id="matricula_pa" name="matricula_pa" value="{{ matricula_pa or '' }}" inputmode="numeric" required></div>
+      <div class="field"><label for="codigo">Código do grupo</label><input id="codigo" name="codigo" value="{{ codigo or '' }}" autocomplete="off" required style="text-transform:uppercase"></div>
+      <div class="field"><label for="nova">Crie uma senha (mín. 8)</label><input id="nova" name="nova" type="password" autocomplete="new-password" minlength="8" required></div>
+      <div class="field"><label for="nova2">Repita a senha</label><input id="nova2" name="nova2" type="password" autocomplete="new-password" minlength="8" required></div>
+      <label class="check ciencia"><input type="checkbox" name="ciente" value="1" required> Li o <a href="/privacidade" target="_blank">aviso de privacidade</a> e estou ciente de como meus dados são tratados.</label>
+      <div class="form-acoes"><button class="btn btn-dark" type="submit">Criar senha e entrar</button></div>
+    </form>
+  </div>
+  <p class="mono-sm muted" style="margin-top:20px">Esqueceu a senha? Peça ao professor para apagá-la e faça o primeiro acesso de novo. Professores e coordenação entram por <a href="/entrar">/entrar</a>.</p>
+</section>
+{% endblock %}

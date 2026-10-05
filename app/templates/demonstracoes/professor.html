@@ -1,0 +1,11 @@
+{% extends "base.html" %}
+{% from "demonstracoes/_macros.html" import dre, bp %}
+{% block titulo %}Demonstrações · {{ d.rotulo }}{% endblock %}
+{% block conteudo %}
+<div class="breadcrumb"><a href="/duplas">Grupos</a> / <a href="/turmas/{{ d.turma.id }}/duplas">{{ d.turma.disciplina.codigo }} · Turma {{ d.turma.codigo }}</a> / <a href="/duplas/{{ d.id }}/escrituracao">{{ d.rotulo }}</a> / Demonstrações</div>
+<div class="page-head"><div><div class="eyebrow">CPC 26 · janeiro/2026</div><h1>Demonstrações · {{ d.empresa.valores.empresa.nome }}</h1>
+  <p class="lead">{% if g %}À esquerda, a partir dos lançamentos da dupla; à direita, a partir do gabarito. Resultado: dupla {{ r.lucro|n(2) }} · gabarito {{ g.lucro|n(2) }}.{% else %}A partir dos lançamentos da dupla.{% endif %}</p></div>
+  <div class="acoes"><a class="btn" href="/duplas/{{ d.id }}/escrituracao">Escrituração</a></div></div>
+<div class="dem-grid">{{ dre(r, 'DRE · dupla') }}{% if g %}{{ dre(g, 'DRE · gabarito') }}{% endif %}</div>
+<div class="dem-grid">{{ bp(r, 'Balanço · dupla') }}{% if g %}{{ bp(g, 'Balanço · gabarito') }}{% endif %}</div>
+{% endblock %}

@@ -1,0 +1,18 @@
+{% extends "base.html" %}
+{% from "_macros.html" import campo %}
+{% block titulo %}{{ 'Editar' if d and d.id else 'Nova' }} disciplina{% endblock %}
+{% block conteudo %}
+<div class="breadcrumb"><a href="/disciplinas">Disciplinas</a>{% if d and d.id %} / <a href="/disciplinas/{{ d.id }}">{{ d.codigo }}</a>{% endif %}</div>
+<div class="page-head"><h1>{{ 'Editar disciplina' if d and d.id else 'Nova disciplina' }}</h1></div>
+<form class="card" method="post">
+  <div class="form-grid">
+    {{ campo('codigo', 'Código', d.codigo if d, required=True, placeholder='EH0012') }}
+    {{ campo('nome', 'Nome', d.nome if d, required=True) }}
+    {{ campo('nivel', 'Nível', d.nivel if d else 'GRADUAÇÃO') }}
+    {{ campo('carga_horaria', 'Carga horária (h)', d.carga_horaria if d, tipo='number') }}
+    {{ campo('departamento', 'Departamento', d.departamento if d, full=True) }}
+    <div class="field full"><label for="observacoes">Observações</label><textarea id="observacoes" name="observacoes">{{ d.observacoes if d and d.observacoes else '' }}</textarea></div>
+  </div>
+  <div class="form-acoes"><button class="btn btn-primary" type="submit">Salvar</button><a class="btn" href="{{ '/disciplinas/%s'|format(d.id) if d and d.id else '/disciplinas' }}">Cancelar</a></div>
+</form>
+{% endblock %}

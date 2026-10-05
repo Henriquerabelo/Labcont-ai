@@ -1,0 +1,19 @@
+{% extends "base.html" %}
+{% block titulo %}{{ caso.nome }}{% endblock %}
+{% block conteudo %}
+<div class="breadcrumb"><a href="/casos">Casos da empresa</a> / {{ caso.nome }}</div>
+<div class="page-head" style="margin-bottom:24px">
+  <div>
+    <div class="eyebrow">Caso da empresa{% if caso.docente %} · Prof. {{ caso.docente.nome }}{% endif %}{% if caso.origem_id %} · cópia do caso #{{ caso.origem_id }}{% endif %}</div>
+    <h1>{{ caso.nome }}</h1>
+  </div>
+  <div class="acoes"><a class="btn" href="/casos/{{ caso.id }}/exportar">Exportar JSON</a></div>
+</div>
+{% if usuario and not usuario.gestor and not (caso.docente_id and caso.docente_id == usuario.docente_id) %}
+<div class="aviso" role="note"><span>{% if 'professor' in usuario.perfis %}Este é o caso-base mantido pela coordenação: você pode consultar. Para ajustar valores e validar premissas, use <strong>Duplicar</strong> na lista de casos — a cópia fica em seu nome.{% else %}Consulta: somente leitura.{% endif %}</span></div>
+{% endif %}
+<nav class="abas">
+  {% for chave, rotulo in abas %}<a href="/casos/{{ caso.id }}/{{ chave }}" class="{{ 'ativo' if aba == chave }}">{{ rotulo }}</a>{% endfor %}
+</nav>
+{% block aba %}{% endblock %}
+{% endblock %}

@@ -1,0 +1,11 @@
+# Liga o app à rede Docker do Traefik (usado quando o Traefik NÃO está em network_mode: host).
+services:
+  app:
+    networks:
+      - interna
+      - proxy
+
+networks:
+  proxy:
+    external: true
+    name: ${TRAEFIK_NETWORK}

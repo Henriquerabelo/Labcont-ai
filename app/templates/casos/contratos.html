@@ -1,0 +1,28 @@
+{% extends "casos/_base.html" %}
+{% from "casos/_macros.html" import parametros %}
+{% block aba %}
+<div class="sub-head" style="margin-bottom:16px">
+  <p class="muted mono-sm" style="margin:0">{{ caso.contratos|length }} contratos. Cada contrato tem dados descritivos e os parâmetros que variam por dupla.</p>
+  <form class="inline" method="post" action="/casos/{{ caso.id }}/contratos/novo"><button class="btn btn-primary" type="submit">Novo contrato</button></form>
+</div>
+<nav class="indice">{% for c in caso.contratos %}<a href="#{{ c.codigo }}">{{ c.codigo }}</a>{% endfor %}</nav>
+
+{% for c in caso.contratos %}
+<section class="card" id="{{ c.codigo }}">
+  <form method="post" action="/casos/{{ caso.id }}/contratos/{{ c.id }}">
+    <div class="card-head"><h3>{{ c.codigo }} · {{ c.tipo }}</h3><span class="muted mono-sm">{{ c.parte or '' }}</span></div>
+    <div class="form-grid">
+      <div class="field" style="max-width:120px"><label>Código</label><input name="codigo" value="{{ c.codigo }}"></div>
+      <div class="field"><label>Tipo</label><input name="tipo" value="{{ c.tipo }}"></div>
+      <div class="field"><label>Parte contratante</label><input name="parte" value="{{ c.parte or '' }}"></div>
+      <div class="field" style="max-width:180px"><label>Início</label><input type="date" name="inicio" value="{{ c.inicio.isoformat() if c.inicio else '' }}"></div>
+      <div class="field full"><label>Descrição / cláusulas</label><textarea name="descricao" rows="2">{{ c.descricao or '' }}</textarea></div>
+      <div class="field full"><label>Eventos ligados</label><input name="eventos" value="{{ c.eventos or '' }}" placeholder="J24, F33"></div>
+    </div>
+    <div class="form-acoes compacto"><button class="btn btn-dark btn-sm" type="submit">Salvar contrato</button></div>
+  </form>
+  {{ parametros(caso, caso.params('contrato', c.codigo), 'contrato', c.codigo, '/casos/%s/contratos#%s'|format(caso.id, c.codigo)) }}
+  <form class="inline" method="post" action="/casos/{{ caso.id }}/contratos/{{ c.id }}/excluir" data-confirmar="Excluir o contrato {{ c.codigo }} e seus parâmetros?"><button class="btn-link btn" type="submit">Excluir contrato</button></form>
+</section>
+{% endfor %}
+{% endblock %}

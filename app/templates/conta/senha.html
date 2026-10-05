@@ -1,0 +1,14 @@
+{% extends "base.html" %}
+{% block titulo %}Trocar senha{% endblock %}
+{% block conteudo %}
+<div class="page-head"><div><div class="eyebrow">{{ usuario.login }}</div><h1>Trocar senha</h1>
+  {% if usuario.trocar_senha %}<p class="lead">Você entrou com uma senha provisória. Crie a sua senha para continuar.</p>{% endif %}</div></div>
+<form class="card" method="post" action="/conta/senha" style="max-width:640px">
+  <div class="form-grid">
+    <div class="field full"><label for="atual">Senha atual{{ ' (provisória)' if usuario.trocar_senha }}</label><input id="atual" name="atual" type="password" autocomplete="current-password" required></div>
+    <div class="field"><label for="nova">Nova senha (mín. 8 caracteres)</label><input id="nova" name="nova" type="password" autocomplete="new-password" minlength="8" required></div>
+    <div class="field"><label for="nova2">Repita a nova senha</label><input id="nova2" name="nova2" type="password" autocomplete="new-password" minlength="8" required></div>
+  </div>
+  <div class="form-acoes"><button class="btn btn-primary" type="submit">Salvar</button></div>
+</form>
+{% endblock %}

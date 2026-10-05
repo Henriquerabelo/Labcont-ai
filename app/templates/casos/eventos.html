@@ -1,0 +1,31 @@
+{% extends "casos/_base.html" %}
+{% block aba %}
+<form class="busca" method="get">
+  <select name="mes" aria-label="Mês"><option value="">Todos os meses</option>{% for m in meses %}<option value="{{ m }}" {{ 'selected' if m == mes }}>{{ m[5:] }}/{{ m[:4] }}</option>{% endfor %}</select>
+  <select name="natureza" aria-label="Natureza"><option value="">Todas as naturezas</option>{% for k, v in naturezas.items() %}<option value="{{ k }}" {{ 'selected' if k == natureza }}>{{ v }}</option>{% endfor %}</select>
+  <input type="search" name="q" value="{{ q }}" placeholder="Buscar por texto, código ou grupo">
+  <button class="btn" type="submit">Filtrar</button>{% if mes or natureza or q %}<a class="btn btn-link" href="?">Limpar</a>{% endif %}
+</form>
+<div class="sub-head" style="margin-bottom:12px">
+  <p class="muted mono-sm" style="margin:0">{{ evs|length }} evento(s) · <strong>V</strong> = valores sorteados por dupla · <strong>D</strong> = derivado (calculado pelo sistema) · <strong>F</strong> = fixo</p>
+  <form class="inline linha-form" method="post" action="/casos/{{ caso.id }}/eventos/novo">
+    <input type="date" name="data" value="2026-02-27" aria-label="Data do novo evento" style="width:auto">
+    <button class="btn btn-primary" type="submit">Novo evento</button></form>
+</div>
+<div class="table-wrap"><table>
+  <thead><tr><th>ID</th><th>Data</th><th>Grupo</th><th>Evento</th><th>Nat.</th><th class="num">Parâm.</th><th>Contrato</th></tr></thead>
+  <tbody>
+  {% for e in evs %}
+    <tr>
+      <td><a href="/casos/{{ caso.id }}/eventos/{{ e.id }}"><strong>{{ e.codigo }}</strong></a></td>
+      <td class="mono-sm">{{ e.data.strftime('%d/%m') if e.data else '' }}</td>
+      <td class="mono-sm">{{ e.grupo or '' }}</td>
+      <td><a href="/casos/{{ caso.id }}/eventos/{{ e.id }}">{{ e.descricao }}</a>{% if e.obs %}<div class="muted mono-sm">⚠ {{ e.obs }}</div>{% endif %}</td>
+      <td><span class="tag {{ 'tag-dark' if e.natureza == 'V' }}">{{ e.natureza }}</span></td>
+      <td class="num">{{ nparams.get(e.codigo, '') }}</td>
+      <td class="mono-sm">{% if e.contrato %}<a href="/casos/{{ caso.id }}/contratos#{{ e.contrato.split('/')[0] }}">{{ e.contrato }}</a>{% endif %}</td>
+    </tr>
+  {% else %}<tr><td colspan="7" class="vazio">Nenhum evento com esses filtros.</td></tr>{% endfor %}
+  </tbody>
+</table></div>
+{% endblock %}

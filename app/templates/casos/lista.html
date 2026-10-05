@@ -1,0 +1,55 @@
+{% extends "base.html" %}
+{% block titulo %}Casos da empresa{% endblock %}
+{% block conteudo %}
+<div class="page-head">
+  <div><div class="eyebrow">Etapa 2 · Processos da empresa</div><h1>Casos da empresa</h1>
+  <p class="lead">Cada caso reúne a empresa-modelo: contratos, folha, produção e eventos, com o valor de referência e a faixa de variação de cada parâmetro. Duplique o caso-base para ter a sua versão: as alterações de um professor não afetam os casos dos outros.</p></div>
+</div>
+
+<div class="table-wrap card" style="padding:8px 24px">
+<table>
+  <thead><tr><th>#</th><th>Caso</th><th>Professor</th><th class="num">Contratos</th><th class="num">Eventos</th><th class="num">Parâmetros</th><th>Pendências</th><th>Atualizado</th><th></th></tr></thead>
+  <tbody>
+  {% for c in casos %}
+    <tr>
+      <td>{{ c.id }}</td>
+      <td><a href="/casos/{{ c.id }}/empresa"><strong>{{ c.nome }}</strong></a><div class="muted mono-sm">{{ c.descricao or '' }}</div></td>
+      <td class="mono-sm">{{ c.docente.nome if c.docente else '—' }}</td>
+      <td class="num">{{ c.contratos|length }}</td><td class="num">{{ c.eventos|length }}</td><td class="num">{{ c.parametros|length }}</td>
+      <td>{% set pend = c.inconsistencias|selectattr('status','equalto','PENDENTE')|list|length %}{% if pend %}<span class="tag tag-alerta">{{ pend }} pendente(s)</span>{% else %}<span class="tag tag-ok">ok</span>{% endif %}</td>
+      <td class="mono-sm">{{ c.atualizado_em.strftime('%d/%m/%Y %H:%M') if c.atualizado_em else '' }}</td>
+      <td class="num" style="white-space:nowrap">
+        <details class="menu-acao"><summary class="btn btn-sm">Duplicar</summary>
+          <form method="post" action="/casos/{{ c.id }}/duplicar" class="pop">
+            <label for="dn{{ c.id }}">Nome da cópia</label><input id="dn{{ c.id }}" name="nome" value="{{ c.nome }} — minha versão">
+            {% if usuario and usuario.gestor %}<label for="dd{{ c.id }}">Professor responsável</label>
+            <select id="dd{{ c.id }}" name="docente_id"><option value="">—</option>{% for d in docentes %}<option value="{{ d.id }}">{{ d.nome }}</option>{% endfor %}</select>{% endif %}
+            <button class="btn btn-dark btn-sm" type="submit">Criar cópia</button>
+          </form></details>
+        {% if usuario and (usuario.gestor or (c.docente_id and c.docente_id == usuario.docente_id)) %}<form class="inline" method="post" action="/casos/{{ c.id }}/excluir" data-confirmar="Excluir o caso “{{ c.nome }}” e todos os seus parâmetros? Esta ação não pode ser desfeita."><button class="btn btn-sm" type="submit">Excluir</button></form>{% endif %}
+      </td>
+    </tr>
+  {% endfor %}
+  </tbody>
+</table>
+</div>
+
+{% if usuario and usuario.gestor %}<div class="grid grid-2" style="margin-top:24px">
+  <form class="card" method="post" action="/casos/carregar">
+    <div class="card-head"><h3>Carregar o caso-base</h3></div>
+    <p class="muted mono-sm">Cria um novo caso com os dados originais do exercício EH0012 2026.2 (empresa LAB).</p>
+    <div class="form-grid">
+      <div class="field"><label for="cbn">Nome</label><input id="cbn" name="nome" value="EH0012 · Caso-base 2026.2"></div>
+      <div class="field"><label for="cbd">Professor</label><select id="cbd" name="docente_id"><option value="">—</option>{% for d in docentes %}<option value="{{ d.id }}">{{ d.nome }}</option>{% endfor %}</select></div>
+    </div>
+    <div class="form-acoes"><button class="btn btn-primary" type="submit">Carregar caso-base</button></div>
+  </form>
+  <form class="card" method="post" action="/casos/importar" enctype="multipart/form-data">
+    <div class="card-head"><h3>Importar caso (JSON)</h3></div>
+    <p class="muted mono-sm">Use um arquivo gerado por “Exportar JSON” para compartilhar um caso entre professores ou guardar uma versão.</p>
+    <div class="drop"><input type="file" name="arquivo" accept=".json,application/json" required aria-label="Arquivo JSON"></div>
+    <div class="form-acoes"><button class="btn" type="submit">Importar</button></div>
+  </form>
+</div>
+{% endif %}
+{% endblock %}

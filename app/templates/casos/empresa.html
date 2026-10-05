@@ -1,0 +1,67 @@
+{% extends "casos/_base.html" %}
+{% from "casos/_macros.html" import parametros, tabela, chave_valor %}
+{% block aba %}
+{% set url = '/casos/%s/empresa'|format(caso.id) %}
+
+<form class="card" method="post" action="/casos/{{ caso.id }}/editar">
+    <input type="hidden" name="volta" value="{{ url }}">
+    <div class="card-head"><h3>Identificação do caso</h3></div>
+    <div class="form-grid">
+      <div class="field"><label for="cn">Nome do caso</label><input id="cn" name="nome" value="{{ caso.nome }}"></div>
+      <div class="field"><label for="cd">Descrição</label><input id="cd" name="descricao" value="{{ caso.descricao or '' }}"></div>
+      <div class="field"><label for="cdo">Professor responsável</label>
+        <select id="cdo" name="docente_id"><option value="">—</option>{% for d in docentes %}<option value="{{ d.id }}" {{ 'selected' if d.id == caso.docente_id }}>{{ d.nome }}</option>{% endfor %}</select></div>
+    </div>
+    <div class="form-acoes compacto"><button class="btn btn-dark btn-sm" type="submit">Salvar</button></div>
+  </form>
+<section class="card" id="parametros">
+  <div class="card-head"><h3>Parâmetros da empresa</h3><span class="muted mono-sm">Capital social e destinação do resultado</span></div>
+  {{ parametros(caso, caso.params('empresa'), 'empresa', '', url+'#parametros', titulo=none) }}
+</section>
+
+<section class="card" id="empresa" style="margin-top:24px">
+  <div class="card-head"><h3>Dados da empresa</h3><span class="muted mono-sm">Regime, tributação e políticas — texto livre</span></div>
+  {{ chave_valor(url, 'empresa', 'emp', caso.dados.empresa or {}) }}
+</section>
+
+<section class="card" id="socios">
+  <div class="card-head"><h3>Sócios</h3><span class="muted mono-sm">Capital, integralização e pró-labore</span></div>
+  {{ tabela(url, 'socios', 's', caso.socios, [
+      ('nome','Nome',''), ('funcao','Função',''), ('cotas','Cotas','w-sm num'), ('a_integralizar','A integralizar (R$)','w-sm num'),
+      ('evento_integralizacao','Evento','w-xs'), ('pro_labore_jan','Pró-labore jan','w-sm num'), ('pro_labore_fev','Pró-labore fev','w-sm num'),
+      ('dependentes','Dependentes','')], chave_id='id', novo_rotulo='+ novo sócio') }}
+  {{ parametros(caso, caso.params('socios'), 'socios', '', url+'#socios', titulo='Faixas dos sócios') }}
+</section>
+
+<section class="card" id="imobilizado">
+  <div class="card-head"><h3>Imobilizado em 31/12/2025</h3></div>
+  {{ tabela(url, 'imobilizado', 'imobilizado', caso.dados.imobilizado or [], [
+      ('bem','Bem',''), ('ncm','NCM','w-xs'), ('aquisicao','Aquisição','w-sm'), ('valor','Valor (R$)','w-sm num'),
+      ('taxa_fiscal_aa','Taxa fiscal % a.a.','w-xs num'), ('classe','Classe',''), ('vida_util_anos','Vida útil (anos)','w-xs num'), ('residual_pct','Residual %','w-xs num')],
+      novo_rotulo='+ novo bem') }}
+</section>
+
+<div class="grid grid-2">
+  <section class="card" id="vida_util">
+    <div class="card-head"><h3>Vida útil e valor residual</h3></div>
+    {{ tabela(url, 'vida_util', 'vida_util', caso.dados.vida_util or [], [('classe','Classe',''), ('anos','Anos','w-xs num'), ('residual_pct','Residual %','w-xs num')], novo_rotulo='+ nova classe') }}
+  </section>
+  <section class="card" id="rateio_areas">
+    <div class="card-head"><h3>Rateio por área (%)</h3></div>
+    {{ tabela(url, 'rateio_areas', 'rateio_areas', caso.dados.rateio_areas or [], [('item','Item',''), ('adm','Adm.','w-xs num'), ('com','Com.','w-xs num'), ('ind','Ind.','w-xs num')], novo_rotulo='+ novo item') }}
+  </section>
+</div>
+
+<section class="card" id="saldos">
+  <div class="card-head"><h3>Saldos iniciais (31/12/2025)</h3><span class="muted mono-sm">Referência do caso-base · recalculados na geração por dupla</span></div>
+  {% set s = caso.dados.saldos_iniciais or {} %}
+  <p class="mono-sm muted">{{ s.observacao }}</p>
+  <div class="grid grid-2">
+    <div><h4 class="h4">Ativo</h4><table class="mini"><tbody>{% for k, v in (s.ativo or {}).items() %}<tr><td>{{ k }}</td><td class="num">{{ (v.valor if v is mapping else v)|n(2) }}</td></tr>{% endfor %}</tbody></table></div>
+    <div><h4 class="h4">Passivo e PL</h4><table class="mini"><tbody>
+      {% for k, v in (s.passivo or {}).items() %}{% if v is mapping %}{% for k2, v2 in v.items() %}<tr><td>{{ k }} · {{ k2 }}</td><td class="num">{{ v2|n(2) }}</td></tr>{% endfor %}{% else %}<tr><td>{{ k }}</td><td class="num">{{ v|n(2) }}</td></tr>{% endif %}{% endfor %}
+      {% for k, v in (s.patrimonio_liquido or {}).items() %}<tr><td>{{ k }}</td><td class="num">{{ v|n(2) }}</td></tr>{% endfor %}
+    </tbody></table></div>
+  </div>
+</section>
+{% endblock %}

@@ -1,0 +1,27 @@
+{% extends "casos/_base.html" %}
+{% from "casos/_macros.html" import parametros %}
+{% block aba %}
+<div class="sub-head" style="margin-bottom:16px">
+  <a class="btn btn-link" href="/casos/{{ caso.id }}/eventos">← Todos os eventos</a>
+  <span>{% if anterior %}<a class="btn btn-sm" href="/casos/{{ caso.id }}/eventos/{{ anterior.id }}">← {{ anterior.codigo }}</a>{% endif %}
+  {% if proximo %}<a class="btn btn-sm" href="/casos/{{ caso.id }}/eventos/{{ proximo.id }}">{{ proximo.codigo }} →</a>{% endif %}</span>
+</div>
+<section class="card">
+  <form method="post" action="/casos/{{ caso.id }}/eventos/{{ e.id }}">
+    <div class="card-head"><h3>{{ e.codigo }} · {{ e.data.strftime('%d/%m/%Y') if e.data else '' }}</h3><span class="tag {{ 'tag-dark' if e.natureza == 'V' }}">{{ naturezas[e.natureza] }}</span></div>
+    <div class="form-grid">
+      <div class="field" style="max-width:120px"><label for="ec">Código</label><input id="ec" name="codigo" value="{{ e.codigo }}"></div>
+      <div class="field" style="max-width:180px"><label for="ed">Data</label><input id="ed" type="date" name="data" value="{{ e.data.isoformat() if e.data else '' }}"></div>
+      <div class="field"><label for="eg">Grupo</label><input id="eg" name="grupo" value="{{ e.grupo or '' }}"></div>
+      <div class="field" style="max-width:200px"><label for="en">Natureza</label><select id="en" name="natureza">{% for k, v in naturezas.items() %}<option value="{{ k }}" {{ 'selected' if k == e.natureza }}>{{ k }} — {{ v }}</option>{% endfor %}</select></div>
+      <div class="field" style="max-width:160px"><label for="et">Contrato</label><input id="et" name="contrato" value="{{ e.contrato or '' }}" placeholder="C04"></div>
+      <div class="field full"><label for="eds">Descrição (enunciado)</label><textarea id="eds" name="descricao" rows="3">{{ e.descricao }}</textarea></div>
+      <div class="field full"><label for="eo">Observação / ponto de atenção</label><textarea id="eo" name="obs" rows="2">{{ e.obs or '' }}</textarea></div>
+    </div>
+    <div class="form-acoes compacto"><button class="btn btn-dark btn-sm" type="submit">Salvar evento</button></div>
+  </form>
+  {{ parametros(caso, caso.params('evento', e.codigo), 'evento', e.codigo, '/casos/%s/eventos/%s'|format(caso.id, e.id),
+      vazio=('Evento derivado: os valores são calculados pelo sistema a partir de saldos, contratos, folha ou produção.' if e.natureza == 'D' else 'Sem parâmetros. Inclua abaixo os valores que devem variar por dupla.')) }}
+  <form class="inline" method="post" action="/casos/{{ caso.id }}/eventos/{{ e.id }}/excluir" data-confirmar="Excluir o evento {{ e.codigo }}?"><button class="btn btn-link" type="submit">Excluir evento</button></form>
+</section>
+{% endblock %}

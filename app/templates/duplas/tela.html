@@ -1,0 +1,156 @@
+{% extends "base.html" %}
+{% block titulo %}Duplas · {{ t.disciplina.codigo }} {{ t.codigo }}{% endblock %}
+{% block conteudo %}
+<div class="breadcrumb"><a href="/disciplinas">Disciplinas</a> / <a href="/disciplinas/{{ t.disciplina.id }}">{{ t.disciplina.codigo }}</a> / <a href="/turmas/{{ t.id }}">Turma {{ t.codigo }}</a> / Duplas</div>
+<div class="page-head">
+  <div><div class="eyebrow">{{ t.rotulo }} · Etapa 3</div><h1>Duplas da turma</h1>
+  <p class="lead">A formação é voluntária: os discentes escolhem seus pares e o professor registra aqui. Depois de formadas, gere a empresa de cada dupla a partir de um caso — cada uma recebe valores próprios, sorteados dentro das faixas.</p></div>
+  <div class="acoes">{% if geradas %}<a class="btn btn-dark" href="/turmas/{{ t.id }}/painel">Painel da turma</a>{% endif %}<a class="btn" href="/turmas/{{ t.id }}">Voltar à turma</a>{% if duplas %}<a class="btn" href="/turmas/{{ t.id }}/duplas.csv">Exportar CSV</a>{% endif %}</div>
+</div>
+
+{% if status and status.encerrada_em %}<div class="aviso" role="note"><span><strong>Turma encerrada</strong>: somente leitura{{ ' (o administrador ainda pode alterar)' if usuario and usuario.admin }}.</span></div>{% endif %}
+<div class="stats" style="margin-bottom:32px">
+  <div class="stat"><div class="num">{{ total_ativos }}</div><div class="lbl">Discentes ativos</div></div>
+  <div class="stat"><div class="num">{{ duplas|length }}</div><div class="lbl">Duplas formadas</div></div>
+  <div class="stat"><div class="num">{{ sem_dupla|length }}</div><div class="lbl">Sem dupla</div></div>
+  <div class="stat"><div class="num">{{ geradas }}<span class="muted" style="font-size:24px"> / {{ duplas|length }}</span></div><div class="lbl">Empresas geradas</div></div>
+</div>
+
+<div class="duplas-layout">
+  <section class="card" id="sem-dupla">
+    <div class="card-head"><h3>Sem dupla</h3><span class="muted mono-sm">marque 2 e forme a dupla</span></div>
+    {% if sem_dupla %}
+    <form method="post" action="/turmas/{{ t.id }}/duplas" id="form-dupla">
+      <ul class="lista-sel">
+      {% for m in sem_dupla %}
+        <li><label class="check"><input type="checkbox" name="discente_id" value="{{ m.discente_id }}">
+          <span>{{ m.discente.nome }}<span class="muted mono-sm"> · {{ m.discente.matricula }}{% if m.discente.turno %} · {{ m.discente.turno|lower }}{% endif %}</span></span></label></li>
+      {% endfor %}
+      </ul>
+      <div class="sel-barra">
+        <input name="nome" placeholder="Nome da dupla (opcional)" aria-label="Nome da dupla">
+        <button class="btn btn-dark" type="submit" id="btn-formar" disabled>Formar dupla <span id="n-sel">(0)</span></button>
+      </div>
+      <p class="muted mono-sm" id="aviso-sel">Trio ou integrante sozinho só como exceção (máximo 3).</p>
+    </form>
+    {% else %}
+      <p class="vazio">{% if total_ativos %}Todos os discentes ativos já estão em dupla.{% else %}Nenhum discente ativo nesta turma. Importe a lista de participantes do SIGAA ou inclua na página da turma.{% endif %}</p>
+    {% endif %}
+
+    <details class="lote"{% if not duplas %} open{% endif %}>
+      <summary>Informar várias duplas de uma vez</summary>
+      <form method="post" action="/turmas/{{ t.id }}/duplas/lote">
+        <p class="muted mono-sm">Uma dupla por linha, com matrículas ou nomes separados por <b>;</b> &nbsp;<b>,</b> &nbsp;<b>/</b> ou “ e ”. Serve para colar a lista recebida dos alunos (e-mail, formulário, planilha).</p>
+        <textarea name="lista" rows="5" placeholder="512345; 512399&#10;Ana Souza e Bruno Lima"></textarea>
+        <div class="form-acoes compacto"><button class="btn btn-dark btn-sm" type="submit">Registrar duplas</button></div>
+      </form>
+    </details>
+  </section>
+
+  <section class="card" id="duplas">
+    <div class="card-head"><h3>Duplas formadas</h3><span class="muted mono-sm">{{ duplas|length }} dupla(s)</span></div>
+    {% for d in duplas %}
+    <article class="dupla" id="d{{ d.id }}">
+      <header>
+        <div><span class="dupla-num">{{ '%02d'|format(d.numero) }}</span>
+          <form class="inline nome-dupla" method="post" action="/duplas/{{ d.id }}/editar">
+            <input name="nome" value="{{ d.nome or '' }}" placeholder="sem nome" aria-label="Nome da dupla {{ d.numero }}" onchange="this.form.submit()">
+            <input type="hidden" name="observacao" value="{{ d.observacao or '' }}">
+          </form></div>
+        <div class="dupla-status">
+          {% if d.membros|length != 2 %}<span class="tag tag-alerta">{{ d.membros|length }} integrante{{ 's' if d.membros|length > 1 }}</span>{% endif %}
+          {% if d.empresa %}<a class="tag tag-ok" href="/duplas/{{ d.id }}/empresa">Empresa gerada</a>{% else %}<span class="tag">Sem empresa</span>{% endif %}
+        </div>
+      </header>
+      <ul class="membros">
+        {% for m in d.membros %}
+        <li><span>{{ m.discente.nome }} <span class="muted mono-sm">· {{ m.discente.matricula }}</span>
+          {% set sit = (m.discente.matriculas|selectattr('turma_id','equalto',t.id)|map(attribute='situacao')|first) %}
+          {% if sit and sit != 'ATIVO' %}<span class="tag tag-alerta">{{ sit }}</span>{% endif %}</span>
+          <form class="inline" method="post" action="/duplas/{{ d.id }}/membros/{{ m.id }}/remover" data-confirmar="Retirar {{ m.discente.nome }} da dupla {{ d.numero }}?"><button class="btn-link" type="submit">retirar</button></form></li>
+        {% endfor %}
+      </ul>
+      {% if d.empresa %}{% set pr = progresso.get(d.id) %}{% set ac = codigos.get(d.id) %}
+      <div class="dupla-esc">
+        <span>Código: <strong class="mono-sm">{{ ac.codigo if ac else '—' }}</strong></span>
+        <span>{% if pr and pr.enviado %}Janeiro <strong>enviado</strong> {{ pr.enviado.strftime('%d/%m') }} · <strong>{{ pr.percentual }}%</strong> correto{% else %}Janeiro em andamento: {{ pr.eventos if pr else 0 }}/42 eventos lançados{% if pr and pr.previa is defined %} <span class="muted mono-sm">(prévia {{ pr.previa }}%)</span>{% endif %}{% endif %}</span>
+        <a class="btn btn-sm btn-dark" href="/duplas/{{ d.id }}/escrituracao">Escrituração</a><a class="btn btn-sm" href="/duplas/{{ d.id }}/tutor">Tutor</a><a class="btn btn-sm" href="/aluno/ver/{{ d.id }}" title="Abre a área do aluno deste grupo em modo somente leitura">Ver como aluno</a>
+      </div>{% endif %}
+      <footer>
+        {% if d.membros|length < 3 and sem_dupla %}
+        <form class="inline incluir" method="post" action="/duplas/{{ d.id }}/membros">
+          <select name="discente_id" aria-label="Incluir integrante"><option value="">+ incluir integrante…</option>{% for m in sem_dupla %}<option value="{{ m.discente_id }}">{{ m.discente.nome }}</option>{% endfor %}</select>
+          <button class="btn btn-sm" type="submit">Incluir</button>
+        </form>{% else %}<span></span>{% endif %}
+        <span class="dupla-acoes">
+          {% if d.empresa %}<a class="btn btn-sm" href="/duplas/{{ d.id }}/empresa">Ver empresa</a><a class="btn btn-sm" href="/duplas/{{ d.id }}/documentos">Documentos</a><a class="btn btn-sm" href="/duplas/{{ d.id }}/gabarito">Gabarito</a><a class="btn btn-sm" href="/duplas/{{ d.id }}/orientacao.docx" title="Documento de orientação da dupla">.docx</a>{% endif %}
+          <form class="inline" method="post" action="/duplas/{{ d.id }}/excluir" data-confirmar="Desfazer a dupla {{ d.numero }}?{{ ' A empresa gerada também será excluída.' if d.empresa }}"><button class="btn btn-sm" type="submit">Desfazer</button></form>
+        </span>
+      </footer>
+    </article>
+    {% else %}
+      <p class="vazio">Nenhuma dupla registrada ainda.</p>
+    {% endfor %}
+  </section>
+</div>
+
+<section class="card" id="acesso" style="margin-top:24px">
+  <div class="card-head"><h3>Acesso dos grupos</h3><span class="muted mono-sm">alunos entram em <strong>{{ url_aluno }}</strong> com matrícula e senha; no primeiro acesso, criam a senha com o código do grupo</span></div>
+  {% if duplas %}
+  <div class="table-wrap"><table class="mini">
+    <thead><tr><th>Grupo</th><th>Integrantes (senha)</th><th>Código</th><th>Último acesso</th><th></th></tr></thead>
+    <tbody>{% for d in duplas %}{% set ac = codigos.get(d.id) %}<tr><td>{{ d.rotulo }}</td>
+      <td>{% for m in d.membros %}<div class="aluno-acesso">{{ m.discente.nome }} <span class="tag{{ ' tag-ok' if m.discente_id in contas }}">{{ 'senha criada' if m.discente_id in contas else 'sem senha' }}</span>
+        {% if altera and m.discente_id in contas %}<form class="inline" method="post" action="/turmas/{{ t.id }}/alunos/{{ m.discente_id }}/senha" data-confirmar="Apagar a senha de {{ m.discente.nome }}? Ele fará o primeiro acesso de novo com o código do grupo."><button class="btn-link" type="submit">apagar senha</button></form>{% endif %}</div>{% endfor %}</td>
+      <td class="mono-sm"><strong>{{ ac.codigo if ac else '—' }}</strong></td><td class="mono-sm">{{ ac.ultimo_acesso.strftime('%d/%m %H:%M') if ac and ac.ultimo_acesso else '' }}</td>
+      <td class="num">{% if altera %}<form class="inline" method="post" action="/duplas/{{ d.id }}/codigo/novo" data-confirmar="Gerar um novo código para o {{ d.rotulo }}? O atual deixará de funcionar para o primeiro acesso."><button class="btn-link" type="submit">{{ 'novo código' if ac else 'gerar' }}</button></form>{% endif %}</td></tr>{% endfor %}</tbody>
+  </table></div>
+  {% if altera %}<form method="post" action="/turmas/{{ t.id }}/duplas/codigos" class="form-acoes compacto"><button class="btn btn-dark btn-sm" type="submit">Gerar códigos que faltam</button>
+    <span class="muted mono-sm">Entregue o código a cada grupo. Ele serve só para o primeiro acesso; depois cada aluno usa a própria senha.</span></form>{% endif %}
+  {% else %}<p class="muted">Forme os grupos primeiro.</p>{% endif %}
+</section>
+
+<section class="card gerar" id="gerar" style="margin-top:24px">
+  <div class="card-head"><h3>Gerar as empresas das duplas</h3><span class="muted mono-sm">{{ geradas }} de {{ duplas|length }} geradas</span></div>
+  {% if not casos %}
+    <p class="muted">Nenhum caso cadastrado. <a href="/casos">Cadastre ou carregue o caso-base</a>.</p>
+  {% elif not duplas %}
+    <p class="muted">Forme as duplas primeiro.</p>
+  {% else %}
+  <form method="post" action="/turmas/{{ t.id }}/duplas/gerar">
+    <div class="form-grid">
+      <div class="field"><label for="caso_id">Caso da empresa</label>
+        <select id="caso_id" name="caso_id">{% for c in casos %}<option value="{{ c.id }}" {{ 'selected' if c.id == caso_padrao }}>{{ c.nome }}{% if c.docente %} — {{ c.docente.nome }}{% endif %}</option>{% endfor %}</select>
+        {% for c in casos %}{% set pend = c.inconsistencias|selectattr('status','equalto','PENDENTE')|list|length %}{% if pend and c.id == caso_padrao %}<span class="mono-sm muted">Este caso tem {{ pend }} inconsistência(s) pendente(s) — <a href="/casos/{{ c.id }}/inconsistencias">revisar</a> antes de gerar é recomendado.</span>{% endif %}{% endfor %}
+      </div>
+      <fieldset class="field modos"><legend>O que gerar</legend>
+        <label class="check"><input type="radio" name="modo" value="faltantes" checked> Só as duplas sem empresa</label>
+        <label class="check"><input type="radio" name="modo" value="recalcular"> Todas, mantendo o sorteio (aplica alterações do caso)</label>
+        <label class="check"><input type="radio" name="modo" value="novas"> Todas, com novo sorteio</label>
+      </fieldset>
+    </div>
+    <div class="form-acoes"><button class="btn btn-primary" type="submit" data-confirmar-modo>Gerar empresas</button>
+      {% if geradas %}<a class="btn" href="/turmas/{{ t.id }}/duplas/orientacoes.zip">Baixar orientações (.zip)</a>{% endif %}
+      <span class="muted mono-sm">Cada dupla recebe uma semente; com a mesma semente e o mesmo caso, os valores se repetem. A orientação (.docx) segue o formato do exercício-base, com os valores da dupla.</span></div>
+  </form>
+  {% endif %}
+</section>
+
+<script>
+(() => {
+  const f = document.getElementById('form-dupla'); if (!f) return;
+  const b = document.getElementById('btn-formar'), n = document.getElementById('n-sel'), av = document.getElementById('aviso-sel');
+  const upd = () => {
+    const k = f.querySelectorAll('input[name=discente_id]:checked').length;
+    n.textContent = `(${k})`; b.disabled = k === 0 || k > 3;
+    av.textContent = k > 3 ? 'Máximo de 3 integrantes.' : (k && k !== 2 ? 'Atenção: dupla com ' + k + ' integrante(s), registrada como exceção.' : 'Trio ou integrante sozinho só como exceção (máximo 3).');
+    av.classList.toggle('alerta', k > 0 && k !== 2);
+  };
+  f.addEventListener('change', upd); upd();
+})();
+document.querySelectorAll('[data-confirmar-modo]').forEach(btn => btn.addEventListener('click', e => {
+  const m = btn.form.querySelector('input[name=modo]:checked').value;
+  if (m === 'novas' && !confirm('Refazer o sorteio de TODAS as duplas? Os valores atuais serão substituídos.')) e.preventDefault();
+}));
+</script>
+{% endblock %}

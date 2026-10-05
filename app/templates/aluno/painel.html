@@ -1,0 +1,57 @@
+{% extends "aluno/base.html" %}
+{% set menu = 'painel' %}
+{% block titulo %}{{ d.empresa.valores.empresa.nome }}{% endblock %}
+{% block conteudo %}
+{% if nota %}<div class="aviso aviso-ok" role="status"><span><strong>Nota de janeiro (homologada pelo professor): {{ nota.nota_final|n(1) }}</strong>{% if nota.observacao %} · {{ nota.observacao }}{% endif %}</span></div>{% endif %}
+<div class="page-head">
+  <div><div class="eyebrow">{{ d.turma.disciplina.codigo }} · Turma {{ d.turma.codigo }} · {{ d.rotulo }} · {{ aluno_nome }}</div>
+    <h1>{{ d.empresa.valores.empresa.nome }}</h1>
+    <p class="lead">{% if fech %}Janeiro enviado em {{ fech.enviado_em.strftime('%d/%m/%Y às %H:%M') }}. Abaixo, a correção de cada evento.{% else %}Escriture os fatos de janeiro a partir dos documentos. A correção só é feita no fechamento do mês, quando a dupla enviar todos os lançamentos.{% endif %}</p></div>
+  <div class="acoes">{% if not fech and not visualizacao %}<a class="btn btn-primary" href="/aluno/lancar">Novo lançamento</a>{% endif %}<a class="btn" href="/aluno/documentos">Documentos</a><a class="btn" href="/aluno/orientacao.docx">Orientação (.docx)</a></div>
+</div>
+
+{% include "aluno/_avisos.html" %}
+{% if fech %}
+{% set c = aud.contagem %}
+<div class="stats" style="margin-bottom:32px">
+  <div class="stat"><div class="num">{{ aud.percentual }}<span style="font-size:24px">%</span></div><div class="lbl">Eventos corretos em janeiro</div></div>
+  <div class="stat"><div class="num" style="color:#1d8a52">{{ c.get('correto', 0) }}</div><div class="lbl">Corretos</div></div>
+  <div class="stat"><div class="num" style="color:#b88400">{{ c.get('valor', 0) }}</div><div class="lbl">Valor divergente</div></div>
+  <div class="stat"><div class="num" style="color:#b4441f">{{ c.get('conta', 0) }}</div><div class="lbl">Conta errada</div></div>
+  <div class="stat"><div class="num">{{ c.get('pendente', 0) }}</div><div class="lbl">Não lançados</div></div>
+</div>
+{% else %}
+<div class="stats" style="margin-bottom:24px">
+  <div class="stat"><div class="num">{{ lancados }}<span class="muted" style="font-size:24px"> / {{ aud.eventos|length }}</span></div><div class="lbl">Eventos com lançamento</div></div>
+  <div class="stat"><div class="num">{{ pendentes|length }}</div><div class="lbl">Eventos pendentes</div></div>
+  <div class="stat"><div class="num">{{ n_lancs }}</div><div class="lbl">Lançamentos registrados</div></div>
+</div>
+<section class="card fechamento" id="fechamento">
+  <div class="card-head"><h3>Fechamento de janeiro</h3><span class="muted mono-sm">depois do envio, a escrituração de janeiro fica bloqueada</span></div>
+  <p>Quando a dupla terminar todos os eventos, envie o fechamento do mês. Só então o sistema confere os lançamentos com o gabarito e mostra a correção de cada evento.</p>
+  <form method="post" action="/aluno/fechamento" data-confirmar="Enviar o fechamento de janeiro? Depois disso não será possível alterar os lançamentos.">
+    {% if pendentes %}
+    <p class="aviso erro" style="margin:12px 0">Ainda há {{ pendentes|length }} evento(s) sem lançamento: {{ pendentes|map(attribute='codigo')|join(', ') }}.</p>
+    <label class="check"><input type="checkbox" name="confirmo" value="1"> Enviar mesmo assim (eventos sem lançamento contam como não feitos)</label>
+    {% endif %}
+    <div class="form-acoes compacto"><button class="btn btn-dark" type="submit" {{ 'disabled' if not n_lancs }}>Enviar fechamento de janeiro</button>
+      <a class="btn btn-sm" href="/aluno/balancete">Conferir balancete antes</a></div>
+  </form>
+</section>
+{% endif %}
+
+<div class="card" style="padding:8px 24px;margin-top:24px">
+<table class="aud">
+  <thead><tr><th>Data</th><th>Evento</th><th>Descrição</th><th>Situação</th><th></th></tr></thead>
+  <tbody>
+  {% for e in aud.eventos %}
+    <tr id="ev-{{ e.codigo }}"><td class="mono-sm">{{ e.data.strftime('%d/%m') if e.data else '' }}</td><td class="mono-sm">{{ e.codigo }}</td>
+      <td>{{ e.descricao }}{% if fech and e.nivel in ('valor', 'conta') %}<div class="dica nivel-{{ e.nivel }}">{{ e.dica }}</div>{% endif %}</td>
+      <td><span class="nivel nivel-{{ e.nivel }}">{{ niveis[e.nivel] if e.nivel != 'pendente' or not fech else 'Não lançado' }}</span></td>
+      <td class="num" style="white-space:nowrap"><a class="btn btn-sm" href="/aluno/tutor?evento={{ e.codigo }}" title="Perguntar ao tutor sobre este evento">Tutor</a> {% if not fech and not visualizacao %}<a class="btn btn-sm" href="/aluno/lancar?evento={{ e.codigo }}">Lançar</a>{% endif %}{% if e.nivel != 'pendente' %} <a class="btn btn-sm" href="/aluno/diario#ev-{{ e.codigo }}">Ver</a>{% endif %}</td></tr>
+  {% endfor %}
+  </tbody>
+</table>
+</div>
+{% if fech %}<p class="muted mono-sm" style="margin-top:16px">A correção compara o efeito de cada evento por conta (débitos − créditos). Diferenças de até R$ 0,05 por conta são aceitas.</p>{% endif %}
+{% endblock %}

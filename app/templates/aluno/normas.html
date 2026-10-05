@@ -1,0 +1,23 @@
+{% extends "aluno/base.html" %}
+{% set menu = 'normas' %}
+{% block titulo %}Normas{% endblock %}
+{% block conteudo %}
+<div class="page-head" style="margin-bottom:24px">
+  <div><div class="eyebrow">{{ d.empresa.valores.empresa.nome }} · consulta</div><h1>Normas</h1>
+    <p class="lead">Resumos das normas usadas no exercício, com a fonte para consulta. São as mesmas fichas que o tutor usa para explicar.</p></div>
+</div>
+<form class="card busca-norma" method="get" action="/aluno/normas">
+  <div class="form-grid">
+    <div class="field" style="grid-column: span 2"><label for="q">Buscar</label><input id="q" name="q" value="{{ q }}" placeholder="Ex.: reserva legal, crédito de ICMS, depreciação"></div>
+    <div class="field"><label for="evento">Evento (opcional)</label><input id="evento" name="evento" value="{{ evento }}" placeholder="J15"></div>
+  </div>
+  <div class="form-acoes compacto"><button class="btn btn-primary" type="submit">Buscar</button>{% if resultado is not none %}<a class="btn" href="/aluno/normas">Ver todas</a>{% endif %}</div>
+</form>
+<div class="normas-grid" style="margin-top:24px">
+{% if resultado is not none %}
+  {% for n, score in resultado %}{% set admin = False %}{% set score = 0 %}{% include "normas/_ficha.html" %}{% else %}<p class="vazio">Nada encontrado. Tente outras palavras ou pergunte ao tutor.</p>{% endfor %}
+{% else %}
+  {% for n in normas %}{% set admin = False %}{% set score = 0 %}{% include "normas/_ficha.html" %}{% endfor %}
+{% endif %}
+</div>
+{% endblock %}

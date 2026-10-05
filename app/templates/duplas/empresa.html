@@ -1,0 +1,85 @@
+{% extends "base.html" %}
+{% set t = d.turma %}
+{% set nomes_escopo = {'empresa':'Empresa','socios':'Sócios','contrato':'Contratos','folha':'Folha','producao':'Produção','markup':'Mark-up','evento':'Eventos'} %}
+{% block titulo %}{{ v.empresa.nome or 'Empresa' }} · {{ d.rotulo }}{% endblock %}
+{% block conteudo %}
+<div class="breadcrumb"><a href="/disciplinas">Disciplinas</a> / <a href="/turmas/{{ t.id }}">{{ t.disciplina.codigo }} · Turma {{ t.codigo }}</a> / <a href="/turmas/{{ t.id }}/duplas">Duplas</a> / {{ d.rotulo }}</div>
+<div class="page-head">
+  <div><div class="eyebrow">{{ d.rotulo }} · {{ t.periodo }}</div><h1>{{ v.empresa.nome or 'Empresa' }}</h1>
+    <p class="lead">{% for m in v.integrantes %}{{ m.nome }}{% if not loop.last %} &nbsp;·&nbsp; {% endif %}{% endfor %}</p>
+    <p class="muted mono-sm">Caso: {% if d.empresa.caso %}<a href="/casos/{{ d.empresa.caso.id }}/empresa">{{ d.empresa.caso.nome }}</a>{% else %}{{ v.caso.nome }} (excluído){% endif %} · semente {{ d.empresa.semente }} · gerada em {{ d.empresa.gerado_em.strftime('%d/%m/%Y %H:%M') if d.empresa.gerado_em else '' }}</p></div>
+  <div class="acoes">
+    <a class="btn btn-primary" href="/duplas/{{ d.id }}/orientacao.docx">Orientação (.docx)</a>
+    <a class="btn btn-dark" href="/duplas/{{ d.id }}/documentos">Documentos</a>
+    <a class="btn btn-dark" href="/duplas/{{ d.id }}/gabarito">Gabarito de janeiro</a>
+    <a class="btn" href="/duplas/{{ d.id }}/empresa.json">Exportar JSON</a>
+    {% if d.empresa.caso %}
+    <form class="inline" method="post" action="/duplas/{{ d.id }}/empresa/sortear"><input type="hidden" name="manter" value="1"><button class="btn" type="submit" title="Reaplica o caso (após edições) com a mesma semente">Recalcular</button></form>
+    <form class="inline" method="post" action="/duplas/{{ d.id }}/empresa/sortear" data-confirmar="Fazer um novo sorteio para esta dupla? Os valores atuais serão substituídos."><button class="btn" type="submit">Novo sorteio</button></form>
+    {% endif %}
+    <form class="inline" method="post" action="/duplas/{{ d.id }}/empresa/excluir" data-confirmar="Excluir a empresa gerada desta dupla?"><button class="btn" type="submit">Excluir</button></form>
+  </div>
+</div>
+
+{% set r = v.resumo %}
+<div class="stats" style="margin-bottom:32px">
+  <div class="stat"><div class="num">{{ r.parametros_sorteados }}</div><div class="lbl">Parâmetros sorteados</div></div>
+  <div class="stat"><div class="num">{{ r.producao_total|n }}</div><div class="lbl">Unidades produzidas (fev)</div></div>
+  <div class="stat"><div class="num" style="font-size:34px">{{ r.total_compras_insumos|n(2) }}</div><div class="lbl">Compras de insumos (R$)</div></div>
+  <div class="stat"><div class="num" style="font-size:34px">{{ r.folha_fev|n(2) }}</div><div class="lbl">Salários-base fev (R$) · {{ r.empregados_fev }} empregados</div></div>
+</div>
+
+{% if v.pendencias %}<div class="aviso" role="note" style="flex-direction:column;align-items:flex-start;gap:4px">{% for p in v.pendencias %}<span class="mono-sm">• {{ p }}</span>{% endfor %}</div>{% endif %}
+
+<nav class="indice"><a href="#producao">Produção e compras</a><a href="#folha">Folha</a><a href="#socios">Sócios</a><a href="#parametros">Parâmetros sorteados</a></nav>
+
+<section class="card" id="producao">
+  <div class="card-head"><h3>Produção e vendas (fevereiro)</h3>{% if v.markup.multiplicador %}<span class="muted mono-sm">Mark-up: margem {{ v.markup.margem_contribuicao|n }}% · divisor {{ v.markup.divisor|n(4) }} · multiplicador {{ v.markup.multiplicador|n(4) }}</span>{% endif %}</div>
+  <div class="table-wrap"><table>
+    <thead><tr><th>Produto</th><th class="num">Produzido</th><th class="num">% vendido</th><th class="num">Vendido</th><th class="num">Estoque final</th></tr></thead>
+    <tbody>{% for p in v.producao.produtos %}<tr><td>{{ p.codigo }} · {{ p.descricao }}</td><td class="num">{{ p.quantidade|n }}</td><td class="num">{{ p.pct_vendido|n(1) }}</td><td class="num">{{ p.vendido|n }}</td><td class="num">{{ p.estoque_final|n }}</td></tr>{% endfor %}</tbody>
+  </table></div>
+  <div class="sub-head"><h4>Ficha técnica e compras de insumos</h4><span class="muted mono-sm">compra = necessidade (ficha × produção) + sobra</span></div>
+  {% set prods = v.producao.produtos|map(attribute='codigo')|list %}
+  <div class="table-wrap"><table>
+    <thead><tr><th>Insumo</th>{% for p in prods %}<th class="num">Por {{ p }}</th>{% endfor %}<th class="num">Necessidade</th><th class="num">Sobra</th><th class="num">Compra</th><th class="num">Custo unit. (R$)</th><th class="num">Valor (R$)</th></tr></thead>
+    <tbody>
+    {% for i in v.producao.insumos %}<tr><td>{{ i.codigo }} <span class="muted mono-sm">· {{ i.descricao }}</span></td>{% for p in prods %}<td class="num">{{ i.por_produto[p]|n if p in i.por_produto else '—' }}</td>{% endfor %}
+      <td class="num">{{ i.necessidade|n }}</td><td class="num">{{ i.sobra|n }}</td><td class="num">{{ i.compra|n }}</td><td class="num">{{ i.custo_unit|n(4) }}</td><td class="num">{{ i.valor_compra|n(2) }}</td></tr>{% endfor %}
+    <tr class="total"><td colspan="{{ prods|length + 5 }}"><strong>Total</strong></td><td class="num"><strong>{{ v.producao.total_compras|n(2) }}</strong></td></tr>
+    </tbody>
+  </table></div>
+</section>
+
+<section class="card" id="folha" style="margin-top:24px">
+  <div class="card-head"><h3>Folha de pagamento</h3><span class="muted mono-sm">salários arredondados a R$ 10, mínimo R$ 1.621,00</span></div>
+  <div class="table-wrap"><table>
+    <thead><tr><th>Setor</th><th>Empregado</th><th>Admissão</th><th class="num">Salário jan</th><th class="num">Salário fev</th><th class="num">HE fev</th><th class="num">Comissão fev</th><th>Dependentes fev</th></tr></thead>
+    <tbody>{% for f in v.folha %}<tr><td class="mono-sm">{{ f.setor }}</td><td>{{ f.nome }}</td><td class="mono-sm">{{ f.admissao or '' }}</td>
+      <td class="num">{{ f.salario_jan|n(2) if f.salario_jan is not none else '—' }}</td>
+      <td class="num">{% if f.pendente %}<span class="tag tag-alerta">sem valor</span>{% else %}{{ f.salario_fev|n(2) if f.salario_fev is not none else '—' }}{% endif %}</td>
+      <td class="num">{{ f.he_fev|n(2) if f.he_fev else '—' }}</td><td class="num">{{ f.comissao_fev|n(2) if f.comissao_fev else '—' }}</td><td class="mono-sm">{{ f.dependentes_fev or '' }}</td></tr>{% endfor %}</tbody>
+  </table></div>
+</section>
+
+<section class="card" id="socios" style="margin-top:24px">
+  <div class="card-head"><h3>Sócios</h3></div>
+  <div class="table-wrap"><table>
+    <thead><tr><th>Sócio</th><th>Função</th><th class="num">Cotas</th><th class="num">A integralizar</th><th class="num">Pró-labore jan</th><th class="num">Pró-labore fev</th></tr></thead>
+    <tbody>{% for s in v.socios %}<tr><td>{{ s.nome }}</td><td class="mono-sm">{{ s.funcao or '' }}</td><td class="num">{{ s.cotas|n if s.cotas else '—' }}</td><td class="num">{{ s.a_integralizar|n(2) if s.a_integralizar else '—' }}</td><td class="num">{{ s.pro_labore_jan|n(2) if s.pro_labore_jan else '—' }}</td><td class="num">{{ s.pro_labore_fev|n(2) if s.pro_labore_fev else '—' }}</td></tr>{% endfor %}</tbody>
+  </table></div>
+</section>
+
+<section class="card" id="parametros" style="margin-top:24px">
+  <div class="card-head"><h3>Parâmetros sorteados</h3><span class="muted mono-sm">valor da dupla comparado ao caso-base e à faixa</span></div>
+  {% for (escopo, ref), lista in grupos.items() %}{% set var = lista|selectattr('varia')|selectattr('min','ne',none)|list %}{% if var %}
+    <div class="sub-head"><h4>{{ nomes_escopo.get(escopo, escopo) }}{% if ref %} · <span class="mono-sm">{{ refs.get((escopo, ref), ref) }}</span>{% endif %}</h4></div>
+    <div class="table-wrap"><table class="mini param-dupla">
+      <colgroup><col style="width:38%"><col style="width:10%"><col style="width:16%"><col style="width:22%"><col style="width:14%"></colgroup>
+      <thead><tr><th>Parâmetro</th><th>Unid.</th><th class="num">Base</th><th class="num">Faixa</th><th class="num">Dupla</th></tr></thead>
+      <tbody>{% for p in var %}<tr><td>{{ p.nome }}</td><td class="mono-sm">{{ p.unidade or '' }}</td><td class="num">{{ p.base or '' }}</td>
+        {% set c = (4 if p.passo and p.passo < 0.01 else 2) if p.unidade == "R$" else (0 if p.unidade == "un" else none) %}<td class="num muted">{{ p.min|n(c) }} a {{ p.max|n(c) }}</td><td class="num"><strong>{{ p.valor|n(c) if p.valor is number else p.valor }}</strong>{% if p.ajustado %} <span class="tag" title="Reduzido para não vender mais que o estoque disponível">ajustado</span>{% endif %}</td></tr>{% endfor %}</tbody>
+    </table></div>
+  {% endif %}{% endfor %}
+</section>
+{% endblock %}

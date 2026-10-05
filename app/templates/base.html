@@ -1,0 +1,50 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>{% block titulo %}{{ APP_NOME }}{% endblock %} · LABCONT-AI</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=Newsreader:opsz,wght@6..72,400&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="{{ url_for('static', path='css/style.css') }}">
+</head>
+<body class="{{ 'so-leitura' if (usuario and usuario.so_leitura) or visualizacao }}">
+  <header class="topbar">
+    <div class="topbar-inner">
+      <a class="brand" href="{% block home %}/{% endblock %}">LABCONT-AI<small>Protótipo</small></a>
+      {% block nav %}
+      {% if usuario and usuario.equipe %}
+      <nav class="nav">
+        <a href="/" class="{{ 'ativo' if menu == 'painel' }}">{{ 'Painel' if usuario.gestor else 'Minhas turmas' }}</a>
+        {% if usuario.gestor %}
+        <a href="/disciplinas" class="{{ 'ativo' if menu == 'disciplinas' }}">Disciplinas</a>
+        <a href="/discentes" class="{{ 'ativo' if menu == 'discentes' }}">Discentes</a>
+        {% endif %}
+        <a href="/duplas" class="{{ 'ativo' if menu == 'duplas' }}">Grupos</a>
+        {% if usuario.gestor or 'professor' in usuario.perfis or 'visitante' in usuario.perfis %}<a href="/casos" class="{{ 'ativo' if menu == 'casos' }}">Caso</a>{% endif %}
+        <a href="/normas" class="{{ 'ativo' if menu == 'normas' }}">Normas</a>
+        {% if usuario.gestor %}<details class="nav-mais{{ ' ativo' if menu in ('docentes','importacao','usuarios','lote','historico','demo') }}"><summary>Gestão</summary><div>
+          <a href="/docentes">Docentes</a><a href="/importacao">Importar SIGAA</a><a href="/usuarios">Usuários e perfis</a>
+          {% if usuario.admin %}<a href="/admin/lote">Operações em lote</a><a href="/historico">Histórico de ações</a><a href="/admin/demonstracao">Turma de demonstração</a>{% endif %}
+        </div></details>{% endif %}
+        {% if not usuario.dev %}<span class="nav-usuario"><span title="{{ usuario.rotulo_perfis }}">{{ usuario.nome.split(' ')[0] }}</span><a href="/conta/senha">Senha</a><a href="/sair">Sair</a></span>{% endif %}
+      </nav>
+      {% endif %}
+      {% endblock %}
+    </div>
+  </header>
+  {% if usuario and usuario.so_leitura and not visualizacao %}<div class="faixa-leitura"><div><span><strong>Somente leitura</strong> · {{ usuario.rotulo_perfis }}</span></div></div>{% endif %}
+  {% if visualizacao %}<div class="faixa-leitura"><div><span><strong>Visualização da área do aluno</strong> · somente leitura</span><a href="/aluno/sair">Sair da visualização</a></div></div>{% endif %}
+  <main>
+    {% if msg %}<div class="aviso" role="status">{{ msg }}</div>{% endif %}
+    {% if erro %}<div class="aviso erro" role="alert">{{ erro }}</div>{% endif %}
+    {% block conteudo %}{% endblock %}
+  </main>
+  <footer><div><span>UFC · FEAAC · Laboratório de Prática Contábil</span><span><a href="/privacidade">Privacidade</a> · LABCONT-AI · protótipo</span></div></footer>
+  <script>
+    document.querySelectorAll('form[data-confirmar]').forEach(f =>
+      f.addEventListener('submit', e => { if (!confirm(f.dataset.confirmar)) e.preventDefault(); }));
+  </script>
+</body>
+</html>

@@ -1,0 +1,47 @@
+{% extends "base.html" %}
+{% block titulo %}Prévia da importação{% endblock %}
+{% block conteudo %}
+{% set dados = imp.dados %}
+<div class="breadcrumb"><a href="/importacao">Importar SIGAA</a> / #{{ imp.id }}</div>
+<div class="page-head">
+  <div><div class="eyebrow">{{ 'Lista de participantes' if imp.tipo == 'participantes' else 'Consulta de turmas' }} · {{ imp.status }}</div><h1>{{ imp.arquivo }}</h1></div>
+  {% if imp.status == 'PENDENTE' %}<div class="acoes">
+    <form class="inline" method="post" action="/importacao/{{ imp.id }}/confirmar"><button class="btn btn-primary" type="submit">Confirmar e gravar</button></form>
+    <form class="inline" method="post" action="/importacao/{{ imp.id }}/cancelar"><button class="btn" type="submit">Cancelar</button></form>
+  </div>{% endif %}
+</div>
+
+{% for a in dados.avisos %}<div class="aviso erro">{{ a }}</div>{% endfor %}
+
+<div class="stats" style="margin-bottom:24px">
+  <div class="stat"><div class="num">{{ resumo.disciplinas }}</div><div class="lbl">Disciplinas no arquivo</div></div>
+  <div class="stat"><div class="num">{{ resumo.turmas }}</div><div class="lbl">Turmas</div></div>
+  <div class="stat"><div class="num">{{ resumo.docentes }}</div><div class="lbl">Docentes</div></div>
+  <div class="stat"><div class="num">{{ resumo.discentes }}</div><div class="lbl">Discentes</div></div>
+</div>
+
+{% if imp.resumo %}<div class="card" style="margin-bottom:24px"><div class="card-head"><h3>Resultado gravado</h3></div><dl class="dados">
+  <dt>Novos</dt><dd>{% for k, v in imp.resumo.novos.items() %}{{ v }} {{ k|replace('_',' ') }}{% if not loop.last %} · {% endif %}{% else %}nenhum{% endfor %}</dd>
+  <dt>Atualizados</dt><dd>{% for k, v in imp.resumo.atualizados.items() %}{{ v }} campo(s) em {{ k }}{% if not loop.last %} · {% endif %}{% else %}nenhum{% endfor %}</dd>
+</dl></div>{% endif %}
+
+{% for t in dados.turmas %}
+{% if imp.tipo == 'participantes' %}
+<div class="card">
+  <div class="card-head"><h3>{{ t.disciplina_codigo }} — {{ t.disciplina_nome }}</h3><span class="tag">Turma {{ t.codigo }} · {{ t.periodo }}</span></div>
+  <p class="mono-sm"><strong>Docente(s):</strong> {% for d in t.docentes %}{{ d.nome }} <span class="muted">({{ d.email or 'sem e-mail' }})</span>{% if not loop.last %}; {% endif %}{% endfor %}</p>
+  <div class="table-wrap"><table>
+    <thead><tr><th>Matrícula</th><th>Nome</th><th>E-mail</th><th>Turno</th><th>Situação</th></tr></thead>
+    <tbody>{% for a in t.discentes|sort(attribute='nome') %}<tr><td>{{ a.matricula }}</td><td>{{ a.nome }}</td><td class="mono-sm">{{ a.email or '—' }}</td><td class="mono-sm">{{ a.turno or '' }}</td><td><span class="tag{{ ' tag-alerta' if a.situacao != 'ATIVO' }}">{{ a.situacao }}</span></td></tr>{% endfor %}</tbody>
+  </table></div>
+</div>
+{% else %}
+{% if loop.first %}<div class="card"><div class="table-wrap"><table>
+  <thead><tr><th>Disciplina</th><th>Turma</th><th>Período</th><th>Docente(s)</th><th>Horário</th><th>Local</th><th class="num">Mat./Cap.</th></tr></thead><tbody>{% endif %}
+  <tr><td><strong>{{ t.disciplina_codigo }}</strong><div class="muted mono-sm">{{ t.disciplina_nome }}</div></td><td>{{ t.codigo }}</td><td>{{ t.periodo }}</td>
+  <td class="mono-sm">{% for d in t.docentes %}{{ d.nome }}{% if not loop.last %}<br>{% endif %}{% else %}<span class="muted">A definir</span>{% endfor %}</td>
+  <td class="mono-sm">{{ t.horario or '—' }}</td><td class="mono-sm">{{ t.local or '—' }}</td><td class="num">{{ t.matriculados if t.matriculados is not none else '—' }}/{{ t.capacidade or '—' }}</td></tr>
+{% if loop.last %}</tbody></table></div></div>{% endif %}
+{% endif %}
+{% endfor %}
+{% endblock %}

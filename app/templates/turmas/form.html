@@ -1,0 +1,24 @@
+{% extends "base.html" %}
+{% from "_macros.html" import campo %}
+{% block titulo %}{{ 'Editar' if t and t.id else 'Nova' }} turma{% endblock %}
+{% block conteudo %}
+<div class="breadcrumb"><a href="/disciplinas">Disciplinas</a>{% if t and t.id %} / <a href="/turmas/{{ t.id }}">Turma {{ t.codigo }}</a>{% endif %}</div>
+<div class="page-head"><h1>{{ 'Editar turma' if t and t.id else 'Nova turma' }}</h1></div>
+<form class="card" method="post">
+  <div class="form-grid">
+    <div class="field full"><label for="disciplina_id">Disciplina *</label>
+      <select id="disciplina_id" name="disciplina_id" required><option value="">Selecione…</option>
+      {% for d in disciplinas %}<option value="{{ d.id }}" {{ 'selected' if d.id == disciplina_id }}>{{ d.codigo }} — {{ d.nome }}</option>{% endfor %}</select></div>
+    {{ campo('periodo', 'Período letivo', t.periodo if t, required=True, placeholder='2026.2') }}
+    {{ campo('codigo', 'Código da turma', t.codigo if t, required=True, placeholder='03A') }}
+    {{ campo('tipo', 'Tipo', t.tipo if t else 'REGULAR') }}
+    {{ campo('situacao', 'Situação', t.situacao if t else 'ABERTA') }}
+    {{ campo('horario', 'Horário', t.horario if t, full=True, placeholder='TER 18:30-20:30 QUI 18:30-20:30') }}
+    {{ campo('data_inicio', 'Início', t.data_inicio.isoformat() if t and t.data_inicio, tipo='date') }}
+    {{ campo('data_fim', 'Término', t.data_fim.isoformat() if t and t.data_fim, tipo='date') }}
+    {{ campo('local', 'Local', t.local if t) }}
+    {{ campo('capacidade', 'Capacidade', t.capacidade if t, tipo='number') }}
+  </div>
+  <div class="form-acoes"><button class="btn btn-primary" type="submit">Salvar</button><a class="btn" href="{{ '/turmas/%s'|format(t.id) if t and t.id else ('/disciplinas/%s'|format(disciplina_id) if disciplina_id else '/disciplinas') }}">Cancelar</a></div>
+</form>
+{% endblock %}

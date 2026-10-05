@@ -1,0 +1,18 @@
+{% extends "base.html" %}
+{% from "_macros.html" import campo %}
+{% block titulo %}{{ 'Editar' if d and d.id else 'Novo' }} discente{% endblock %}
+{% block conteudo %}
+<div class="breadcrumb"><a href="/discentes">Discentes</a>{% if d and d.id %} / <a href="/discentes/{{ d.id }}">{{ d.nome }}</a>{% endif %}</div>
+<div class="page-head"><h1>{{ 'Editar discente' if d and d.id else 'Novo discente' }}</h1></div>
+<form class="card" method="post">
+  <div class="form-grid">
+    {{ campo('matricula', 'Matrícula', d.matricula if d, required=True) }}
+    {{ campo('nome', 'Nome completo', d.nome if d, required=True) }}
+    {{ campo('email', 'E-mail', d.email if d, tipo='email') }}
+    {{ campo('curso', 'Curso', d.curso if d else 'CIÊNCIAS CONTÁBEIS') }}
+    <div class="field"><label for="turno">Turno</label><select id="turno" name="turno"><option value=""></option>{% for x in ['DIURNO','NOTURNO'] %}<option {{ 'selected' if d and d.turno == x }}>{{ x }}</option>{% endfor %}</select></div>
+    <div class="field full"><label class="check"><input type="checkbox" name="ativo" {{ 'checked' if not d or d.ativo }}> Discente ativo</label></div>
+  </div>
+  <div class="form-acoes"><button class="btn btn-primary" type="submit">Salvar</button><a class="btn" href="{{ '/discentes/%s'|format(d.id) if d and d.id else '/discentes' }}">Cancelar</a></div>
+</form>
+{% endblock %}

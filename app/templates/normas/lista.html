@@ -1,0 +1,25 @@
+{% extends "base.html" %}
+{% block titulo %}Base normativa{% endblock %}
+{% block conteudo %}
+<div class="page-head">
+  <div><div class="eyebrow">Etapa 6 · tutor</div><h1>Base normativa</h1>
+  <p class="lead">Fichas curtas com a norma e a fonte (Lei 6.404/76, CPCs, LC 87/96, PIS/COFINS, IRPJ/CSLL, folha). A cada pergunta, o tutor busca aqui as fichas mais relevantes, explica a partir delas e cita a fonte. A busca roda no próprio servidor. As decisões do caso (premissas) ficam no gabarito e não aparecem aqui.</p></div>
+  <div class="acoes"><a class="btn btn-dark" href="/normas/nova">Nova ficha</a></div>
+</div>
+<form class="card busca-norma" method="get" action="/normas">
+  <div class="form-grid">
+    <div class="field" style="grid-column: span 2"><label for="q">Testar a busca do tutor: pergunta da dupla</label><input id="q" name="q" value="{{ q }}" placeholder="Ex.: Quais tributos desta nota a empresa pode recuperar?"></div>
+    <div class="field"><label for="evento">Evento (opcional)</label><input id="evento" name="evento" value="{{ evento }}" placeholder="J15"></div>
+  </div>
+  <div class="form-acoes compacto"><button class="btn btn-primary" type="submit">Buscar</button>{% if resultado is not none %}<a class="btn" href="/normas">Limpar</a>{% endif %}</div>
+</form>
+{% if resultado is not none %}
+  <h2 class="h4" style="margin:24px 0 12px">{{ resultado|length }} ficha(s) que o tutor receberia</h2>
+  {% for n, score in resultado %}{% set admin = True %}{% include "normas/_ficha.html" %}{% else %}<p class="vazio">Nenhuma ficha relevante. O tutor responderia sem base normativa — considere incluir uma ficha.</p>{% endfor %}
+  <h2 class="h4" style="margin:32px 0 12px">Todas as fichas</h2>
+{% endif %}
+<p class="mono-sm muted">{{ normas|length }} fichas · {{ ativas }} ativas</p>
+<div class="normas-grid">
+{% for n in normas %}{% set admin = True %}{% set score = 0 %}{% include "normas/_ficha.html" %}{% endfor %}
+</div>
+{% endblock %}

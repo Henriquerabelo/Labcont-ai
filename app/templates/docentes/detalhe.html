@@ -1,0 +1,24 @@
+{% extends "base.html" %}
+{% from "_macros.html" import excluir, situacao_tag %}
+{% block titulo %}{{ d.nome }}{% endblock %}
+{% block conteudo %}
+<div class="breadcrumb"><a href="/docentes">Docentes</a> / {{ d.nome }}</div>
+<div class="page-head">
+  <div><div class="eyebrow">Docente{% if not d.ativo %} · inativo{% endif %}</div><h1>{{ d.nome }}</h1></div>
+  <div class="acoes"><a class="btn" href="/docentes/{{ d.id }}/editar">Editar</a>{{ excluir('/docentes/%s/excluir'|format(d.id), 'Excluir o cadastro de ' ~ d.nome ~ '? Os vínculos com turmas também serão removidos.') }}</div>
+</div>
+<div class="grid grid-2">
+  <div class="card"><dl class="dados">
+    <dt>E-mail</dt><dd>{{ d.email or '—' }}</dd><dt>SIAPE</dt><dd>{{ d.siape or '—' }}</dd>
+    <dt>Departamento</dt><dd>{{ d.departamento or '—' }}</dd><dt>Formação</dt><dd>{{ d.formacao or '—' }}</dd>
+  </dl></div>
+  <div class="card">
+    <div class="card-head"><h3>Turmas</h3></div>
+    <table><tbody>
+    {% for v in d.turmas|sort(attribute='turma.periodo', reverse=True) %}
+      <tr><td><a href="/turmas/{{ v.turma.id }}">{{ v.turma.disciplina.codigo }} · Turma {{ v.turma.codigo }}</a><div class="muted mono-sm">{{ v.turma.disciplina.nome }}</div></td><td class="mono-sm">{{ v.turma.periodo }}</td><td class="num mono-sm">{{ v.carga_horaria ~ 'h' if v.carga_horaria else '' }}</td></tr>
+    {% else %}<tr><td class="vazio">Sem turmas vinculadas.</td></tr>{% endfor %}
+    </tbody></table>
+  </div>
+</div>
+{% endblock %}

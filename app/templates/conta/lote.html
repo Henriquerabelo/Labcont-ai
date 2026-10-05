@@ -1,0 +1,30 @@
+{% extends "base.html" %}
+{% block titulo %}Operações em lote{% endblock %}
+{% block conteudo %}
+<div class="page-head"><div><div class="eyebrow">Etapa 7 · administração</div><h1>Operações em lote</h1>
+  <p class="lead">Escolha a turma, marque os grupos ou alunos e a operação. Antes de executar, o sistema mostra o que será afetado e pede confirmação. Tudo fica no histórico. Exclusões não podem ser desfeitas.</p></div></div>
+<form class="card busca-norma" method="get" action="/admin/lote">
+  <div class="form-grid"><div class="field" style="grid-column: span 2"><label for="turma">Turma</label>
+    <select id="turma" name="turma" onchange="this.form.submit()"><option value="">Escolha…</option>{% for t in turmas %}<option value="{{ t.id }}" {{ 'selected' if t.id == turma }}>{{ t.disciplina.codigo }} · Turma {{ t.codigo }} ({{ t.periodo }})</option>{% endfor %}</select></div></div>
+</form>
+{% if dados %}
+<div class="painel-grid" style="margin-top:24px">
+<form class="card" method="post" action="/admin/lote" style="padding:8px 24px">
+  <input type="hidden" name="turma" value="{{ turma }}">
+  <div class="card-head"><h3>Grupos</h3><label class="check mono-sm"><input type="checkbox" onclick="this.form.querySelectorAll('input[name=id]').forEach(c => c.checked = this.checked)"> todos</label></div>
+  <table class="mini"><thead><tr><th></th><th>Grupo</th><th class="num">Lançamentos</th><th class="num">Msgs tutor</th><th>Janeiro</th></tr></thead>
+  <tbody>{% for d in dados.duplas %}{% set i = dados.info[d.id] %}<tr><td><input type="checkbox" name="id" value="{{ d.id }}" aria-label="{{ d.rotulo }}"></td><td>{{ d.rotulo }}</td><td class="num">{{ i.lancamentos }}</td><td class="num">{{ i.tutor }}</td><td>{{ 'enviado' if i.fechado else '—' }}</td></tr>
+  {% else %}<tr><td colspan="5" class="vazio">Nenhum grupo.</td></tr>{% endfor %}</tbody></table>
+  <div class="form-acoes compacto"><select name="op" aria-label="Operação">{% for k in ['lancamentos','tutor','reabrir'] %}<option value="{{ k }}">{{ ops[k] }}</option>{% endfor %}</select><button class="btn btn-dark" type="submit">Revisar →</button></div>
+</form>
+<form class="card" method="post" action="/admin/lote" style="padding:8px 24px">
+  <input type="hidden" name="turma" value="{{ turma }}">
+  <div class="card-head"><h3>Alunos</h3><label class="check mono-sm"><input type="checkbox" onclick="this.form.querySelectorAll('input[name=id]').forEach(c => c.checked = this.checked)"> todos</label></div>
+  <table class="mini"><thead><tr><th></th><th>Aluno</th><th>Matrícula</th><th>Senha</th></tr></thead>
+  <tbody>{% for m in dados.mats %}<tr><td><input type="checkbox" name="id" value="{{ m.discente_id }}" aria-label="{{ m.discente.nome }}"></td><td>{{ m.discente.nome }}</td><td class="mono-sm">{{ m.discente.matricula }}</td><td>{{ 'criada' if m.discente_id in dados.contas else '—' }}</td></tr>
+  {% else %}<tr><td colspan="4" class="vazio">Nenhum aluno.</td></tr>{% endfor %}</tbody></table>
+  <div class="form-acoes compacto"><select name="op" aria-label="Operação">{% for k in ['contas','discentes'] %}<option value="{{ k }}">{{ ops[k] }}</option>{% endfor %}</select><button class="btn btn-dark" type="submit">Revisar →</button></div>
+</form>
+</div>
+{% endif %}
+{% endblock %}

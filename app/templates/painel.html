@@ -1,0 +1,33 @@
+{% extends "base.html" %}
+{% block titulo %}Painel{% endblock %}
+{% block conteudo %}
+<section class="hero">
+  <div class="eyebrow">Etapa 1 · Cadastros acadêmicos</div>
+  <h1>Laboratório de Prática Contábil,<br>agora em um só lugar.</h1>
+  <p class="lead">Cadastre disciplinas, turmas, docentes e discentes manualmente ou importe os relatórios em PDF do SIGAA. Esta base alimenta as próximas etapas: empresas simuladas por dupla, escrituração, auditoria e tutoria.</p>
+  <div class="form-acoes"><a class="btn btn-primary" href="/importacao">Importar PDF do SIGAA</a><a class="btn" href="/disciplinas">Ver disciplinas</a></div>
+</section>
+
+<div class="stats">
+  <a class="stat" href="/disciplinas"><div class="num">{{ contagens.disciplinas }}</div><div class="lbl">Disciplinas</div></a>
+  <a class="stat" href="/disciplinas"><div class="num">{{ contagens.turmas }}</div><div class="lbl">Turmas</div></a>
+  <a class="stat" href="/docentes"><div class="num">{{ contagens.docentes }}</div><div class="lbl">Docentes</div></a>
+  <a class="stat" href="/discentes"><div class="num">{{ contagens.discentes }}</div><div class="lbl">Discentes</div></a>
+  <div class="stat"><div class="num">{{ contagens.matriculas }}</div><div class="lbl">Matrículas em turmas</div></div>
+</div>
+
+<div class="card" style="margin-top:40px">
+  <div class="card-head"><h3>Importações recentes</h3><a class="btn btn-sm" href="/importacao">Histórico</a></div>
+  {% if importacoes %}
+  <div class="table-wrap"><table>
+    <thead><tr><th>#</th><th>Arquivo</th><th>Tipo</th><th>Status</th><th>Data</th></tr></thead>
+    <tbody>
+    {% for i in importacoes %}
+      <tr><td>{{ i.id }}</td><td><a href="/importacao/{{ i.id }}">{{ i.arquivo }}</a></td><td>{{ 'Lista de participantes' if i.tipo == 'participantes' else 'Consulta de turmas' }}</td>
+      <td><span class="tag{{ ' tag-ok' if i.status == 'CONCLUIDA' }}">{{ i.status }}</span></td><td>{{ i.criado_em.strftime('%d/%m/%Y %H:%M') }}</td></tr>
+    {% endfor %}
+    </tbody>
+  </table></div>
+  {% else %}<p class="muted">Nenhuma importação ainda.</p>{% endif %}
+</div>
+{% endblock %}

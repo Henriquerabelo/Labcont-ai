@@ -1,0 +1,13 @@
+{% extends "aluno/base.html" %}
+{% block titulo %}Trocar senha{% endblock %}
+{% block conteudo %}
+<div class="page-head"><div><div class="eyebrow">{{ aluno_nome }}</div><h1>Trocar senha</h1></div></div>
+<form class="card" method="post" action="/aluno/senha" style="max-width:640px">
+  <div class="form-grid">
+    <div class="field full"><label for="atual">Senha atual</label><input id="atual" name="atual" type="password" required></div>
+    <div class="field"><label for="nova">Nova senha (mín. 8)</label><input id="nova" name="nova" type="password" minlength="8" required></div>
+    <div class="field"><label for="nova2">Repita</label><input id="nova2" name="nova2" type="password" minlength="8" required></div>
+  </div>
+  <div class="form-acoes"><button class="btn btn-primary" type="submit">Salvar</button></div>
+</form>
+{% endblock %}

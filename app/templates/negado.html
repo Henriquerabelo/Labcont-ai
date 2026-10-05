@@ -1,0 +1,10 @@
+{% extends "base.html" %}
+{% block titulo %}Acesso não permitido{% endblock %}
+{% block conteudo %}
+<section class="hero" style="max-width:760px">
+  <div class="eyebrow">Acesso</div>
+  <h1>Não permitido</h1>
+  <p class="lead">{{ motivo }}</p>
+  <div class="form-acoes"><a class="btn btn-primary" href="/">Ir para o início</a>{% if usuario %}<span class="muted mono-sm">Conectado como {{ usuario.login }} · {{ usuario.rotulo_perfis }}</span>{% endif %}</div>
+</section>
+{% endblock %}

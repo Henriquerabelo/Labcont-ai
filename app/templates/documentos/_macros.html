@@ -1,0 +1,6 @@
+{% macro data(s) %}{{ s[8:10] }}/{{ s[5:7] }}/{{ s[0:4] }}{% endmacro %}
+{% macro parte(rot, p) %}
+<div class="dc-box"><div class="dc-rot">{{ rot }}</div><div class="dc-nome">{{ p.nome }}</div>
+  <div class="dc-sub">CNPJ (fictício) {{ p.cnpj }} · {{ (p.cidade ~ '/') if p.cidade }}{{ p.uf }}</div></div>
+{% endmacro %}
+{% macro calc(v, casas=2) %}{% if v is none %}<span class="dc-calc">a calcular pela dupla</span>{% else %}{{ v|n(casas) }}{% endif %}{% endmacro %}

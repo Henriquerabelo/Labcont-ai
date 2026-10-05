@@ -1,0 +1,41 @@
+# Testes automáticos a cada envio para a branch principal (main ou master).
+# Se passarem, a versão é promovida para a branch "producao",
+# que o VPS acompanha e publica sozinho em até 1 minuto.
+name: Testes e publicação
+on:
+  push:
+    branches: [main, master]
+permissions:
+  contents: write
+jobs:
+  testes:
+    runs-on: ubuntu-latest
+    services:
+      postgres:
+        image: postgres:16-alpine
+        env:
+          POSTGRES_USER: labcont
+          POSTGRES_PASSWORD: labcont
+          POSTGRES_DB: labcont_test
+        ports: ["5432:5432"]
+        options: >-
+          --health-cmd "pg_isready -U labcont" --health-interval 5s --health-retries 20
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+      - run: pip install -r requirements.txt
+      - run: python -m pytest -q tests
+        env:
+          DATABASE_URL: postgresql+psycopg://labcont:labcont@localhost:5432/labcont_test
+  promover:
+    needs: testes
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Promover para produção
+        run: git push --force origin HEAD:producao

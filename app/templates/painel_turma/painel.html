@@ -1,0 +1,120 @@
+{% extends "base.html" %}
+{% block titulo %}Painel da turma · {{ t.disciplina.codigo }} {{ t.codigo }}{% endblock %}
+{% block conteudo %}
+{% set r = an.resumo %}
+{% set SIMB = {'correto': '✓', 'valor': '≈', 'conta': '✗', 'pendente': '·', 'lancado': '•'} %}
+{% macro nv(g, c) -%}{%- set n = (g.niveis_oficiais or g.niveis).get(c, 'pendente') -%}{{ n if (ve_previa or g.niveis_oficiais or n == 'pendente') else 'lancado' }}{%- endmacro %}
+<div class="breadcrumb"><a href="/duplas">Grupos</a> / <a href="/turmas/{{ t.id }}/duplas">{{ t.disciplina.codigo }} · Turma {{ t.codigo }}</a> / Painel da turma</div>
+<div class="page-head">
+  <div><div class="eyebrow">{{ t.rotulo }} · Learning Analytics</div><h1>Painel da turma</h1>
+  <p class="lead">Acompanhamento de janeiro a partir dos dados do próprio sistema: progresso de cada grupo, alertas precoces, onde a turma mais erra e mais pergunta, engajamento diário e notas para homologação.</p></div>
+  <div class="acoes"><a class="btn btn-dark" href="/turmas/{{ t.id }}/notas">Notas de janeiro</a><a class="btn" href="/turmas/{{ t.id }}/duplas">Grupos e códigos</a></div>
+</div>
+
+<div class="aviso {{ 'aviso-ok' if ia.ok else 'aviso-roteiro' }}" role="note">
+  {% if ia.ok %}<span><strong>Tutor com IA local ativo</strong> · modelo <span class="mono-sm">{{ ia.modelo }}</span>.</span>
+  {% else %}<span><strong>Tutor em modo roteiro</strong> (sem IA): {{ ia.motivo }}.</span>{% endif %}
+</div>
+
+<div class="stats stats-7" style="margin:24px 0 16px">
+  <div class="stat"><div class="num">{{ r.grupos }}</div><div class="lbl">Grupos</div></div>
+  <div class="stat"><div class="num">{{ r.progresso_medio }}<span class="unid">%</span></div><div class="lbl">Progresso médio</div></div>
+  <div class="stat"><div class="num">{{ r.enviados }}<span class="muted unid"> / {{ r.grupos }}</span></div><div class="lbl">Janeiro enviado</div></div>
+  <div class="stat"><div class="num">{{ r.media_oficial if r.media_oficial is not none else '—' }}{% if r.media_oficial is not none %}<span class="unid">%</span>{% endif %}</div><div class="lbl">Acerto médio (enviados)</div></div>
+  <div class="stat"><div class="num">{{ r.tempo_medio|n(1) if r.tempo_medio is not none else '—' }}{% if r.tempo_medio is not none %}<span class="unid"> d</span>{% endif %}</div><div class="lbl">Tempo médio até o envio</div></div>
+  <div class="stat"><div class="num">{{ r.ativos7 }}<span class="muted unid"> / {{ r.grupos }}</span></div><div class="lbl">Ativos em 7 dias</div></div>
+  <div class="stat{{ ' stat-alerta' if r.em_risco }}"><div class="num">{{ r.em_risco }}</div><div class="lbl">Grupos em risco</div></div>
+  <div class="stat"><div class="num">{{ r.perguntas }}</div><div class="lbl">Perguntas ao tutor{% if r.bloqueadas %} · {{ r.bloqueadas }} bloqueada(s){% endif %}</div></div>
+</div>
+<nav class="abas abas-ancora">
+  <a href="#visao">Visão geral</a><a href="#alertas">Alertas ({{ r.alertas }})</a><a href="#calor">Matriz de calor</a><a href="#dificuldades">Dificuldades</a><a href="#engajamento">Engajamento</a><a href="#tutor">Tutor</a>
+</nav>
+
+<section class="card secao" id="visao">
+  <div class="card-head"><h3>Visão geral dos grupos</h3><span class="muted mono-sm">ordenado por risco · {% if ve_previa %}% correto = oficial (enviado) ou prévia (calculada agora, a dupla não vê){% else %}correção visível só depois do envio{% endif %}</span></div>
+  <div class="table-wrap"><table class="mini">
+    <thead><tr><th>Grupo</th><th style="width:18%">Eventos lançados</th><th style="width:16%">% correto</th><th>Janeiro</th><th>Última atividade</th><th class="num">Perguntas</th><th>Alertas</th><th></th></tr></thead>
+    <tbody>{% for g in an.grupos %}{% set d = g.d %}
+      <tr><td><strong>{{ d.rotulo }}</strong><div class="muted mono-sm">{% for mat, nome in g.membros %}{{ nome.split(' ')[0]|title }}{% if not loop.last %} · {% endif %}{% endfor %}</div></td>
+        <td><div class="barra" title="{{ g.lancados }} de {{ g.total }} eventos"><span style="width:{{ g.progresso }}%"></span></div><span class="mono-sm">{{ g.lancados }}/{{ g.total }}</span></td>
+        <td>{% if g.oficial or (ve_previa and g.n_lancs) %}<div class="barra barra-acerto" title="{{ g.pct }}% dos eventos conferem"><span style="width:{{ g.pct }}%"></span></div><span class="mono-sm">{{ g.pct }}% {{ 'oficial' if g.oficial else 'prévia' }}</span>{% else %}<span class="muted">—</span>{% endif %}</td>
+        <td>{% if g.fech %}<span class="nivel nivel-correto">Enviado {{ g.fech.enviado_em.strftime('%d/%m') }}</span>{% if g.dias_ate_envio is not none %}<div class="muted mono-sm">em {{ g.dias_ate_envio|n(1) }} dia(s)</div>{% endif %}{% elif g.n_lancs %}<span class="nivel nivel-lancado">Em andamento</span>{% else %}<span class="nivel nivel-pendente">Não iniciado</span>{% endif %}</td>
+        <td class="mono-sm">{% if g.ultima %}{{ g.ultima.strftime('%d/%m %H:%M') }}{% if g.dias %} <span class="muted">({{ g.dias }} d)</span>{% endif %}{% else %}—{% endif %}</td>
+        <td class="num">{% if g.perguntas %}<a href="/duplas/{{ d.id }}/tutor">{{ g.perguntas }}</a>{% else %}0{% endif %}</td>
+        <td>{% for nivel, titulo, txt in g.alertas %}<span class="alerta alerta-{{ nivel }}" title="{{ txt }}">{{ {'alto': '▲', 'medio': '◆', 'baixo': '●'}[nivel] }} {{ titulo }}</span> {% else %}<span class="muted mono-sm">—</span>{% endfor %}</td>
+        <td class="num" style="white-space:nowrap"><a class="btn btn-sm btn-dark" href="/duplas/{{ d.id }}/escrituracao">Escrituração</a> <a class="btn btn-sm" href="/aluno/ver/{{ d.id }}">Ver como aluno</a></td></tr>
+    {% else %}<tr><td colspan="8" class="vazio">Nenhum grupo com empresa gerada nesta turma.</td></tr>{% endfor %}</tbody>
+  </table></div>
+</section>
+
+<section class="card secao" id="alertas">
+  <div class="card-head"><h3>Alertas precoces</h3><span class="muted mono-sm">▲ alto · ◆ médio · ● baixo — calculados a cada abertura do painel</span></div>
+  {% set com = an.grupos|selectattr('alertas')|list %}
+  {% if com %}<ul class="perguntas">{% for g in com %}
+    <li><strong>{{ g.d.rotulo }}</strong> <span class="muted mono-sm">· {{ g.lancados }}/{{ g.total }} eventos</span>
+      <ul class="alertas-lista">{% for nivel, titulo, txt in g.alertas %}<li><span class="alerta alerta-{{ nivel }}">{{ {'alto': '▲ Alto', 'medio': '◆ Médio', 'baixo': '● Baixo'}[nivel] }}</span> <strong>{{ titulo }}</strong> — {{ txt }}</li>{% endfor %}</ul></li>
+  {% endfor %}</ul>{% else %}<p class="vazio">Nenhum alerta no momento.</p>{% endif %}
+  <details class="mono-sm muted"><summary>Como os alertas são calculados</summary>
+    <p>Sem acesso: o grupo nunca entrou. Inativo: {{ 7 }} dias ou mais sem lançar, perguntar ou entrar (antes do envio). Abaixo da turma: menos da metade da mediana de eventos lançados ({{ an.mediana }}). Travado: 3 ou mais perguntas ao tutor sobre um evento crítico ({{ criticos.keys()|join(', ') }}) que segue pendente ou com conta errada. Prévia baixa: menos de 60% de acerto entre os eventos já lançados (com 10 ou mais). Busca respostas prontas: 3 ou mais respostas do tutor bloqueadas pelo filtro. Participação desigual: 90% ou mais dos lançamentos feitos por um só integrante.</p></details>
+</section>
+
+<section class="card secao" id="calor">
+  <div class="card-head"><h3>Matriz de calor: evento × grupo</h3>
+    <span class="legenda-calor">{% if ve_previa %}<span class="cel cel-correto">✓</span> correto <span class="cel cel-valor">≈</span> valor <span class="cel cel-conta">✗</span> conta errada {% else %}<span class="cel cel-lancado">•</span> lançado {% endif %}<span class="cel cel-pendente">·</span> pendente</span></div>
+  <div class="table-wrap"><table class="calor">
+    <thead><tr><th>Evento</th>{% for g in an.grupos|sort(attribute='d.numero') %}<th class="num" title="{{ g.d.rotulo }}">{{ '%02d'|format(g.d.numero) }}</th>{% endfor %}<th class="num">% erro</th><th class="num">Perg.</th></tr></thead>
+    <tbody>{% for e in an.eventos %}<tr><td class="mono-sm" title="{{ e.descricao }}"><strong>{{ e.codigo }}</strong> <span class="muted">{{ e.descricao[:34] }}{{ '…' if e.descricao|length > 34 }}</span></td>
+      {% for g in an.grupos|sort(attribute='d.numero') %}{% set n = nv(g, e.codigo) %}<td class="cel cel-{{ n }}" title="{{ g.d.rotulo }} · {{ e.codigo }}: {{ niveis[n] }}{% if g.perg_ev.get(e.codigo) %} · {{ g.perg_ev.get(e.codigo) }} pergunta(s){% endif %}">{{ SIMB[n] }}{% if g.perg_ev.get(e.codigo) %}<sup>{{ g.perg_ev.get(e.codigo) }}</sup>{% endif %}</td>{% endfor %}
+      <td class="num mono-sm">{{ (e.pct_erro ~ '%') if (ve_previa and e.pct_erro is not none) else '—' }}</td><td class="num mono-sm">{{ e.perguntas or '' }}</td></tr>{% endfor %}</tbody>
+  </table></div>
+  <p class="mono-sm muted">O número pequeno na célula é a quantidade de perguntas do grupo ao tutor sobre o evento.</p>
+</section>
+
+<section class="card secao" id="dificuldades">
+  <div class="card-head"><h3>Dificuldades conceituais por tema</h3><span class="muted mono-sm">% de erro entre os eventos já lançados · perguntas ao tutor · respostas bloqueadas</span></div>
+  <div class="painel-grid">
+    <table class="mini">
+      <thead><tr><th>Tema</th><th class="num">% erro</th><th class="num">Perguntas</th><th class="num">Bloqueadas</th></tr></thead>
+      <tbody>{% for tm in an.temas %}<tr><td>{{ tm.tema }}<div class="muted mono-sm">{{ tm.eventos|join(', ') }}</div></td>
+        <td class="num"><span class="seq seq-{{ tm.calor_erro if ve_previa else -1 }}">{{ (tm.pct_erro ~ '%') if (ve_previa and tm.pct_erro is not none) else '—' }}</span></td>
+        <td class="num"><span class="seq seq-{{ tm.calor_perg }}">{{ tm.perguntas }}</span></td><td class="num mono-sm">{{ tm.bloqueadas or '' }}</td></tr>{% endfor %}</tbody>
+    </table>
+    <div>
+      <h4 class="h4">Contas com mais divergências</h4>
+      {% if ve_previa and an.contas %}<table class="mini"><thead><tr><th>Conta</th><th>Situação</th><th class="num">Grupos</th></tr></thead>
+        <tbody>{% for c in an.contas %}<tr><td>{{ c.nome }}<div class="muted mono-sm">{{ c.conta }}</div></td><td class="mono-sm">{{ c.situacao }}</td><td class="num">{{ c.grupos }} <span class="muted mono-sm">({{ c.pct }}%)</span></td></tr>{% endfor %}</tbody></table>
+      <p class="mono-sm muted">Ex.: "faltou" em ICMS a recuperar indica crédito não reconhecido; "sobrou" indica conta que não se aplica ao evento.</p>
+      {% elif not ve_previa %}<p class="muted">Disponível para professores e coordenação.</p>{% elif an.resumo.progresso_medio %}<p class="vazio">Nenhuma divergência nos lançamentos feitos até agora.</p>{% else %}<p class="vazio">Sem lançamentos ainda.</p>{% endif %}
+    </div>
+  </div>
+</section>
+
+<section class="card secao" id="engajamento">
+  <div class="card-head"><h3>Engajamento nos últimos 30 dias</h3><span class="muted mono-sm">{{ an.engaj.dias[0].strftime('%d/%m') }} a {{ an.engaj.dias[-1].strftime('%d/%m') }}</span></div>
+  <div class="painel-grid">
+    <div>
+    {% for chave, titulo in [('lancamentos', 'Lançamentos por dia'), ('perguntas', 'Perguntas ao tutor por dia')] %}
+      {% set serie = an.engaj.series[chave] %}{% set mx = [serie|max, 1]|max %}
+      <figure class="mini-barras"><figcaption>{{ titulo }} <span class="muted mono-sm">· total {{ serie|sum }} · pico {{ serie|max }}</span></figcaption>
+        <svg viewBox="0 0 600 90" role="img" aria-label="{{ titulo }}: total {{ serie|sum }}">
+          <line x1="0" y1="80.5" x2="600" y2="80.5" class="eixo"/>
+          {% for v in serie %}{% set h = (v / mx * 72)|round(1) %}<g><rect x="{{ loop.index0 * 20 + 3 }}" y="{{ 80 - h }}" width="14" height="{{ h if v else 0 }}" rx="2" class="barra-svg"/><rect x="{{ loop.index0 * 20 }}" y="0" width="20" height="90" fill="transparent"><title>{{ an.engaj.dias[loop.index0].strftime('%d/%m') }}: {{ v }}</title></rect></g>{% endfor %}
+        </svg></figure>
+    {% endfor %}
+    </div>
+    <div>
+      <h4 class="h4">Participação dos integrantes</h4>
+      <table class="mini"><thead><tr><th>Grupo</th><th>Integrante</th><th class="num">Lançamentos</th></tr></thead>
+        <tbody>{% for g in an.grupos|sort(attribute='d.numero') %}{% for mat, nome in g.membros %}<tr><td class="mono-sm">{{ g.d.rotulo if loop.first else '' }}</td><td>{{ nome }}</td><td class="num">{{ g.autores.get(mat, 0) }}</td></tr>{% endfor %}{% endfor %}</tbody></table>
+      <p class="mono-sm muted">Cada aluno entra com a própria senha; o lançamento registra quem o fez.</p>
+    </div>
+  </div>
+</section>
+
+<section class="card secao" id="tutor">
+  <div class="card-head"><h3>Perguntas recentes ao tutor</h3><span class="muted mono-sm">limite {{ limite }}/dia por grupo</span></div>
+  {% if recentes %}<ul class="perguntas">{% for x in recentes %}
+    <li><div class="mono-sm muted"><a href="/duplas/{{ x.dupla_id }}/tutor">{{ x.dupla }}</a> · {{ x.m.evento or 'geral' }} · {{ x.m.criado_em.strftime('%d/%m %H:%M') }}</div>{{ x.m.texto[:220] }}{{ '…' if x.m.texto|length > 220 }}</li>
+  {% endfor %}</ul>{% else %}<p class="vazio">Nenhuma pergunta ainda.</p>{% endif %}
+</section>
+{% endblock %}

@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+{% block titulo %}Duplas{% endblock %}
+{% block conteudo %}
+<div class="page-head">
+  <div><div class="eyebrow">Etapa 3 · Duplas e empresas</div><h1>Duplas por turma</h1>
+  <p class="lead">Escolha a turma para registrar as duplas (formação voluntária) e gerar a empresa de cada dupla a partir de um caso.</p></div>
+</div>
+<div class="table-wrap card" style="padding:8px 24px">
+<table>
+  <thead><tr><th>Turma</th><th>Período</th><th class="num">Discentes ativos</th><th class="num">Duplas</th><th class="num">Sem dupla</th><th class="num">Empresas geradas</th><th></th></tr></thead>
+  <tbody>
+  {% for l in linhas %}{% set t = l.t %}
+    <tr><td><a href="/turmas/{{ t.id }}/duplas"><strong>{{ t.disciplina.codigo }} · Turma {{ t.codigo }}</strong></a><div class="muted mono-sm">{{ t.disciplina.nome }}</div></td>
+      <td>{{ t.periodo }}</td><td class="num">{{ l.ativos }}</td><td class="num">{{ l.duplas }}</td>
+      <td class="num">{% if l.ativos - l.em_dupla > 0 %}<span class="tag tag-alerta">{{ l.ativos - l.em_dupla }}</span>{% else %}0{% endif %}</td>
+      <td class="num">{{ l.geradas }} / {{ l.duplas }}</td>
+      <td class="num">{% if l.geradas %}<a class="btn btn-sm btn-dark" href="/turmas/{{ t.id }}/painel">Painel</a> {% endif %}<a class="btn btn-sm" href="/turmas/{{ t.id }}/duplas">Abrir</a></td></tr>
+  {% else %}<tr><td colspan="7" class="vazio">Nenhuma turma com discentes. Importe a Lista de participantes do SIGAA.</td></tr>{% endfor %}
+  </tbody>
+</table></div>
+{% endblock %}

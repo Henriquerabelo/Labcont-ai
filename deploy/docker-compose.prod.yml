@@ -1,0 +1,62 @@
+# LABCONT-AI em produção (VPS). Usado pelo script deploy/atualizar.sh:
+#   docker compose -p labcont --env-file /opt/labcont/.env -f deploy/docker-compose.prod.yml up -d --build
+# As variáveis vêm de /opt/labcont/.env, criado pelo deploy/setup-vps.sh.
+services:
+  db:
+    image: postgres:16-alpine
+    container_name: labcont-db
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: labcont
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: labcont
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    networks:
+      - interna
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U labcont -d labcont"]
+      interval: 5s
+      retries: 20
+
+  app:
+    build:
+      context: ..
+    container_name: labcont-app
+    restart: unless-stopped
+    environment:
+      DATABASE_URL: postgresql+psycopg://labcont:${POSTGRES_PASSWORD}@db:5432/labcont
+      APP_USUARIO: ${APP_USUARIO}
+      APP_SENHA: ${APP_SENHA}
+      # Tutor (Etapa 6): IA local do VPS. Configure com deploy/configurar-ia.sh; vazio = modo roteiro.
+      TUTOR_LLM_URL: ${TUTOR_LLM_URL:-}
+      TUTOR_LLM_MODEL: ${TUTOR_LLM_MODEL:-}
+      TUTOR_LLM_KEY: ${TUTOR_LLM_KEY:-}
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    depends_on:
+      db:
+        condition: service_healthy
+    networks:
+      - interna
+    labels:
+      - traefik.enable=true
+      - traefik.docker.network=${TRAEFIK_DOCKER_NETWORK:-labcont_interna}
+      - traefik.http.routers.labcont.rule=Host(`${DOMINIO}`) || Host(`www.${DOMINIO}`)
+      - traefik.http.routers.labcont.entrypoints=${TRAEFIK_ENTRYPOINT}
+      - traefik.http.routers.labcont.tls=true
+      - traefik.http.routers.labcont.tls.certresolver=${TRAEFIK_CERTRESOLVER}
+      - traefik.http.services.labcont.loadbalancer.server.port=8000
+      - traefik.http.routers.labcont-http.rule=Host(`${DOMINIO}`) || Host(`www.${DOMINIO}`)
+      - traefik.http.routers.labcont-http.entrypoints=${TRAEFIK_HTTP_ENTRYPOINT}
+      - traefik.http.routers.labcont-http.middlewares=labcont-https
+      - traefik.http.middlewares.labcont-https.redirectscheme.scheme=https
+
+volumes:
+  pgdata:
+
+networks:
+  interna:
+    name: labcont_interna
+# Se o Traefik estiver em uma rede Docker (e não em "host"), o atualizar.sh
+# acrescenta deploy/compose.rede-traefik.yml para ligar o app a essa rede.

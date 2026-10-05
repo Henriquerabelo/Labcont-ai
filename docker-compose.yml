@@ -1,0 +1,35 @@
+# Sobe o PostgreSQL (e, opcionalmente, a aplicacao) no computador local.
+#   Somente o banco:     docker compose up -d db
+#   Banco + aplicacao:   docker compose up -d --build
+services:
+  db:
+    image: postgres:16
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: labcont
+      POSTGRES_PASSWORD: labcont
+      POSTGRES_DB: labcont
+    ports:
+      - "5432:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U labcont"]
+      interval: 5s
+      retries: 10
+
+  app:
+    build: .
+    restart: unless-stopped
+    environment:
+      DATABASE_URL: postgresql+psycopg://labcont:labcont@db:5432/labcont
+      APP_USUARIO: ${APP_USUARIO:-}
+      APP_SENHA: ${APP_SENHA:-}
+    ports:
+      - "8000:8000"
+    depends_on:
+      db:
+        condition: service_healthy
+
+volumes:
+  pgdata:

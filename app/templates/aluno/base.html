@@ -1,0 +1,18 @@
+{% extends "base.html" %}
+{% block home %}/aluno{% endblock %}
+{% block nav %}
+<nav class="nav">
+  {% if d %}
+  <a href="/aluno" class="{{ 'ativo' if menu == 'painel' }}">Painel</a>
+  <a href="/aluno/documentos" class="{{ 'ativo' if menu == 'documentos' }}">Documentos</a>
+  {% if not visualizacao %}<a href="/aluno/lancar" class="{{ 'ativo' if menu == 'lancar' }}">Lançar</a>{% endif %}
+  <a href="/aluno/diario" class="{{ 'ativo' if menu == 'diario' }}">Diário</a>
+  <a href="/aluno/razao" class="{{ 'ativo' if menu == 'razao' }}">Razão</a>
+  <a href="/aluno/balancete" class="{{ 'ativo' if menu == 'balancete' }}">Balancete</a>
+  <a href="/aluno/demonstracoes" class="{{ 'ativo' if menu == 'demonstracoes' }}">DRE e BP</a>
+  <a href="/aluno/tutor" class="{{ 'ativo' if menu == 'tutor' }}">Tutor</a>
+  <a href="/aluno/normas" class="{{ 'ativo' if menu == 'normas' }}">Normas</a>
+  <span class="nav-usuario">{% if not visualizacao %}<a href="/aluno/senha" class="{{ 'ativo' if menu == 'senha' }}">Senha</a>{% endif %}<a href="/aluno/sair">{{ 'Sair da visualização' if visualizacao else 'Sair' }}</a></span>
+  {% endif %}
+</nav>
+{% endblock %}

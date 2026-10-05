@@ -1,0 +1,9 @@
+{% if avisos %}{% set ct = avisos_cont %}
+<section class="card secao avisos-cons" id="avisos">
+  <div class="card-head"><h3>Conferência imediata</h3>
+    <span class="legenda-calor">{% if ct.erro %}<span class="alerta alerta-alto">▲ {{ ct.erro }} erro(s) estrutural(is)</span>{% endif %}{% if ct.aviso %}<span class="alerta alerta-medio">◆ {{ ct.aviso }} aviso(s)</span>{% endif %}{% if ct.info %}<span class="alerta alerta-baixo">● {{ ct.info }} informativo(s)</span>{% endif %}</span></div>
+  <p class="mono-sm muted" style="margin-top:0">Verificações de forma dos seus próprios lançamentos (datas, históricos, repetições e saldos impossíveis). Não comparam com o gabarito: a correção contábil continua só no fechamento do mês.</p>
+  <ul class="alertas-lista">{% for a in avisos[:12] %}<li><span class="alerta alerta-{{ {'erro': 'alto', 'aviso': 'medio', 'info': 'baixo'}[a.nivel] }}">{{ {'erro': '▲ Erro estrutural', 'aviso': '◆ Aviso', 'info': '● Informativo'}[a.nivel] }}</span> <strong>{{ a.titulo }}</strong> — {{ a.texto }}{% if prof %}{% elif a.lancamento_id and not fech and not visualizacao %} <a class="mono-sm" href="/aluno/lancamentos/{{ a.lancamento_id }}/editar">corrigir</a>{% elif a.conta %} <a class="mono-sm" href="/aluno/razao?conta={{ a.conta }}">ver no Razão</a>{% endif %}</li>{% endfor %}</ul>
+  {% if avisos|length > 12 %}<p class="mono-sm muted">… e mais {{ avisos|length - 12 }}.</p>{% endif %}
+</section>
+{% endif %}

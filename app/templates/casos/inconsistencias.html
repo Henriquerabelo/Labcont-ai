@@ -1,0 +1,25 @@
+{% extends "casos/_base.html" %}
+{% block aba %}
+<p class="lead" style="margin-top:0">Divergências encontradas no texto original do exercício. Registre a decisão adotada neste caso. A geração por dupla seguirá a decisão.</p>
+<form method="post" action="/casos/{{ caso.id }}/inconsistencias" class="card" style="padding:16px 24px">
+  <div class="table-wrap"><table class="tbl-edit">
+    <thead><tr><th>#</th><th style="width:16%">Onde</th><th style="width:32%">Inconsistência</th><th style="width:32%">Decisão do professor</th><th>Status</th><th title="Excluir">✕</th></tr></thead>
+    <tbody>
+    {% for x in caso.inconsistencias %}
+      <tr>
+        <td class="mono-sm">{{ loop.index }}</td>
+        <td><textarea name="n_onde_{{ x.id }}" rows="2" aria-label="Onde">{{ x.onde }}</textarea></td>
+        <td><textarea name="n_descricao_{{ x.id }}" rows="3" aria-label="Descrição">{{ x.descricao }}</textarea></td>
+        <td><textarea name="n_decisao_{{ x.id }}" rows="3" aria-label="Decisão" placeholder="Ex.: considerar R$ 20.000,00 e data 20/02">{{ x.decisao or '' }}</textarea></td>
+        <td><select name="n_status_{{ x.id }}" aria-label="Status">{% for s in ['PENDENTE','RESOLVIDA','MANTIDA'] %}<option {{ 'selected' if s == x.status }}>{{ s }}</option>{% endfor %}</select></td>
+        <td class="c"><input type="checkbox" name="n_x_{{ x.id }}" aria-label="Excluir"></td>
+      </tr>
+    {% endfor %}
+      <tr class="nova"><td></td><td><textarea name="n_onde_novo" rows="2" placeholder="+ nova inconsistência"></textarea></td>
+        <td><textarea name="n_descricao_novo" rows="2"></textarea></td><td><textarea name="n_decisao_novo" rows="2"></textarea></td>
+        <td><select name="n_status_novo"><option>PENDENTE</option><option>RESOLVIDA</option><option>MANTIDA</option></select></td><td></td></tr>
+    </tbody>
+  </table></div>
+  <div class="form-acoes compacto"><button class="btn btn-primary" type="submit">Salvar decisões</button><span class="muted mono-sm">RESOLVIDA = corrigida no caso · MANTIDA = a divergência é proposital (desafio aos alunos)</span></div>
+</form>
+{% endblock %}

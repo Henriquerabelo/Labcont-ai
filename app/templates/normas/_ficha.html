@@ -1,0 +1,10 @@
+<article class="card norma{{ ' norma-inativa' if not n.ativa }}" id="n{{ n.id }}">
+  <div class="norma-head"><span class="mono-sm muted">{{ n.codigo }}{% if score is defined and score %} · relevância {{ score }}{% endif %}</span>
+    {% if admin %}<span class="norma-tags">{% if not n.ativa %}<span class="tag">inativa</span>{% endif %}{% if n.origem != 'padrao' %}<span class="tag">{{ 'do professor' if n.origem == 'professor' else 'editada' }}</span>{% endif %}</span>{% endif %}</div>
+  <h3>{{ n.titulo }}</h3>
+  <p class="norma-fonte">{{ n.fonte }}</p>
+  <p>{{ n.texto }}</p>
+  {% if n.lista_eventos or admin %}<div class="norma-pe"><span class="mono-sm muted">{% if n.lista_eventos %}Eventos: {{ n.lista_eventos|join(', ') }}{% endif %}</span>
+    {% if admin %}<span><a class="btn btn-sm" href="/normas/{{ n.id }}/editar">Editar</a>
+      <form class="inline" method="post" action="/normas/{{ n.id }}/ativa"><button class="btn btn-sm" type="submit">{{ 'Desativar' if n.ativa else 'Reativar' }}</button></form></span>{% endif %}</div>{% endif %}
+</article>

@@ -1,0 +1,27 @@
+{% extends "base.html" %}
+{% from "_macros.html" import excluir, situacao_tag %}
+{% block titulo %}{{ d.nome }}{% endblock %}
+{% block conteudo %}
+<div class="breadcrumb"><a href="/discentes">Discentes</a> / {{ d.matricula }}</div>
+<div class="page-head">
+  <div><div class="eyebrow">Discente · Matrícula {{ d.matricula }}{% if not d.ativo %} · inativo{% endif %}</div><h1>{{ d.nome }}</h1></div>
+  <div class="acoes"><a class="btn" href="/discentes/{{ d.id }}/editar">Editar</a>{{ excluir('/discentes/%s/excluir'|format(d.id), 'Excluir o cadastro de ' ~ d.nome ~ '? Ele(a) será removido(a) de todas as turmas.') }}</div>
+</div>
+<div class="grid grid-2">
+  <div class="card"><dl class="dados">
+    <dt>E-mail</dt><dd>{{ d.email or '—' }}</dd><dt>Curso</dt><dd>{{ d.curso or '—' }}</dd><dt>Turno</dt><dd>{{ d.turno or '—' }}</dd>
+  </dl></div>
+  <div class="card">
+    <div class="card-head"><h3>Turmas</h3></div>
+    <table><tbody>
+    {% for m in d.matriculas|sort(attribute='turma.periodo', reverse=True) %}
+      <tr><td><a href="/turmas/{{ m.turma.id }}">{{ m.turma.disciplina.codigo }} · Turma {{ m.turma.codigo }}</a><div class="muted mono-sm">{{ m.turma.disciplina.nome }}</div></td><td class="mono-sm">{{ m.turma.periodo }}</td><td>{{ situacao_tag(m.situacao) }}</td></tr>
+    {% else %}<tr><td class="vazio">Não está em nenhuma turma.</td></tr>{% endfor %}
+    </tbody></table>
+    <form class="linha-form" method="post" action="/discentes/{{ d.id }}/matricular" style="margin-top:20px">
+      <div class="field"><label for="turma_id">Incluir em turma</label><select id="turma_id" name="turma_id"><option value="">Selecione…</option>{% for t in turmas %}<option value="{{ t.id }}">{{ t.periodo }} · {{ t.disciplina.codigo }} · Turma {{ t.codigo }} — {{ t.disciplina.nome }}</option>{% endfor %}</select></div>
+      <button class="btn btn-dark" type="submit">Incluir</button>
+    </form>
+  </div>
+</div>
+{% endblock %}

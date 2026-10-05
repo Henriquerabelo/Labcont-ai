@@ -1,0 +1,73 @@
+{% from "documentos/_macros.html" import data, parte, calc with context %}
+<article class="dc dc-{{ doc.tipo }}">
+  <div class="dc-marca">Documento didático · sem valor fiscal</div>
+  <header class="dc-topo">
+    <div><div class="dc-tipo">{{ tipos[doc.tipo] }}</div><div class="dc-titulo">{{ doc.titulo }}</div></div>
+    <div class="dc-num">{% if doc.numero %}<span>Nº</span> {{ doc.numero }}{% endif %}<div class="dc-sub">Emissão {{ data(doc.data) }}</div></div>
+  </header>
+  <div class="dc-partes">{{ parte('Emitente', doc.emitente) }}{{ parte('Destinatário / tomador', doc.destinatario) }}</div>
+
+  {% if doc.tipo == 'nfe' %}
+    <div class="dc-linha"><div><span class="dc-rot">Natureza da operação</span> {{ doc.natureza }}</div><div><span class="dc-rot">CFOP</span> {{ doc.cfop }}</div></div>
+    <table class="dc-tab">
+      <thead><tr><th>Código</th><th>Descrição</th><th>NCM</th><th>CFOP</th><th>Un</th><th class="num">Qtd.</th><th class="num">Valor unit.</th><th class="num">Valor total</th><th class="num">ICMS %</th><th class="num">IPI %</th></tr></thead>
+      <tbody>{% for i in doc.itens %}<tr><td>{{ i.codigo }}</td><td>{{ i.descricao }}</td><td>{{ i.ncm }}</td><td>{{ i.cfop }}</td><td>{{ i.unidade }}</td>
+        <td class="num">{{ i.quantidade|n(0) }}</td><td class="num">{{ calc(i.unitario, 4) }}</td><td class="num">{{ calc(i.total) }}</td>
+        <td class="num">{{ i.aliq_icms|n(2) }}</td><td class="num">{{ i.aliq_ipi|n(2) }}</td></tr>{% endfor %}</tbody>
+    </table>
+    <div class="dc-calculo">
+      {% for rot, v in [('Valor dos produtos', doc.produtos), ('Desconto', doc.desconto), ('Base de cálculo do ICMS', doc.base_icms), ('Valor do ICMS', doc.icms), ('Valor do IPI', doc.ipi), ('Valor total da nota', doc.total)] %}
+      <div class="dc-box {{ 'dc-destaque' if loop.last }}"><div class="dc-rot">{{ rot }}</div><div class="dc-val">{{ calc(v) }}</div></div>
+      {% endfor %}
+    </div>
+    <h4 class="dc-h">Fatura / duplicatas</h4>
+    <table class="dc-tab"><thead><tr><th>Parcela</th><th>Vencimento</th><th class="num">Valor</th></tr></thead>
+      <tbody>{% for n, venc, v in doc.duplicatas %}<tr><td>{{ n }}</td><td>{{ data(venc) }}</td><td class="num">{{ calc(v) }}</td></tr>{% endfor %}</tbody></table>
+    <div class="dc-linha"><div><span class="dc-rot">Transporte</span> {{ doc.transporte }}</div></div>
+  {% elif doc.tipo == 'cte' %}
+    <div class="dc-linha"><div><span class="dc-rot">CFOP</span> {{ doc.cfop }}</div><div><span class="dc-rot">Origem → destino</span> {{ doc.origem }} → {{ doc.destino }}</div><div><span class="dc-rot">Tomador</span> {{ doc.tomador }}</div></div>
+    <div class="dc-linha"><div><span class="dc-rot">Remetente</span> {{ doc.remetente }}</div><div><span class="dc-rot">Documento transportado</span> NF-e {{ doc.nf_ref }}</div></div>
+    <div class="dc-calculo">
+      <div class="dc-box"><div class="dc-rot">Valor da prestação</div><div class="dc-val">{{ doc.valor|n(2) }}</div></div>
+      <div class="dc-box"><div class="dc-rot">Base do ICMS</div><div class="dc-val">{{ doc.base_icms|n(2) }}</div></div>
+      <div class="dc-box"><div class="dc-rot">Alíquota ICMS</div><div class="dc-val">{{ doc.aliq_icms|n(2) }}%</div></div>
+      <div class="dc-box"><div class="dc-rot">Valor do ICMS</div><div class="dc-val">{{ doc.icms|n(2) }}</div></div>
+      <div class="dc-box dc-destaque"><div class="dc-rot">Pagamento</div><div class="dc-val" style="font-size:15px">{{ doc.pagamento }}</div></div>
+    </div>
+  {% elif doc.tipo == 'nfse' %}
+    <div class="dc-linha"><div><span class="dc-rot">Serviço</span> {{ doc.codigo_servico }}</div></div>
+    <div class="dc-discr"><div class="dc-rot">Discriminação</div>{{ doc.servico }}</div>
+    <div class="dc-calculo">
+      <div class="dc-box"><div class="dc-rot">Valor do serviço</div><div class="dc-val">{{ doc.valor|n(2) }}</div></div>
+      {% if doc.materiais is defined %}<div class="dc-box"><div class="dc-rot">Materiais aplicados</div><div class="dc-val">{{ doc.materiais|n(2) }}</div></div>
+      <div class="dc-box"><div class="dc-rot">Mão de obra</div><div class="dc-val">{{ doc.mao_de_obra|n(2) }}</div></div>{% endif %}
+      <div class="dc-box"><div class="dc-rot">ISS ({{ doc.aliq_iss|n(2) }}%){{ ' · retido pelo tomador' if doc.iss_retido }}</div><div class="dc-val">{{ calc(doc.iss) }}</div></div>
+      {% for rot, v in doc.retencoes %}<div class="dc-box"><div class="dc-rot">{{ rot }}</div><div class="dc-val">{{ calc(v) }}</div></div>{% endfor %}
+      <div class="dc-box dc-destaque"><div class="dc-rot">Valor líquido · vencimento {{ data(doc.vencimento) }}</div><div class="dc-val">{{ calc(doc.liquido) }}</div></div>
+    </div>
+  {% elif doc.tipo == 'fatura' %}
+    <div class="dc-linha">{% if doc.classe %}<div><span class="dc-rot">Classe</span> {{ doc.classe }}</div>{% endif %}<div><span class="dc-rot">Referência</span> {{ doc.referencia }}</div><div><span class="dc-rot">Vencimento</span> {{ data(doc.vencimento) }}</div></div>
+    <table class="dc-tab"><thead><tr><th>Descrição</th><th class="num">Quantidade</th><th>Un</th><th class="num">Tarifa / valor unit.</th><th class="num">Valor</th></tr></thead>
+      <tbody>{% for i in doc.itens %}<tr><td>{{ i.descricao }}</td><td class="num">{{ i.quantidade|n(3) if i.unidade != 'mês' else 1 }}</td><td>{{ i.unidade }}</td><td class="num">{{ i.unitario|n(4) if i.unidade != 'mês' else i.unitario|n(2) }}</td><td class="num">{{ i.total|n(2) }}</td></tr>{% endfor %}</tbody></table>
+    <div class="dc-calculo"><div class="dc-box dc-destaque"><div class="dc-rot">Total a pagar</div><div class="dc-val">{{ doc.total|n(2) }}</div></div></div>
+  {% elif doc.tipo == 'rpa' %}
+    <div class="dc-discr"><div class="dc-rot">Serviço prestado</div>{{ doc.servico }}</div>
+    <div class="dc-calculo">
+      <div class="dc-box"><div class="dc-rot">Valor bruto</div><div class="dc-val">{{ doc.valor|n(2) }}</div></div>
+      {% for rot in ['(−) INSS do contribuinte individual', '(−) IRRF', '(−) ISS'] %}<div class="dc-box"><div class="dc-rot">{{ rot }}</div><div class="dc-val">{{ calc(none) }}</div></div>{% endfor %}
+      <div class="dc-box dc-destaque"><div class="dc-rot">Líquido · pagamento em {{ data(doc.vencimento) }}</div><div class="dc-val">{{ calc(none) }}</div></div>
+    </div>
+  {% elif doc.tipo == 'contrato' %}
+    <table class="dc-tab"><tbody>{% for k, v in doc.clausulas %}<tr><th style="width:30%">{{ k }}</th><td>{{ v }}</td></tr>{% endfor %}</tbody></table>
+  {% elif doc.tipo == 'auto' %}
+    <div class="dc-discr"><div class="dc-rot">Infração</div>{{ doc.infracao }}</div>
+    <div class="dc-calculo">
+      <div class="dc-box"><div class="dc-rot">Base de cálculo</div><div class="dc-val">{{ doc.base|n(2) }}</div></div>
+      <div class="dc-box"><div class="dc-rot">ICMS ({{ doc.aliq|n(2) }}%)</div><div class="dc-val">{{ doc.icms|n(2) }}</div></div>
+      <div class="dc-box"><div class="dc-rot">Multa (75% do ICMS)</div><div class="dc-val">{{ doc.multa|n(2) }}</div></div>
+      <div class="dc-box dc-destaque"><div class="dc-rot">Total do auto</div><div class="dc-val">{{ doc.total|n(2) }}</div></div>
+    </div>
+    <div class="dc-linha"><div><span class="dc-rot">Benefício</span> redução de {{ doc.reducao }}</div></div>
+  {% endif %}
+  {% if doc.obs %}<div class="dc-discr"><div class="dc-rot">Informações complementares</div>{{ doc.obs }}</div>{% endif %}
+</article>

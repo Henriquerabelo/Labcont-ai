@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+{% block titulo %}Entrar{% endblock %}
+{% block nav %}<nav class="nav"><a href="/aluno">Sou aluno</a></nav>{% endblock %}
+{% block conteudo %}
+<section class="hero" style="max-width:640px;margin:0 auto 40px">
+  <div class="eyebrow">Laboratório de Prática Contábil · equipe</div>
+  <h1>Entrar</h1>
+  <p class="lead">Professores, coordenação, monitores e avaliadores. Alunos entram pela <a href="/aluno">área do grupo</a>.</p>
+  <form method="post" action="/entrar" class="form-grid" style="margin-top:28px">
+    <input type="hidden" name="volta" value="{{ volta }}">
+    <div class="field full"><label for="login">Login (e-mail)</label><input id="login" name="login" value="{{ login or '' }}" autocomplete="username" required autofocus></div>
+    <div class="field full"><label for="senha">Senha</label><input id="senha" name="senha" type="password" autocomplete="current-password" required></div>
+    <div class="form-acoes" style="grid-column:1/-1;margin-top:8px"><button class="btn btn-primary" type="submit">Entrar</button><span class="muted mono-sm">Esqueceu a senha? Peça uma senha provisória à coordenação.</span></div>
+  </form>
+</section>
+{% endblock %}

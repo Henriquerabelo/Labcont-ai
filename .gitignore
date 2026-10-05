@@ -1,0 +1,17 @@
+# Ambiente e segredos
+.env
+.venv/
+__pycache__/
+*.pyc
+.pytest_cache/
+
+# Dados pessoais reais (LGPD) - nunca enviar ao GitHub
+dados_sigaa/*
+!dados_sigaa/LEIA-ME.txt
+*.pdf
+*.sql
+*.dump
+pgdata/
+
+# Arquivos da antiga execução local no Windows
+.venv/

@@ -1,0 +1,48 @@
+{% extends "casos/_base.html" %}
+{% from "casos/_macros.html" import parametros, tabela, chave_valor %}
+{% block aba %}
+{% set url = '/casos/%s/producao'|format(caso.id) %}
+
+<section class="card" id="ficha">
+  <div class="card-head"><h3>Ficha técnica (lista técnica)</h3><span class="muted mono-sm">Unidades de insumo por unidade de produto · deixe vazio ou 0 para remover</span></div>
+  <form method="post" action="{{ url }}">
+    <input type="hidden" name="secao" value="ficha">
+    <div class="table-wrap"><table class="tbl-edit matriz">
+      <thead><tr><th>Produto</th>{% for i in insumos %}<th class="c" title="{{ i.descricao }}">{{ i.codigo }}</th>{% endfor %}</tr></thead>
+      <tbody>
+      {% for p in produtos %}<tr><th scope="row">{{ p.descricao }} <span class="muted">({{ p.codigo }})</span></th>
+        {% for i in insumos %}<td class="c"><input name="ft|{{ p.codigo }}|{{ i.codigo }}" value="{{ ficha.get((p.codigo, i.codigo))|n }}" class="w-xs num" aria-label="{{ p.codigo }} × {{ i.codigo }}"></td>{% endfor %}</tr>
+      {% endfor %}
+      <tr class="total"><th scope="row">Necessidade pelo plano base</th>{% for i in insumos %}<td class="c mono-sm">{{ necessidade[i.codigo]|n }}</td>{% endfor %}</tr>
+      </tbody>
+    </table></div>
+    <div class="form-acoes compacto"><button class="btn btn-dark btn-sm" type="submit">Salvar ficha técnica</button><span class="muted mono-sm">Para incluir um insumo ou produto novo, cadastre-o na tabela de itens abaixo.</span></div>
+  </form>
+</section>
+
+<div class="grid grid-2">
+  <section class="card" id="plano">
+    <div class="card-head"><h3>Plano de produção</h3></div>
+    {{ chave_valor(url, 'plano', 'plano', plano) }}
+  </section>
+  <section class="card" id="markup">
+    <div class="card-head"><h3>Mark-up</h3><span class="muted mono-sm">Preço = custo ÷ divisor</span></div>
+    {{ chave_valor(url, 'markup', 'markup', caso.dados.markup or {}) }}
+    {{ parametros(caso, caso.params('markup'), 'markup', '', url+'#markup', titulo='Faixa da margem') }}
+  </section>
+</div>
+
+<section class="card" id="itens">
+  <div class="card-head"><h3>Itens: insumos, produtos e mercadorias</h3><span class="muted mono-sm">Custo base e faixa de sorteio do custo unitário de compra</span></div>
+  {{ tabela(url, 'itens', 'i', caso.itens, [
+      ('codigo','Código','w-xs'), ('descricao','Descrição',''), ('tipo','Tipo',''), ('ncm','NCM','w-sm'),
+      ('custo_base','Custo base','w-sm num'), ('custo_min','Custo mín.','w-sm num'), ('custo_max','Custo máx.','w-sm num')],
+      chave_id='id', novo_rotulo='+ novo item', botao='Salvar itens') }}
+  <p class="muted mono-sm">Tipos usados na ficha técnica: Matéria-prima, Material secundário, Embalagem e Produto acabado.</p>
+</section>
+
+<section class="card" id="parametros">
+  <div class="card-head"><h3>Variação por dupla</h3></div>
+  {{ parametros(caso, caso.params('producao'), 'producao', '', url+'#parametros', titulo=none) }}
+</section>
+{% endblock %}

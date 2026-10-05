@@ -1,0 +1,37 @@
+{% extends "base.html" %}
+{% block titulo %}Notas de janeiro · {{ t.disciplina.codigo }} {{ t.codigo }}{% endblock %}
+{% block conteudo %}
+<div class="breadcrumb"><a href="/duplas">Grupos</a> / <a href="/turmas/{{ t.id }}/duplas">{{ t.disciplina.codigo }} · Turma {{ t.codigo }}</a> / <a href="/turmas/{{ t.id }}/painel">Painel</a> / Notas de janeiro</div>
+<div class="page-head">
+  <div><div class="eyebrow">Homologação · janeiro</div><h1>Notas de janeiro</h1>
+  <p class="lead">O sistema propõe a nota de cada aluno a partir do fechamento enviado pelo grupo, por um critério objetivo de conformidade técnica. Você revisa, ajusta pela participação qualitativa e homologa. Só a nota homologada aparece para o aluno.</p></div>
+  <div class="acoes"><a class="btn" href="/turmas/{{ t.id }}/notas.csv">Exportar CSV</a><a class="btn" href="/turmas/{{ t.id }}/painel">Painel da turma</a></div>
+</div>
+<div class="aviso" role="note"><span><strong>Critério:</strong> nota = 10 × (eventos corretos × {{ pesos.correto|n(1) }} + valor divergente × {{ pesos.valor|n(1) }} + conta errada ou pendente × 0) ÷ eventos do mês. Ajuste de −10 a +10 sobre a nota do sistema; a nota final fica entre 0 e 10.</span></div>
+<div class="stats" style="margin:24px 0">
+  <div class="stat"><div class="num">{{ linhas|length }}</div><div class="lbl">Alunos em grupos</div></div>
+  <div class="stat"><div class="num">{{ prontas }}</div><div class="lbl">Com nota proposta (janeiro enviado)</div></div>
+  <div class="stat"><div class="num">{{ homologadas }}</div><div class="lbl">Homologadas</div></div>
+</div>
+<form method="post" action="/turmas/{{ t.id }}/notas" class="card" style="padding:8px 24px 20px">
+  <div class="table-wrap"><table class="mini">
+    <thead><tr><th><input type="checkbox" aria-label="Marcar todos" onclick="this.form.querySelectorAll('input.sel').forEach(c => c.checked = this.checked)"></th><th>Aluno</th><th>Grupo</th><th>Fechamento</th><th class="num">Sistema</th><th class="num" style="width:90px">Ajuste</th><th class="num">Final</th><th>Observação</th><th>Situação</th></tr></thead>
+    <tbody>{% for l in linhas %}{% set n = l.n %}
+      <tr><td>{% if n.nota_sistema is not none %}<input class="sel" type="checkbox" name="sel_{{ n.id }}" aria-label="Selecionar {{ l.m.discente.nome }}">{% endif %}</td>
+        <td>{{ l.m.discente.nome }}<div class="muted mono-sm">{{ l.m.discente.matricula }}</div></td>
+        <td class="mono-sm">{{ l.d.rotulo }}</td>
+        <td class="mono-sm">{% if l.fech %}enviado {{ l.fech.enviado_em.strftime('%d/%m') }}<div class="muted">{{ l.cont.get('correto', 0) }} ✓ · {{ l.cont.get('valor', 0) }} ≈ · {{ l.cont.get('conta', 0) }} ✗ de {{ l.total }}</div>{% else %}<span class="muted">não enviado</span>{% endif %}</td>
+        <td class="num">{{ n.nota_sistema|n(1) if n.nota_sistema is not none else '—' }}</td>
+        <td class="num">{% if n.homologada %}{{ n.ajuste|n(1) }}{% elif n.nota_sistema is not none %}<input name="ajuste_{{ n.id }}" value="{{ (n.ajuste or 0)|n(1) }}" inputmode="decimal" style="width:80px;padding:6px 10px" aria-label="Ajuste de {{ l.m.discente.nome }}">{% endif %}</td>
+        <td class="num"><strong>{{ n.nota_final|n(1) if n.nota_final is not none else '—' }}</strong></td>
+        <td>{% if n.homologada %}<span class="mono-sm">{{ n.observacao or '' }}</span>{% elif n.nota_sistema is not none %}<input name="obs_{{ n.id }}" value="{{ n.observacao or '' }}" style="padding:6px 10px" aria-label="Observação sobre {{ l.m.discente.nome }}">{% endif %}</td>
+        <td>{% if n.homologada %}<span class="nivel nivel-correto" title="{{ n.homologada_por }}">Homologada {{ n.homologada_em.strftime('%d/%m') }}</span>{% elif n.nota_sistema is not none %}<span class="nivel nivel-lancado">Proposta</span>{% else %}<span class="nivel nivel-pendente">Aguardando envio</span>{% endif %}</td></tr>
+    {% else %}<tr><td colspan="9" class="vazio">Nenhum aluno em grupo com empresa gerada.</td></tr>{% endfor %}</tbody>
+  </table></div>
+  <div class="form-acoes compacto">
+    <button class="btn" type="submit" name="acao" value="salvar">Salvar ajustes</button>
+    <button class="btn btn-primary" type="submit" name="acao" value="homologar">Homologar selecionadas</button>
+    <button class="btn" type="submit" name="acao" value="desfazer">Desfazer homologação das selecionadas</button>
+  </div>
+</form>
+{% endblock %}

@@ -1,0 +1,31 @@
+{% extends "base.html" %}
+{% block titulo %}Importar SIGAA{% endblock %}
+{% block conteudo %}
+<div class="page-head"><div><div class="eyebrow">Importação</div><h1>Importar relatórios do SIGAA</h1>
+<p class="lead">Envie o PDF salvo do SIGAA. O sistema reconhece o tipo automaticamente e mostra uma prévia antes de gravar. Importar o mesmo arquivo de novo atualiza os dados, sem duplicar registros.</p></div></div>
+<div class="grid grid-2">
+  <form class="card" method="post" enctype="multipart/form-data">
+    <div class="card-head"><h3>Enviar PDF</h3></div>
+    <div class="drop"><input type="file" name="arquivo" accept="application/pdf,.pdf" required aria-label="Arquivo PDF"></div>
+    <div class="form-acoes"><button class="btn btn-primary" type="submit">Ler arquivo</button></div>
+  </form>
+  <div class="card">
+    <div class="card-head"><h3>Formatos aceitos</h3></div>
+    <dl class="dados">
+      <dt>Consulta de turmas</dt><dd>Portal do Discente → Consulta Geral de Turmas. Cadastra disciplinas, turmas (horário, local, vagas) e docentes.</dd>
+      <dt>Participantes</dt><dd>Turma Virtual → Participantes. Cadastra a turma, o(s) docente(s) com e-mail e todos os discentes, inclusive os com matrícula trancada.</dd>
+    </dl>
+    <p class="muted mono-sm">Use “Imprimir → Salvar como PDF” no navegador, sem alterar o layout.</p>
+  </div>
+</div>
+<div class="card" style="margin-top:24px">
+  <div class="card-head"><h3>Histórico</h3></div>
+  <div class="table-wrap"><table>
+    <thead><tr><th>#</th><th>Arquivo</th><th>Tipo</th><th>Status</th><th>Data</th></tr></thead>
+    <tbody>
+    {% for i in historico %}<tr><td>{{ i.id }}</td><td><a href="/importacao/{{ i.id }}">{{ i.arquivo }}</a></td><td>{{ 'Participantes' if i.tipo == 'participantes' else 'Consulta de turmas' }}</td><td><span class="tag{{ ' tag-ok' if i.status == 'CONCLUIDA' }}">{{ i.status }}</span></td><td>{{ i.criado_em.strftime('%d/%m/%Y %H:%M') }}</td></tr>
+    {% else %}<tr><td colspan="5" class="vazio">Nenhuma importação ainda.</td></tr>{% endfor %}
+    </tbody>
+  </table></div>
+</div>
+{% endblock %}

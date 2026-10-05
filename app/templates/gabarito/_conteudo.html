@@ -1,0 +1,93 @@
+{% set t = g.totais %}
+<div class="stats" style="margin-bottom:24px">
+  <div class="stat"><div class="num">{{ g.lancamentos|length }}</div><div class="lbl">Lançamentos</div></div>
+  <div class="stat"><div class="num" style="font-size:34px">{{ t.ativo|n(2) }}</div><div class="lbl">Ativo em 31/01 (R$)</div></div>
+  <div class="stat"><div class="num" style="font-size:34px">{{ t.resultado|n(2) }}</div><div class="lbl">Resultado de janeiro (R$)</div></div>
+  <div class="stat"><div class="num" style="font-size:34px">{% if t.fecha %}<span class="tag tag-ok" style="font-size:14px">fecha</span>{% else %}<span class="tag tag-alerta" style="font-size:14px">não fecha</span>{% endif %}</div>
+    <div class="lbl">Débitos = créditos{% if t.diferenca %} (dif. {{ t.diferenca|n(2) }} do balanço de 2025){% endif %}</div></div>
+</div>
+
+<nav class="abas gab-abas">
+  <a href="#lancamentos" class="ativo" data-aba="lancamentos">Lançamentos e memória</a>
+  <a href="#balancete" data-aba="balancete">Balancete em 31/01</a>
+  <a href="#premissas" data-aba="premissas">Premissas{% if pendentes %} · {{ pendentes }} a validar{% else %} · todas validadas{% endif %}</a>
+</nav>
+
+<section class="gab-painel" id="p-lancamentos">
+  <nav class="indice">{% for gr in grupos %}<a href="#ev-{{ gr.evento }}">{{ gr.evento }}</a>{% endfor %}</nav>
+  {% for gr in grupos %}
+  <article class="card gab-ev" id="ev-{{ gr.evento }}">
+    <header class="card-head">
+      <h3><span class="mono-sm muted">{{ gr.evento }} · {{ gr.data[8:10] }}/{{ gr.data[5:7] }}</span><br>{{ eventos.get(gr.evento, '') }}</h3>
+      <span>{% for p in g.premissas_evento.get(gr.evento, []) %}{% set st = (validacao.get(p) or {}).get('status', 'PENDENTE') %}<a class="tag {{ 'tag-ok' if st == 'VALIDADA' else ('tag-alerta' if st == 'AJUSTAR' else '') }}" href="#premissa-{{ p }}" title="{{ g.premissas.get(p, '') }}">{{ p }}</a> {% endfor %}</span>
+    </header>
+    <div class="table-wrap"><table class="mini gab-tab">
+      <colgroup><col style="width:18%"><col><col style="width:15%"><col style="width:15%"></colgroup>
+      <thead><tr><th>Conta</th><th>Nome</th><th class="num">Débito</th><th class="num">Crédito</th></tr></thead>
+      <tbody>
+      {% for l in gr.lancs %}
+        <tr class="hist"><td colspan="4">{{ l.n }}. {{ l.historico }}</td></tr>
+        {% for p in l.debitos %}<tr><td class="mono-sm">{{ p.conta }}</td><td>{{ p.nome }}</td><td class="num">{{ p.valor|n(2) }}</td><td></td></tr>{% endfor %}
+        {% for p in l.creditos %}<tr><td class="mono-sm">{{ p.conta }}</td><td class="cred">{{ p.nome }}</td><td></td><td class="num">{{ p.valor|n(2) }}</td></tr>{% endfor %}
+      {% endfor %}
+      </tbody>
+    </table></div>
+    {% set mem = g.memoria.get(gr.evento, []) %}
+    {% if mem %}
+    <details class="memoria"><summary>Memória de cálculo</summary>
+      <table class="mini"><tbody>{% for m in mem %}<tr><td>{{ m.descricao }}{% if m.obs %} <span class="muted mono-sm">· {{ m.obs }}</span>{% endif %}</td><td class="num">{{ m.valor|n(2) if m.valor is not none else '' }}</td></tr>{% endfor %}</tbody></table>
+    </details>
+    {% endif %}
+  </article>
+  {% endfor %}
+</section>
+
+<section class="gab-painel card" id="p-balancete" hidden>
+  <div class="card-head"><h3>Balancete de verificação em 31/01/2026</h3><span class="muted mono-sm">antes do encerramento do resultado</span></div>
+  <div class="table-wrap"><table class="mini gab-bal">
+    <thead><tr><th>Conta</th><th>Nome</th><th class="num">Saldo inicial</th><th class="num">Débitos</th><th class="num">Créditos</th><th class="num">Saldo final</th></tr></thead>
+    <tbody>
+    {% for x in linhas_bal %}
+      <tr class="{{ 'sint n%s'|format(x.nivel) if x.sintetica }}"><td class="mono-sm">{{ x.conta }}</td><td>{{ x.nome }}</td>
+        <td class="num">{{ x.inicial|abs|n(2) }} {{ ('D' if x.inicial >= 0 else 'C') if x.inicial else '' }}</td>
+        <td class="num">{{ x.debitos|n(2) }}</td><td class="num">{{ x.creditos|n(2) }}</td>
+        <td class="num">{{ x.final|abs|n(2) }} {{ ('D' if x.final >= 0 else 'C') if x.final else '' }}</td></tr>
+    {% endfor %}
+    <tr class="sint n0"><td></td><td>Total devedor / credor</td><td></td><td></td><td></td><td class="num">{{ t.devedor|n(2) }} D · {{ t.credor|n(2) }} C</td></tr>
+    </tbody>
+  </table></div>
+</section>
+
+<section class="gab-painel card" id="p-premissas" hidden>
+  <div class="card-head"><h3>Premissas do gabarito</h3><span class="muted mono-sm">decisões que o exercício não define — {{ 'marque cada uma como validada ou a ajustar' if editar_premissas else 'validação feita pelo professor na aba Gabarito do caso' }}</span></div>
+  {% if editar_premissas %}<form method="post" action="/casos/{{ caso_ref.id }}/gabarito/premissas">{% endif %}
+  <table class="mini premissas"><tbody>
+  {% for k, v in g.premissas.items() %}{% set val = validacao.get(k) or {} %}{% set st = val.get('status', 'PENDENTE') %}
+    <tr id="premissa-{{ k }}"><td class="mono-sm" style="width:60px"><strong>{{ k }}</strong></td>
+      <td>{{ v }}{% if not editar_premissas and val.get('comentario') %}<div class="muted mono-sm" style="margin-top:6px">Professor: {{ val.comentario }}</div>{% endif %}</td>
+      {% if editar_premissas %}
+      <td style="width:150px"><select name="st_{{ k }}" aria-label="Situação de {{ k }}">{% for sk, sr in status_opcoes.items() %}<option value="{{ sk }}" {{ 'selected' if sk == st }}>{{ sr }}</option>{% endfor %}</select></td>
+      <td style="width:30%"><textarea name="com_{{ k }}" rows="1" placeholder="comentário / como deve ser" aria-label="Comentário {{ k }}">{{ val.get('comentario', '') }}</textarea>{% if val.get('em') %}<div class="muted mono-sm">{{ val.em }}</div>{% endif %}</td>
+      {% else %}
+      <td style="width:110px"><span class="tag {{ 'tag-ok' if st == 'VALIDADA' else ('tag-alerta' if st == 'AJUSTAR' else '') }}">{{ status_opcoes[st] }}</span></td>
+      {% endif %}
+    </tr>
+  {% endfor %}
+  </tbody></table>
+  {% if editar_premissas %}<div class="form-acoes compacto"><button class="btn btn-dark" type="submit">Salvar validação</button></div></form>{% endif %}
+</section>
+
+<script>
+(() => {
+  const abas = document.querySelectorAll('.gab-abas a');
+  const mostrar = (nome) => {
+    abas.forEach(a => a.classList.toggle('ativo', a.dataset.aba === nome));
+    document.querySelectorAll('.gab-painel').forEach(p => p.hidden = p.id !== 'p-' + nome);
+  };
+  abas.forEach(a => a.addEventListener('click', e => { e.preventDefault(); mostrar(a.dataset.aba); history.replaceState(null, '', '#' + a.dataset.aba); }));
+  const h = location.hash.replace('#', '');
+  if (['balancete', 'premissas'].includes(h)) mostrar(h);
+  document.querySelectorAll('[data-ir]').forEach(a => a.addEventListener('click', e => { e.preventDefault(); mostrar(a.dataset.ir); }));
+  document.querySelectorAll('a[href^="#premissa-"]').forEach(a => a.addEventListener('click', () => mostrar('premissas')));
+})();
+</script>

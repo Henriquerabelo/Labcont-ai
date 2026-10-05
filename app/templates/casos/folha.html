@@ -1,0 +1,31 @@
+{% extends "casos/_base.html" %}
+{% from "casos/_macros.html" import parametros, tabela, chave_valor %}
+{% block aba %}
+{% set url = '/casos/%s/folha'|format(caso.id) %}
+<div class="stats" style="margin-bottom:24px">
+  <div class="stat"><div class="num">{{ tot.jan }}</div><div class="lbl">Empregados em janeiro</div></div>
+  <div class="stat"><div class="num">{{ tot.fev }}</div><div class="lbl">Empregados em fevereiro</div></div>
+  <div class="stat"><div class="num">{{ tot.massa_fev|n(2) }}</div><div class="lbl">Salários-base fev (R$)</div></div>
+  <div class="stat"><div class="num">{{ caso.socios|selectattr('pro_labore_fev')|list|length }}</div><div class="lbl">Sócios com pró-labore</div></div>
+</div>
+
+<section class="card" id="funcionarios">
+  <div class="card-head"><h3>Funcionários</h3><span class="muted mono-sm">Valores do caso-base · admissão “anterior” ou data (contratações no 1º dia do mês)</span></div>
+  {{ tabela(url, 'funcionarios', 'f', caso.funcionarios, [
+      ('setor','Setor','w-md'), ('nome','Nome','w-md'), ('admissao','Admissão','w-sm'),
+      ('salario_jan','Salário jan','w-sm num'), ('he_jan','HE jan','w-xs num'), ('comissao_jan','Comissão jan','w-xs num'), ('dependentes_jan','Dependentes jan','w-md'),
+      ('salario_fev','Salário fev','w-sm num'), ('he_fev','HE fev','w-xs num'), ('comissao_fev','Comissão fev','w-xs num'), ('dependentes_fev','Dependentes fev','w-md')],
+      chave_id='id', novo_rotulo='+ novo funcionário', botao='Salvar funcionários') }}
+  <p class="muted mono-sm">Pró-labore dos sócios: aba <a href="/casos/{{ caso.id }}/empresa#socios">Empresa e sócios</a>.</p>
+</section>
+
+<section class="card" id="parametros">
+  <div class="card-head"><h3>Variação por dupla</h3></div>
+  {{ parametros(caso, caso.params('folha'), 'folha', '', url+'#parametros', titulo=none) }}
+</section>
+
+<section class="card" id="regras">
+  <div class="card-head"><h3>Regras da folha</h3><span class="muted mono-sm">Benefícios, descontos, encargos e datas</span></div>
+  {{ chave_valor(url, 'regras', 'reg', caso.dados.folha_regras or {}) }}
+</section>
+{% endblock %}

@@ -1,0 +1,18 @@
+{% extends "base.html" %}
+{% block titulo %}Tutor · {{ d.rotulo }}{% endblock %}
+{% block conteudo %}
+<div class="breadcrumb"><a href="/duplas">Duplas</a> / <a href="/turmas/{{ d.turma.id }}/duplas">{{ d.turma.disciplina.codigo }} · Turma {{ d.turma.codigo }}</a> / <a href="/turmas/{{ d.turma.id }}/painel">Painel</a> / {{ d.rotulo }} · Tutor</div>
+<div class="page-head">
+  <div><div class="eyebrow">Etapa 6 · conversas com o tutor · visão do professor</div><h1>{{ d.empresa.valores.empresa.nome }} · {{ d.rotulo }}</h1>
+    <p class="lead">{% for m in d.membros %}{{ m.discente.nome }}{% if not loop.last %} · {% endif %}{% endfor %} · {{ n_perg }} pergunta(s){{ ' · janeiro enviado' if fech }}</p></div>
+  <div class="acoes"><a class="btn btn-dark" href="/duplas/{{ d.id }}/escrituracao">Escrituração</a><a class="btn" href="/turmas/{{ d.turma.id }}/painel">Painel da turma</a></div>
+</div>
+{% for b in blocos %}
+<section class="card tutor-chat" style="margin-bottom:24px">
+  <div class="card-head"><h3><span class="mono-sm muted">{{ b.evento or 'geral' }}</span><br>{{ b.descricao }}</h3></div>
+  <div class="msgs" style="max-height:none">
+  {% for m in b.msgs %}<div class="msg msg-{{ m.papel }}"><div class="msg-quem">{{ ('Dupla · ' ~ m.matricula) if m.papel == 'aluno' else {'ia': 'Tutor · IA', 'filtro': 'Tutor · IA bloqueada pelo filtro (resposta substituída)'}.get(m.origem, 'Tutor · roteiro') }} <span>{{ m.criado_em.strftime('%d/%m %H:%M') }}</span></div>{{ m.texto }}</div>{% endfor %}
+  </div>
+</section>
+{% else %}<p class="vazio">A dupla ainda não conversou com o tutor.</p>{% endfor %}
+{% endblock %}

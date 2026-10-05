@@ -1,0 +1,15 @@
+{% extends "aluno/base.html" %}
+{% set menu = 'razao' %}
+{% block titulo %}Razão{% endblock %}
+{% block conteudo %}
+<div class="page-head"><div><div class="eyebrow">{{ d.empresa.valores.empresa.nome }} · Livro Razão</div><h1>{{ nome }}</h1><p class="mono-sm muted">{{ conta }}</p></div>
+  <form method="get" class="busca" style="margin:0"><input name="conta" list="contas" placeholder="Outra conta…" style="min-width:320px"><button class="btn" type="submit">Abrir</button>
+    <datalist id="contas">{% for c in contas %}<option value="{{ c }}">{% endfor %}</datalist></form></div>
+<div class="card table-wrap"><table class="mini">
+  <thead><tr><th>Data</th><th>Evento</th><th>Histórico</th><th class="num">Débito</th><th class="num">Crédito</th><th class="num">Saldo</th></tr></thead>
+  <tbody>{% for x in linhas %}<tr><td class="mono-sm">{{ x.data.strftime('%d/%m') if x.data else '' }}</td><td class="mono-sm">{{ x.evento or '' }}</td>
+    <td>{% if x.lid %}<a href="/aluno/lancamentos/{{ x.lid }}/editar">{{ x.historico }}</a>{% else %}{{ x.historico }}{% endif %}</td>
+    <td class="num">{{ x.d|n(2) if x.d else '' }}</td><td class="num">{{ x.c|n(2) if x.c else '' }}</td>
+    <td class="num">{{ x.saldo|abs|n(2) }} {{ ('D' if x.saldo >= 0 else 'C') if x.saldo else '' }}</td></tr>{% endfor %}</tbody>
+</table></div>
+{% endblock %}

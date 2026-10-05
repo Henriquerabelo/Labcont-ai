@@ -1,0 +1,20 @@
+{% extends "base.html" %}
+{% block titulo %}Minhas turmas{% endblock %}
+{% block conteudo %}
+<div class="page-head">
+  <div><div class="eyebrow">{{ usuario.rotulo_perfis }}</div><h1>Olá, {{ usuario.nome.split(' ')[0]|title }}</h1>
+  <p class="lead">{% if 'visitante' in usuario.perfis and usuario.perfis|length == 1 %}Você está no modo de avaliação: navegue pela turma de demonstração (dados fictícios). Nada pode ser alterado.{% elif usuario.so_leitura %}Você acompanha as turmas abaixo em modo de leitura.{% else %}Estas são as suas turmas. Em cada uma: grupos, empresas, códigos de acesso, escrituração e tutor.{% endif %}</p></div>
+</div>
+<div class="table-wrap card" style="padding:8px 24px">
+<table>
+  <thead><tr><th>Turma</th><th>Período</th><th class="num">Matriculados</th><th>Situação</th><th></th></tr></thead>
+  <tbody>
+  {% for t in turmas %}{% set st = status[t.id] %}
+    <tr><td><a href="/turmas/{{ t.id }}"><strong>{{ t.disciplina.codigo }} · Turma {{ t.codigo }}</strong></a><div class="muted mono-sm">{{ t.disciplina.nome }}</div></td>
+      <td>{{ t.periodo }}</td><td class="num">{{ t.matriculas|length }}</td>
+      <td>{% if st and st.encerrada_em %}<span class="tag">Encerrada</span>{% endif %}{% if st and st.demonstracao %}<span class="tag tag-ok">Demonstração</span>{% endif %}</td>
+      <td class="num"><a class="btn btn-sm btn-dark" href="/turmas/{{ t.id }}/painel">Painel</a> <a class="btn btn-sm" href="/turmas/{{ t.id }}/duplas">Grupos</a></td></tr>
+  {% else %}<tr><td colspan="5" class="vazio">{% if 'visitante' in usuario.perfis %}Nenhuma turma de demonstração disponível ainda.{% elif 'professor' in usuario.perfis %}Nenhuma turma vinculada ao seu cadastro de docente. Peça à coordenação para vincular você à turma.{% else %}Nenhuma turma atribuída.{% endif %}</td></tr>{% endfor %}
+  </tbody>
+</table></div>
+{% endblock %}

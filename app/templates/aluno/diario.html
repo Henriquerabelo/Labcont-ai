@@ -1,0 +1,21 @@
+{% extends "aluno/base.html" %}
+{% set menu = 'diario' %}
+{% block titulo %}Diário{% endblock %}
+{% block conteudo %}
+<div class="page-head"><div><div class="eyebrow">{{ d.empresa.valores.empresa.nome }}</div><h1>Livro Diário · janeiro/2026</h1></div>
+  <div class="acoes">{% if fech %}<span class="tag tag-ok">janeiro enviado em {{ fech.enviado_em.strftime('%d/%m/%Y') }}</span>{% else %}<a class="btn btn-primary" href="/aluno/lancar">Novo lançamento</a>{% endif %}</div></div>
+{% for l in lancs %}
+<article class="card gab-ev" id="ev-{{ l.evento }}">
+  <header class="card-head"><h3><span class="mono-sm muted">{{ l.data.strftime('%d/%m/%Y') }} · {{ l.evento }}</span><br>{{ l.historico }}</h3>
+    {% if not fech %}<a class="btn btn-sm" href="/aluno/lancamentos/{{ l.id }}/editar">Editar</a>{% endif %}</header>
+  <table class="mini gab-tab"><colgroup><col style="width:22%"><col><col style="width:15%"><col style="width:15%"></colgroup>
+    <tbody>
+    {% for p in l.partidas|sort(attribute='natureza', reverse=true) %}
+      <tr><td class="mono-sm">{{ p.conta }}</td><td class="{{ 'cred' if p.natureza == 'C' }}">{{ contas.get(p.conta, {}).get('nome', p.conta) }}</td>
+        <td class="num">{{ p.valor|n(2) if p.natureza == 'D' else '' }}</td><td class="num">{{ p.valor|n(2) if p.natureza == 'C' else '' }}</td></tr>
+    {% endfor %}
+    </tbody></table>
+  <p class="muted mono-sm" style="margin:8px 0 0">Registrado por matrícula {{ l.autor }}</p>
+</article>
+{% else %}<p class="vazio card">Nenhum lançamento ainda. Comece pelo <a href="/aluno/lancar?evento=J01">evento J01</a>.</p>{% endfor %}
+{% endblock %}

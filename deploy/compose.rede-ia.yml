@@ -1,0 +1,11 @@
+# Liga o app à rede Docker onde roda a IA local (ex.: container do Ollama).
+# Acrescentado pelo atualizar.sh quando IA_NETWORK está definido em /opt/labcont/.env.
+services:
+  app:
+    networks:
+      - ia
+
+networks:
+  ia:
+    name: ${IA_NETWORK}
+    external: true

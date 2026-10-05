@@ -1,0 +1,17 @@
+{% extends "aluno/base.html" %}
+{% set menu = 'documentos' %}
+{% from "documentos/_macros.html" import data %}
+{% block titulo %}{{ tipos[doc.tipo] }} {{ doc.numero }}{% endblock %}
+{% block conteudo %}
+<div class="page-head noprint" style="margin-bottom:24px">
+  <div><div class="eyebrow">{{ doc.evento }} · {{ data(doc.data) }}</div><h1 style="font-size:40px">{{ doc.titulo }}</h1></div>
+  <div class="acoes">
+    <a class="btn btn-primary" href="/aluno/lancar?evento={{ doc.evento }}">Lançar {{ doc.evento }}</a>
+    <a class="btn" href="/aluno/tutor?evento={{ doc.evento }}">Perguntar ao tutor</a>
+    {% if anterior %}<a class="btn" href="/aluno/documentos/{{ anterior }}">← Anterior</a>{% endif %}
+    {% if proximo %}<a class="btn" href="/aluno/documentos/{{ proximo }}">Próximo →</a>{% endif %}
+    <button class="btn" type="button" onclick="window.print()">Imprimir</button>
+  </div>
+</div>
+{% include "documentos/_doc.html" %}
+{% endblock %}

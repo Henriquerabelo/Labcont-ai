@@ -1,0 +1,36 @@
+{% extends "base.html" %}
+{% block titulo %}Aviso de privacidade{% endblock %}
+{% block nav %}<nav class="nav"><a href="/aluno">Área do aluno</a><a href="/entrar">Equipe</a></nav>{% endblock %}
+{% block conteudo %}
+<article class="card secao privacidade" style="max-width:860px;margin:0 auto">
+  <div class="eyebrow" style="margin-top:16px">LGPD · Lei 13.709/2018 · versão {{ versao }}</div>
+  <h1 style="font-size:40px">Aviso de privacidade</h1>
+  <p class="lead">Como o LABCONT-AI trata os dados de estudantes e docentes da disciplina Laboratório de Prática Contábil (EH0012).</p>
+
+  <h3>Quem trata os dados</h3>
+  <p>A equipe docente da disciplina, no âmbito da Universidade Federal do Ceará, para fins de ensino. Contato para dúvidas e pedidos: {{ contato }}.</p>
+
+  <h3>Quais dados</h3>
+  <ul>
+    <li>Cadastro acadêmico: nome, matrícula, e-mail institucional, curso, turno e turma (lista de participantes do SIGAA).</li>
+    <li>Atividade na plataforma: lançamentos contábeis, envio do fechamento, perguntas ao tutor e respostas, datas de acesso e o registro de quem fez cada alteração.</li>
+    <li>Avaliação: resultado da auditoria do mês e a nota proposta e homologada pelo professor.</li>
+  </ul>
+
+  <h3>Para quê</h3>
+  <p>Realizar as atividades da disciplina, acompanhar a aprendizagem (painel do professor e alertas), atribuir notas e, de forma desidentificada, avaliar o próprio método de ensino. O tratamento se apoia na execução das atividades de ensino da universidade pública (LGPD, arts. 7º, III, e 23) e, para pesquisa, em dados desidentificados (art. 7º, IV).</p>
+
+  <h3>Inteligência artificial</h3>
+  <p>O tutor usa um modelo de linguagem executado no próprio servidor da plataforma. As conversas não são enviadas a empresas externas nem usadas para treinar modelos. O tutor não recebe o gabarito e não atribui notas: a nota é sempre revisada e homologada pelo professor.</p>
+
+  <h3>Quem acessa</h3>
+  <p>O aluno vê apenas o próprio grupo. O professor vê as suas turmas; monitores veem as turmas atribuídas, sem e-mails nem correção antecipada; a coordenação e a administração acessam o necessário para manter o sistema. Avaliadores externos acessam apenas a turma de demonstração, com dados fictícios.</p>
+
+  <h3>Segurança e guarda</h3>
+  <p>Acesso com senha individual (armazenada de forma cifrada), conexão HTTPS, cópia de segurança diária e histórico de alterações. Os dados ficam guardados até o fim do semestre letivo e do prazo de revisão de notas; depois são excluídos ou desidentificados.</p>
+
+  <h3>Seus direitos</h3>
+  <p>Você pode pedir confirmação, acesso, correção ou exclusão dos seus dados e informações sobre o compartilhamento (LGPD, art. 18), pelo contato acima.</p>
+  <p class="mono-sm muted">Texto do protótipo, a ser revisado pelo encarregado de proteção de dados da UFC antes do uso em turmas regulares.</p>
+</article>
+{% endblock %}

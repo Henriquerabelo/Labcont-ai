@@ -1,0 +1,18 @@
+{% extends "base.html" %}
+{% from "_macros.html" import campo %}
+{% block titulo %}{{ 'Editar' if d and d.id else 'Novo' }} docente{% endblock %}
+{% block conteudo %}
+<div class="breadcrumb"><a href="/docentes">Docentes</a>{% if d and d.id %} / <a href="/docentes/{{ d.id }}">{{ d.nome }}</a>{% endif %}</div>
+<div class="page-head"><h1>{{ 'Editar docente' if d and d.id else 'Novo docente' }}</h1></div>
+<form class="card" method="post">
+  <div class="form-grid">
+    {{ campo('nome', 'Nome completo', d.nome if d, full=True, required=True) }}
+    {{ campo('email', 'E-mail', d.email if d, tipo='email') }}
+    {{ campo('siape', 'SIAPE', d.siape if d) }}
+    {{ campo('departamento', 'Departamento', d.departamento if d) }}
+    {{ campo('formacao', 'Formação', d.formacao if d, placeholder='DOUTORADO') }}
+    <div class="field full"><label class="check"><input type="checkbox" name="ativo" {{ 'checked' if not d or d.ativo }}> Docente ativo</label></div>
+  </div>
+  <div class="form-acoes"><button class="btn btn-primary" type="submit">Salvar</button><a class="btn" href="{{ '/docentes/%s'|format(d.id) if d and d.id else '/docentes' }}">Cancelar</a></div>
+</form>
+{% endblock %}

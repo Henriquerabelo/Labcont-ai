@@ -1,0 +1,20 @@
+{% extends "base.html" %}
+{% block titulo %}{{ 'Editar' if n and n.id else 'Nova' }} ficha normativa{% endblock %}
+{% block conteudo %}
+<div class="breadcrumb"><a href="/normas">Base normativa</a>{% if n and n.id %} / {{ n.codigo }}{% endif %}</div>
+<div class="page-head"><h1>{{ 'Editar ficha' if n and n.id else 'Nova ficha' }}</h1>
+  <p class="lead">Escreva um resumo curto e fiel, sempre com a fonte (norma e artigo/item). Não coloque aqui valores ou decisões do caso: isso fica nas premissas do gabarito.</p></div>
+{% if erro %}<div class="aviso" role="alert">{{ erro }}</div>{% endif %}
+<form class="card" method="post">
+  <div class="form-grid">
+    <div class="field"><label for="codigo">Código</label><input id="codigo" name="codigo" value="{{ n.codigo if n else '' }}" required maxlength="20" placeholder="ICMS-08"></div>
+    <div class="field" style="grid-column: span 2"><label for="titulo">Título</label><input id="titulo" name="titulo" value="{{ n.titulo if n else '' }}" required maxlength="200"></div>
+    <div class="field full"><label for="fonte">Fonte (norma, artigo/item)</label><input id="fonte" name="fonte" value="{{ n.fonte if n else '' }}" required maxlength="300" placeholder="LC 87/96, art. 20"></div>
+    <div class="field full"><label for="texto">Texto (até 1.500 caracteres)</label><textarea id="texto" name="texto" rows="6" maxlength="1500" required>{{ n.texto if n else '' }}</textarea></div>
+    <div class="field full"><label for="palavras">Palavras de busca (sinônimos, siglas)</label><input id="palavras" name="palavras" value="{{ n.palavras if n else '' }}"></div>
+    <div class="field"><label for="eventos">Eventos relacionados</label><input id="eventos" name="eventos" value="{{ n.eventos if n else '' }}" placeholder="J08, J15"></div>
+    <div class="field full"><label class="check"><input type="checkbox" name="ativa" {{ 'checked' if not n or n.ativa }}> Ficha ativa (consultada pelo tutor)</label></div>
+  </div>
+  <div class="form-acoes"><button class="btn btn-primary" type="submit">Salvar</button><a class="btn" href="/normas">Cancelar</a></div>
+</form>
+{% endblock %}

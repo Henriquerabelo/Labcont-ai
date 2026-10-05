@@ -1,0 +1,45 @@
+{% macro v(x) -%}{% if x < 0 %}({{ (-x)|n(2) }}){% else %}{{ x|n(2) }}{% endif %}{%- endmacro %}
+{% macro dre(r, titulo) %}
+<section class="card dem">
+  <div class="card-head"><h3>{{ titulo }}</h3><span class="muted mono-sm">janeiro/2026 · R$</span></div>
+  <table class="mini dem-tab"><tbody>
+  {% for l in r.dre %}
+    {% if l.total %}<tr class="dem-total{{ ' dem-forte' if l.forte }}"><td>{{ l.rotulo }}</td><td class="num">{{ v(l.valor) }}</td></tr>
+    {% else %}<tr><td>{% if l.detalhe %}<details><summary>{{ l.rotulo }}</summary><ul class="dem-det">{% for c in l.detalhe %}<li><span>{{ c.nome }}</span><span class="mono-sm">{{ c.valor|n(2) }}</span></li>{% endfor %}</ul></details>{% else %}{{ l.rotulo }}{% endif %}</td><td class="num">{{ v(l.valor) }}</td></tr>{% endif %}
+  {% endfor %}
+  </tbody></table>
+</section>
+{% endmacro %}
+{% macro grupo(linhas, total, rotulo) %}
+  <tr class="dem-total"><td>{{ rotulo }}</td><td class="num">{{ v(total) }}</td></tr>
+  {% for l in linhas %}<tr><td class="dem-ind">{% if l.contas %}<details><summary>{{ l.rotulo }}</summary><ul class="dem-det">{% for c in l.contas if c.valor %}<li><span>{{ c.nome }}</span><span class="mono-sm">{{ v(c.valor) }}</span></li>{% endfor %}</ul></details>{% else %}{{ l.rotulo }}{% endif %}</td><td class="num">{{ v(l.valor) }}</td></tr>{% endfor %}
+{% endmacro %}
+{% macro bp(r, titulo) %}
+{% set b = r.bp %}
+<section class="card dem">
+  <div class="card-head"><h3>{{ titulo }}</h3><span class="muted mono-sm">em 31/01/2026 · R$</span></div>
+  <div class="dem-bp">
+    <table class="mini dem-tab"><tbody>
+      <tr class="dem-total dem-forte"><td>ATIVO</td><td class="num">{{ v(b.ativo) }}</td></tr>
+      {{ grupo(b.ac, b.t_ac, 'Ativo circulante') }}
+      {{ grupo(b.anc, b.t_anc, 'Ativo não circulante') }}
+    </tbody></table>
+    <table class="mini dem-tab"><tbody>
+      <tr class="dem-total dem-forte"><td>PASSIVO E PATRIMÔNIO LÍQUIDO</td><td class="num">{{ v(b.passivo_pl) }}</td></tr>
+      {{ grupo(b.pc, b.t_pc, 'Passivo circulante') }}
+      {{ grupo(b.pnc, b.t_pnc, 'Passivo não circulante') }}
+      {{ grupo(b.pl, b.t_pl, 'Patrimônio líquido') }}
+    </tbody></table>
+  </div>
+  <p class="mono-sm {{ 'muted' if b.fecha else 'erro-txt' }}">{% if b.fecha %}Ativo = Passivo + PL{% if b.diferenca %} (diferença de arredondamento de {{ b.diferenca|n(2) }}, herdada do balanço de 2025){% endif %}.{% else %}Ativo e Passivo + PL não fecham: diferença de {{ v(b.diferenca) }}. Confira os lançamentos.{% endif %}</p>
+</section>
+{% endmacro %}
+{% macro are(r) %}
+<section class="card dem">
+  <div class="card-head"><h3>Prévia do encerramento (ARE)</h3><span class="muted mono-sm">não é gravado</span></div>
+  <p class="mono-sm muted">No Lucro Real anual, o resultado de janeiro fica no balancete de suspensão/redução e as contas de resultado só são encerradas em 31/12. Esta prévia mostra os lançamentos que zerariam as contas de resultado, transferindo o saldo para a ARE e dela para Lucros ou Prejuízos Acumulados.</p>
+  {% if r.are %}<table class="mini"><thead><tr><th>Débito</th><th>Crédito</th><th class="num">Valor</th></tr></thead><tbody>
+    {% for x in r.are %}<tr class="{{ 'dem-total' if x.final }}"><td>{{ x.debito }}</td><td>{{ x.credito }}</td><td class="num">{{ x.valor|n(2) }}</td></tr>{% endfor %}
+  </tbody></table>{% else %}<p class="vazio">Sem contas de resultado movimentadas.</p>{% endif %}
+</section>
+{% endmacro %}

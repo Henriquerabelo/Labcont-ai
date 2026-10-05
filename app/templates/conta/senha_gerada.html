@@ -1,0 +1,14 @@
+{% extends "base.html" %}
+{% block titulo %}Senha provisória{% endblock %}
+{% block conteudo %}
+<div class="breadcrumb"><a href="/usuarios">Usuários</a> / {{ u.nome }}</div>
+<section class="hero" style="max-width:760px">
+  <div class="eyebrow">{{ 'Usuário criado' if novo else 'Nova senha provisória' }}</div>
+  <h1>{{ u.nome }}</h1>
+  <p class="lead">Entregue estes dados à pessoa por um canal seguro. A senha aparece só agora; ela será obrigada a trocá-la no primeiro acesso.</p>
+  <div class="card senha-gerada"><div><span class="muted mono-sm">Endereço</span><strong>{{ request.base_url }}entrar</strong></div>
+    <div><span class="muted mono-sm">Login</span><strong>{{ u.login }}</strong></div>
+    <div><span class="muted mono-sm">Senha provisória</span><strong class="mono">{{ senha }}</strong></div></div>
+  <div class="form-acoes"><a class="btn btn-primary" href="/usuarios">Voltar aos usuários</a></div>
+</section>
+{% endblock %}

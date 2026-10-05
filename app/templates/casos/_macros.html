@@ -1,0 +1,72 @@
+{# Tabela editável de parâmetros (base e faixa). Reutilizada em todas as abas. #}
+{% macro parametros(caso, lista, escopo, ref='', volta='', titulo='Parâmetros e faixas', vazio='Nenhum parâmetro cadastrado.') -%}
+<form method="post" action="/casos/{{ caso.id }}/parametros" class="param-form">
+  <input type="hidden" name="escopo" value="{{ escopo }}"><input type="hidden" name="ref" value="{{ ref }}">
+  <input type="hidden" name="volta" value="{{ volta }}">
+  {% if titulo %}<div class="sub-head"><h4>{{ titulo }}</h4><span class="muted mono-sm">Base = valor do caso-base · Mínimo/Máximo = faixa de sorteio por dupla</span></div>{% endif %}
+  <div class="table-wrap"><table class="tbl-edit">
+    <thead><tr><th style="min-width:200px">Parâmetro</th><th>Unid.</th><th>Base</th><th>Mínimo</th><th>Máximo</th><th>Passo</th><th style="min-width:200px">Regra / observação</th><th title="Sorteado por dupla">Varia</th><th title="Excluir">✕</th></tr></thead>
+    <tbody>
+    {% for p in lista %}
+      <tr class="{{ 'inativo' if not p.varia }}">
+        <td><input type="hidden" name="pid" value="{{ p.id }}"><textarea name="nome_{{ p.id }}" rows="{{ [(p.nome|length // 26) + 1, 3]|min }}" aria-label="Nome" class="nome">{{ p.nome }}</textarea></td>
+        <td><input name="unidade_{{ p.id }}" value="{{ p.unidade or '' }}" class="w-xs" aria-label="Unidade"></td>
+        <td><input name="base_{{ p.id }}" value="{{ p.base or '' }}" class="w-sm num" aria-label="Base"></td>
+        <td><input name="min_{{ p.id }}" value="{{ p.minimo|n }}" class="w-sm num" aria-label="Mínimo"></td>
+        <td><input name="max_{{ p.id }}" value="{{ p.maximo|n }}" class="w-sm num" aria-label="Máximo"></td>
+        <td><input name="passo_{{ p.id }}" value="{{ p.passo|n }}" class="w-sm num" aria-label="Passo"></td>
+        <td><textarea name="regra_{{ p.id }}" rows="{{ [((p.regra or '')|length // 32) + 1, 4]|min }}" aria-label="Regra">{{ p.regra or '' }}</textarea></td>
+        <td class="c"><input type="checkbox" name="varia_{{ p.id }}" {{ 'checked' if p.varia }} aria-label="Varia por dupla"></td>
+        <td class="c"><input type="checkbox" name="x_{{ p.id }}" aria-label="Excluir"></td>
+      </tr>
+    {% else %}<tr><td colspan="9" class="vazio">{{ vazio }}</td></tr>{% endfor %}
+      <tr class="nova">
+        <td><input name="novo_nome" placeholder="+ novo parâmetro" aria-label="Novo parâmetro"></td>
+        <td><input name="novo_unidade" class="w-xs" placeholder="R$"></td>
+        <td><input name="novo_base" class="w-sm num"></td>
+        <td><input name="novo_min" class="w-sm num"></td>
+        <td><input name="novo_max" class="w-sm num"></td>
+        <td><input name="novo_passo" class="w-xs num"></td>
+        <td><textarea name="novo_regra" rows="1"></textarea></td>
+        <td class="c"><input type="checkbox" name="novo_varia" checked></td><td></td>
+      </tr>
+    </tbody>
+  </table></div>
+  <div class="form-acoes compacto"><button class="btn btn-dark btn-sm" type="submit">Salvar parâmetros</button><span class="muted mono-sm">Aceita 1.234,56 ou 1234.56 · marque ✕ para excluir</span></div>
+</form>
+{%- endmacro %}
+
+{# Tabela editável genérica: campos = [(chave, rótulo, classe)] #}
+{% macro tabela(acao, secao, prefixo, linhas, campos, chave_id=none, novo_rotulo='+ nova linha', botao='Salvar') -%}
+<form method="post" action="{{ acao }}">
+  <input type="hidden" name="secao" value="{{ secao }}">
+  <div class="table-wrap"><table class="tbl-edit">
+    <thead><tr>{% for c, rot, cls in campos %}<th>{{ rot }}</th>{% endfor %}<th title="Excluir">✕</th></tr></thead>
+    <tbody>
+    {% for l in linhas %}{% set k = (l[chave_id] if chave_id else loop.index0) %}
+      <tr>{% for c, rot, cls in campos %}{% set v = (l[c] if l is mapping else l|attr(c)) %}
+        <td><input name="{{ prefixo }}_{{ c }}_{{ k }}" value="{{ v|n if v is number else (v if v is not none else '') }}" class="{{ cls }}" aria-label="{{ rot }}"></td>{% endfor %}
+        <td class="c"><input type="checkbox" name="{{ prefixo }}_x_{{ k }}" aria-label="Excluir linha"></td></tr>
+    {% endfor %}
+      <tr class="nova">{% for c, rot, cls in campos %}<td><input name="{{ prefixo }}_{{ c }}_novo" class="{{ cls }}" {% if loop.first %}placeholder="{{ novo_rotulo }}"{% endif %} aria-label="Novo: {{ rot }}"></td>{% endfor %}<td></td></tr>
+    </tbody>
+  </table></div>
+  <div class="form-acoes compacto"><button class="btn btn-dark btn-sm" type="submit">{{ botao }}</button></div>
+</form>
+{%- endmacro %}
+
+{# Lista chave/valor editável (dict) #}
+{% macro chave_valor(acao, secao, prefixo, dados, botao='Salvar') -%}
+<form method="post" action="{{ acao }}">
+  <input type="hidden" name="secao" value="{{ secao }}">
+  <table class="tbl-edit kv"><tbody>
+  {% for k, v in dados.items() %}
+    <tr><th scope="row">{{ k|replace('_', ' ') }}</th>
+      <td><textarea name="{{ prefixo }}_{{ k }}" rows="1" aria-label="{{ k }}">{{ v|n if v is number else (v if v is not none else '') }}</textarea></td>
+      <td class="c"><input type="checkbox" name="{{ prefixo }}_x_{{ k }}" aria-label="Excluir {{ k }}" title="Excluir"></td></tr>
+  {% endfor %}
+    <tr class="nova"><th><input name="{{ prefixo }}_novo_chave" placeholder="+ novo campo"></th><td><textarea name="{{ prefixo }}_novo_valor" rows="1"></textarea></td><td></td></tr>
+  </tbody></table>
+  <div class="form-acoes compacto"><button class="btn btn-dark btn-sm" type="submit">{{ botao }}</button></div>
+</form>
+{%- endmacro %}
