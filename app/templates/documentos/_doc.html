@@ -12,7 +12,7 @@
     <table class="dc-tab">
       <thead><tr><th>Código</th><th>Descrição</th><th>NCM</th><th>CFOP</th><th>Un</th><th class="num">Qtd.</th><th class="num">Valor unit.</th><th class="num">Valor total</th><th class="num">ICMS %</th><th class="num">IPI %</th></tr></thead>
       <tbody>{% for i in doc.itens %}<tr><td>{{ i.codigo }}</td><td>{{ i.descricao }}</td><td>{{ i.ncm }}</td><td>{{ i.cfop }}</td><td>{{ i.unidade }}</td>
-        <td class="num">{{ i.quantidade|n(0) }}</td><td class="num">{{ calc(i.unitario, 4) }}</td><td class="num">{{ calc(i.total) }}</td>
+        <td class="num">{{ i.quantidade|n(0) }}</td><td class="num">{% if i.unitario is none %}{{ calc(none) }}{% else %}{{ i.unitario|nu }}{% endif %}</td><td class="num">{{ calc(i.total) }}</td>
         <td class="num">{{ i.aliq_icms|n(2) }}</td><td class="num">{{ i.aliq_ipi|n(2) }}</td></tr>{% endfor %}</tbody>
     </table>
     <div class="dc-calculo">
@@ -48,7 +48,7 @@
   {% elif doc.tipo == 'fatura' %}
     <div class="dc-linha">{% if doc.classe %}<div><span class="dc-rot">Classe</span> {{ doc.classe }}</div>{% endif %}<div><span class="dc-rot">Referência</span> {{ doc.referencia }}</div><div><span class="dc-rot">Vencimento</span> {{ data(doc.vencimento) }}</div></div>
     <table class="dc-tab"><thead><tr><th>Descrição</th><th class="num">Quantidade</th><th>Un</th><th class="num">Tarifa / valor unit.</th><th class="num">Valor</th></tr></thead>
-      <tbody>{% for i in doc.itens %}<tr><td>{{ i.descricao }}</td><td class="num">{{ i.quantidade|n(3) if i.unidade != 'mês' else 1 }}</td><td>{{ i.unidade }}</td><td class="num">{{ i.unitario|n(4) if i.unidade != 'mês' else i.unitario|n(2) }}</td><td class="num">{{ i.total|n(2) }}</td></tr>{% endfor %}</tbody></table>
+      <tbody>{% for i in doc.itens %}<tr><td>{{ i.descricao }}</td><td class="num">{{ i.quantidade|n(3) if i.unidade != 'mês' else 1 }}</td><td>{{ i.unidade }}</td><td class="num">{{ i.unitario|nu if i.unidade != 'mês' else i.unitario|n(2) }}</td><td class="num">{{ i.total|n(2) }}</td></tr>{% endfor %}</tbody></table>
     <div class="dc-calculo"><div class="dc-box dc-destaque"><div class="dc-rot">Total a pagar</div><div class="dc-val">{{ doc.total|n(2) }}</div></div></div>
   {% elif doc.tipo == 'rpa' %}
     <div class="dc-discr"><div class="dc-rot">Serviço prestado</div>{{ doc.servico }}</div>

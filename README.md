@@ -4,7 +4,7 @@ Protótipo funcional apresentado ao **Prêmio Inteligência Artificial e Formaç
 Teodoro/UFC, Edital nº 1/2026, Categoria III – Soluções Tecnológicas), para a disciplina **Laboratório de Prática
 Contábil (EH0012)** da FEAAC/UFC.
 
-- **Site de demonstração:** https://labcont.io (acesso de avaliador informado na proposta; turma com dados fictícios)
+- **Site de demonstração:** https://labcont.io (acesso de avaliador informado na proposta; três turmas com dados fictícios)
 - **Módulos:** empresa exclusiva por dupla (motor paramétrico) · central de documentos · escrituração (Diário, Razão,
   balancete, DRE e Balanço) · auditoria contra o gabarito da dupla, com conferência imediata e correção no
   fechamento mensal · tutor socrático com IA executada localmente e base normativa com fontes · Painel de Gestão e
@@ -20,7 +20,7 @@ cp .env.example .env
 docker compose up -d --build
 ```
 Abra http://localhost:8000. Sem usuários cadastrados, o sistema abre em modo local de testes.
-Turma de demonstração: `docker compose exec app python -m app.demo`.
+Turmas de demonstração: `docker compose exec app python -m app.demo`.
 
 ## Testes
 

@@ -152,9 +152,8 @@ def redefinir_aluno(tid: int, dis: int, db: Session = Depends(get_db)):
 @router.get("/admin/demonstracao")
 def demonstracao_tela(request: Request, db: Session = Depends(get_db)):
     from .. import demo
-    t = demo._turma_demo(db)
-    return render(request, "conta/demonstracao.html", t=t, grupos=len(t.matriculas) // 2 if t else 0, res=None,
-                  login_vis=demo.LOGIN_VISITANTE, login_prof=demo.LOGIN_PROFESSOR, menu="demo")
+    return render(request, "conta/demonstracao.html", turmas=demo._turmas_demo(db), res=None, cfg=demo.TURMAS,
+                  login_vis=demo.LOGIN_VISITANTE, menu="demo")
 
 
 @router.post("/admin/demonstracao")
@@ -164,10 +163,9 @@ async def demonstracao_criar(request: Request, db: Session = Depends(get_db)):
     if form.get("acao") == "apagar":
         demo.apagar(db)
         db.commit()
-        acesso.registrar(db, request.state.usuario, "/admin/demonstracao", "Turma de demonstração apagada")
-        return voltar("/admin/demonstracao", "Turma de demonstração e acessos de demonstração apagados.")
+        acesso.registrar(db, request.state.usuario, "/admin/demonstracao", "Turmas de demonstração apagadas")
+        return voltar("/admin/demonstracao", "Turmas e acessos de demonstração apagados.")
     res = demo.criar(db)
-    acesso.registrar(db, request.state.usuario, "/admin/demonstracao", "Turma de demonstração recriada")
-    t = demo._turma_demo(db)
-    return render(request, "conta/demonstracao.html", t=t, grupos=res["grupos"], res=res,
-                  login_vis=demo.LOGIN_VISITANTE, login_prof=demo.LOGIN_PROFESSOR, menu="demo")
+    acesso.registrar(db, request.state.usuario, "/admin/demonstracao", "Turmas de demonstração recriadas")
+    return render(request, "conta/demonstracao.html", turmas=demo._turmas_demo(db), res=res, cfg=demo.TURMAS,
+                  login_vis=demo.LOGIN_VISITANTE, menu="demo")

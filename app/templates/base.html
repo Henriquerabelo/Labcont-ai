@@ -1,4 +1,4 @@
-<!doctype html>
+{% from "_icones.html" import icone %}<!doctype html>
 <html lang="pt-BR">
 <head>
   <meta charset="utf-8">
@@ -6,42 +6,62 @@
   <title>{% block titulo %}{{ APP_NOME }}{% endblock %} · LABCONT-AI</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=Newsreader:opsz,wght@6..72,400&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Instrument+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&family=Newsreader:opsz,wght@6..72,400;6..72,500&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="{{ url_for('static', path='css/style.css') }}">
 </head>
 <body class="{{ 'so-leitura' if (usuario and usuario.so_leitura) or visualizacao }}">
-  <header class="topbar">
-    <div class="topbar-inner">
-      <a class="brand" href="{% block home %}/{% endblock %}">LABCONT-AI<small>Protótipo</small></a>
-      {% block nav %}
-      {% if usuario and usuario.equipe %}
-      <nav class="nav">
-        <a href="/" class="{{ 'ativo' if menu == 'painel' }}">{{ 'Painel' if usuario.gestor else 'Minhas turmas' }}</a>
-        {% if usuario.gestor %}
-        <a href="/disciplinas" class="{{ 'ativo' if menu == 'disciplinas' }}">Disciplinas</a>
-        <a href="/discentes" class="{{ 'ativo' if menu == 'discentes' }}">Discentes</a>
-        {% endif %}
-        <a href="/duplas" class="{{ 'ativo' if menu == 'duplas' }}">Grupos</a>
-        {% if usuario.gestor or 'professor' in usuario.perfis or 'visitante' in usuario.perfis %}<a href="/casos" class="{{ 'ativo' if menu == 'casos' }}">Caso</a>{% endif %}
-        <a href="/normas" class="{{ 'ativo' if menu == 'normas' }}">Normas</a>
-        {% if usuario.gestor %}<details class="nav-mais{{ ' ativo' if menu in ('docentes','importacao','usuarios','lote','historico','demo') }}"><summary>Gestão</summary><div>
-          <a href="/docentes">Docentes</a><a href="/importacao">Importar SIGAA</a><a href="/usuarios">Usuários e perfis</a>
-          {% if usuario.admin %}<a href="/admin/lote">Operações em lote</a><a href="/historico">Histórico de ações</a><a href="/admin/demonstracao">Turma de demonstração</a>{% endif %}
-        </div></details>{% endif %}
-        {% if not usuario.dev %}<span class="nav-usuario"><span title="{{ usuario.rotulo_perfis }}">{{ usuario.nome.split(' ')[0] }}</span><a href="/conta/senha">Senha</a><a href="/sair">Sair</a></span>{% endif %}
-      </nav>
+<div class="app">
+  <aside class="lateral">
+    <a class="brand" href="{% block home %}/{% endblock %}">
+      <span class="brand-marca" aria-hidden="true">L</span>
+      <span class="brand-txt"><strong>LABCONT-AI</strong><small>Ciências Contábeis · UFC</small></span>
+    </a>
+    {% block lateral_info %}{% endblock %}
+    {% block nav %}
+    {% if usuario and usuario.equipe %}
+    <nav class="nav" aria-label="Principal">
+      <a href="/" class="{{ 'ativo' if menu == 'painel' }}">{{ icone('painel') }}{{ 'Painel' if usuario.gestor else 'Minhas turmas' }}</a>
+      {% if usuario.gestor %}
+      <a href="/disciplinas" class="{{ 'ativo' if menu == 'disciplinas' }}">{{ icone('disciplinas') }}Disciplinas</a>
+      <a href="/discentes" class="{{ 'ativo' if menu == 'discentes' }}">{{ icone('discentes') }}Discentes</a>
       {% endif %}
-      {% endblock %}
-    </div>
-  </header>
-  {% if usuario and usuario.so_leitura and not visualizacao %}<div class="faixa-leitura"><div><span><strong>Somente leitura</strong> · {{ usuario.rotulo_perfis }}</span></div></div>{% endif %}
-  {% if visualizacao %}<div class="faixa-leitura"><div><span><strong>Visualização da área do aluno</strong> · somente leitura</span><a href="/aluno/sair">Sair da visualização</a></div></div>{% endif %}
-  <main>
-    {% if msg %}<div class="aviso" role="status">{{ msg }}</div>{% endif %}
-    {% if erro %}<div class="aviso erro" role="alert">{{ erro }}</div>{% endif %}
-    {% block conteudo %}{% endblock %}
-  </main>
-  <footer><div><span>UFC · FEAAC · Laboratório de Prática Contábil</span><span><a href="/privacidade">Privacidade</a> · LABCONT-AI · protótipo</span></div></footer>
+      <a href="/duplas" class="{{ 'ativo' if menu == 'duplas' }}">{{ icone('grupos') }}Grupos</a>
+      {% if usuario.gestor or 'professor' in usuario.perfis or 'visitante' in usuario.perfis %}<a href="/casos" class="{{ 'ativo' if menu == 'casos' }}">{{ icone('caso') }}Caso da empresa</a>{% endif %}
+      <a href="/normas" class="{{ 'ativo' if menu == 'normas' }}">{{ icone('normas') }}Base normativa</a>
+      {% if usuario.gestor %}
+      <span class="nav-secao">Gestão</span>
+      <a href="/docentes" class="{{ 'ativo' if menu == 'docentes' }}">{{ icone('docentes') }}Docentes</a>
+      <a href="/importacao" class="{{ 'ativo' if menu == 'importacao' }}">{{ icone('importar') }}Importar SIGAA</a>
+      <a href="/usuarios" class="{{ 'ativo' if menu == 'usuarios' }}">{{ icone('usuarios') }}Usuários e perfis</a>
+      {% if usuario.admin %}
+      <a href="/admin/lote" class="{{ 'ativo' if menu == 'lote' }}">{{ icone('lote') }}Operações em lote</a>
+      <a href="/historico" class="{{ 'ativo' if menu == 'historico' }}">{{ icone('historico') }}Histórico de ações</a>
+      <a href="/admin/demonstracao" class="{{ 'ativo' if menu == 'demo' }}">{{ icone('demo') }}Turma de demonstração</a>
+      {% endif %}
+      {% endif %}
+      {% if not usuario.dev %}
+      <div class="nav-usuario">
+        <span class="avatar" aria-hidden="true">{{ (usuario.nome.split(' ')[0][:1] ~ (usuario.nome.split(' ')[-1][:1] if usuario.nome.split(' ')|length > 1 else ''))|upper }}</span>
+        <span class="quem"><strong>{{ usuario.nome.split(' ')[0] }}</strong><small>{{ usuario.rotulo_perfis }}</small></span>
+        <span class="acoes-usuario"><a href="/conta/senha">Senha</a><a href="/sair">Sair</a></span>
+      </div>
+      {% endif %}
+    </nav>
+    {% endif %}
+    {% endblock %}
+  </aside>
+
+  <div class="conteudo">
+    {% if usuario and usuario.so_leitura and not visualizacao %}<div class="faixa-leitura"><div><span><strong>Somente leitura</strong> · {{ usuario.rotulo_perfis }}</span></div></div>{% endif %}
+    {% if visualizacao %}<div class="faixa-leitura"><div><span><strong>Visualização da área do aluno</strong> · somente leitura</span><a href="/aluno/sair">Sair da visualização</a></div></div>{% endif %}
+    <main>
+      {% if msg %}<div class="aviso" role="status">{{ msg }}</div>{% endif %}
+      {% if erro %}<div class="aviso erro" role="alert">{{ erro }}</div>{% endif %}
+      {% block conteudo %}{% endblock %}
+    </main>
+    <footer><div><span>UFC · FEAAC · Laboratório de Prática Contábil</span><span><a href="/privacidade">Privacidade</a> · LABCONT-AI · protótipo</span></div></footer>
+  </div>
+</div>
   <script>
     document.querySelectorAll('form[data-confirmar]').forEach(f =>
       f.addEventListener('submit', e => { if (!confirm(f.dataset.confirmar)) e.preventDefault(); }));

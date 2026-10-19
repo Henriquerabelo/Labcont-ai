@@ -1,0 +1,167 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>LABCONT-AI · Laboratório de Prática Contábil</title>
+  <meta name="description" content="Plataforma para praticar contabilidade: empresa simulada por dupla, escrituração, correção no fechamento do mês e tutor com IA, para a disciplina EH0012 da FEAAC/UFC.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Instrument+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&family=Newsreader:opsz,wght@6..72,400;6..72,500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="{{ url_for('static', path='css/style.css') }}">
+</head>
+<body class="ap">
+{% set problemas = [
+  ("Caso único e estático", "Todas as duplas recebem a mesma empresa, com os mesmos valores."),
+  ("Cópia entre turmas", "Planilhas e cópias de segurança passam de um semestre para outro."),
+  ("Planilhas avulsas", "Cálculos espalhados, sujeitos a fórmulas quebradas e perda de dados."),
+  ("Sistema instalado", "Trabalho preso ao laboratório; a dupla troca arquivos para continuar em casa."),
+  ("Correção tardia", "O professor corrige tudo no fim, e o erro do início se propaga até o Balanço."),
+] %}
+{% set beneficios = [
+  ("Para o aluno", "ap-b1", ["Uma empresa só da dupla: o raciocínio não pode ser copiado", "Tudo no navegador, de qualquer computador, sem instalação", "Correção de cada evento no fechamento do mês, com o motivo", "Tutor disponível a qualquer hora, que orienta com as normas"]),
+  ("Para o professor", "ap-b2", ["Gabarito calculado para cada empresa, com memória de cálculo", "Painel da turma com alertas de grupos parados ou travados", "Matriz de dificuldades para ajustar a aula seguinte", "Notas propostas pelo sistema e homologadas pelo professor"]),
+  ("Para o curso", "ap-b3", ["Dados dos alunos tratados conforme a LGPD", "IA executada no próprio servidor, sem enviar dados a terceiros", "Caso editável: a mesma base serve a novos semestres", "Abordagem extensível a Custos, Tributária e Auditoria"]),
+] %}
+{% set solucoes = [
+  ("Caso único e cópia", "Empresa exclusiva para cada dupla", "Motor paramétrico por satisfação de restrições (IA simbólica): o professor define faixas de valores e as regras garantem um caso coerente, com o balanço sempre fechado."),
+  ("Correção manual e tardia", "Gabarito por empresa e correção por evento", "O gabarito de cada dupla é calculado pelas regras do caso, com premissas validadas pelo professor; a escrituração é comparada conta a conta."),
+  ("Tentativa e erro", "Correção no fechamento mensal", "Por decisão pedagógica, a dupla só vê a correção ao enviar o mês; antes disso, recebe apenas avisos de forma (data, histórico, saldo invertido)."),
+  ("Dúvida fora da aula", "Tutor socrático", "Modelo de linguagem executado localmente, com uma base normativa própria (CPC, RIR, RICMS-CE, Código Tributário de Fortaleza). O gabarito nunca chega à IA, e um filtro bloqueia respostas prontas."),
+  ("Pouca visibilidade da turma", "Painel com learning analytics", "Indicadores de progresso, engajamento, tempo até o envio, alertas precoces e matriz de acertos por evento e grupo."),
+  ("Planilhas e arquivos soltos", "Ambiente web único", "Documentos, lançamentos, livros e demonstrações em uma só plataforma, com acesso por perfil e histórico de ações."),
+] %}
+{% set telas = [
+  ("aluno.webp", "Área do grupo", "Eventos do mês, situação de cada lançamento e correção depois do envio do fechamento."),
+  ("documento.webp", "Documentos do mês", "Notas fiscais, faturas e contratos da empresa da dupla, com emitentes fictícios."),
+  ("tutor.webp", "Tutor", "A dupla escolhe o evento e pergunta; a resposta orienta e cita as normas consultadas."),
+  ("painel.webp", "Painel da turma", "Progresso dos grupos, alertas precoces e matriz de acertos por evento."),
+] %}
+<header class="ap-topo">
+  <div class="ap-largura ap-topo-in">
+    <a class="ap-marca" href="/" aria-label="LABCONT-AI, página inicial">
+      <span class="ap-marca-l" aria-hidden="true">L</span>
+      <span class="ap-marca-txt"><strong>LABCONT-AI</strong><small>Laboratório de Prática Contábil · FEAAC/UFC</small></span>
+    </a>
+    <a class="ap-entrar" href="/entrar"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"/><path d="M10 17l5-5-5-5M15 12H3"/></svg>Entrar</a>
+  </div>
+</header>
+
+<main>
+  <section class="ap-largura ap-abertura">
+    <span class="ap-sobretitulo">Tecnologia educacional · Ciências Contábeis</span>
+    <h1>Uma plataforma para praticar contabilidade com acompanhamento do professor e apoio de inteligência artificial.</h1>
+    <p class="ap-lead">O LABCONT-AI foi criado como uma ferramenta tecnológica para uso na disciplina Laboratório de Prática Contábil (EH0012) do curso de Ciências Contábeis da UFC. Cada dupla ou equipe escritura uma empresa simulada própria ao longo do período da atividade prática, a partir dos documentos fiscais ao Balanço, em um ambiente web único que substitui o caso estático, as planilhas avulsas e os arquivos de cópia de segurança.</p>
+  </section>
+
+  <section class="ap-faixa-clara">
+    <div class="ap-largura ap-secao">
+      <h2>O problema pedagógico</h2>
+      <p class="ap-texto">No formato tradicional da disciplina, a mesma empresa é entregue a toda a turma em um documento de texto com os mesmos eventos. Os cálculos ficam espalhados em planilhas e a escrituração depende de um sistema instalado no computador. Isso traz cinco limitações:</p>
+      <div class="ap-grade ap-grade-5">
+        {% for t, d in problemas %}<div class="ap-problema"><strong>{{ t }}</strong><span>{{ d }}</span></div>{% endfor %}
+      </div>
+    </div>
+  </section>
+
+  <section class="ap-largura ap-secao">
+    <h2>Benefícios</h2>
+    <div class="ap-grade ap-grade-3">
+      {% for quem, cls, itens in beneficios %}
+      <div class="ap-beneficio {{ cls }}"><h3>{{ quem }}</h3><ul>{% for i in itens %}<li>{{ i }}</li>{% endfor %}</ul></div>
+      {% endfor %}
+    </div>
+  </section>
+
+  <section class="ap-faixa-escura">
+    <div class="ap-largura ap-secao">
+      <h2>Como as soluções foram criadas</h2>
+      <p class="ap-texto">Cada recurso responde a uma das limitações acima. O quadro mostra o problema, a solução e a técnica empregada.</p>
+      <div class="ap-solucoes">
+        {% for prob, sol, como in solucoes %}
+        <div class="ap-solucao">
+          <div><span class="ap-rotulo">Problema</span><strong>{{ prob }}</strong></div>
+          <div><span class="ap-rotulo">Solução</span><span>{{ sol }}</span></div>
+          <div><span class="ap-rotulo">Como funciona</span><span class="ap-como">{{ como }}</span></div>
+        </div>
+        {% endfor %}
+      </div>
+    </div>
+  </section>
+
+  <section class="ap-largura ap-secao">
+    <h2>Como o sistema foi desenvolvido</h2>
+    <div class="ap-grade ap-grade-3">
+      <div class="ap-cartao"><strong>Do caso real da disciplina</strong><p>O exercício da EH0012 foi transformado em dados: empresa, contratos, folha, produção e 90 eventos. As inconsistências encontradas foram levadas ao professor, e o caso é revisado a cada nova versão do exercício.</p></div>
+      <div class="ap-cartao"><strong>Em etapas curtas, validadas pelo professor</strong><p>Desenvolvimento ágil: cada etapa (cadastros, empresas, documentos, escrituração, tutor, painel, fevereiro) foi publicada, testada e conferida antes da seguinte. As premissas do gabarito ficam no sistema para validação docente.</p></div>
+      <div class="ap-cartao"><strong>Com IA, sob responsabilidade humana</strong><p>O código foi desenvolvido com apoio de IA generativa (Claude), a partir da especificação e da validação contábil dos autores, com testes automáticos a cada entrega. Na plataforma, a nota é sempre homologada pelo professor.</p></div>
+    </div>
+  </section>
+
+  <section class="ap-largura ap-secao ap-ultima">
+    <h2>Telas de exemplo</h2>
+    <p class="ap-texto">Capturas da turma de demonstração, com dados fictícios. Clique em uma tela para ampliar.</p>
+    <div class="ap-grade ap-grade-telas">
+      {% for arq, nome, desc in telas %}
+      <figure class="ap-tela">
+        <button type="button" class="ap-zoom" data-indice="{{ loop.index0 }}" aria-label="Ampliar a tela {{ nome }}"><img src="{{ url_for('static', path='img/apresentacao/' ~ arq) }}" alt="Tela {{ nome }} do LABCONT-AI" loading="lazy" width="1360" height="850"><span class="ap-zoom-dica" aria-hidden="true"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3M11 8v6M8 11h6"/></svg>Ampliar</span></button>
+        <figcaption><strong>{{ nome }}</strong><span>{{ desc }}</span></figcaption>
+      </figure>
+      {% endfor %}
+    </div>
+  </section>
+</main>
+
+<dialog class="ap-lightbox" id="ap-lightbox" aria-label="Tela ampliada">
+  <div class="ap-lb-barra">
+    <span class="ap-lb-titulo" id="ap-lb-titulo"></span>
+    <span class="ap-lb-acoes">
+      <button type="button" class="ap-lb-btn" id="ap-lb-ant" aria-label="Tela anterior"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M15 6l-6 6 6 6"/></svg></button>
+      <button type="button" class="ap-lb-btn" id="ap-lb-prox" aria-label="Próxima tela"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 6l6 6-6 6"/></svg></button>
+      <button type="button" class="ap-lb-btn" id="ap-lb-tam" aria-label="Ampliar mais">Ampliar mais</button>
+      <button type="button" class="ap-lb-btn" id="ap-lb-fechar" aria-label="Fechar"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 6l12 12M18 6L6 18"/></svg></button>
+    </span>
+  </div>
+  <div class="ap-lb-area" id="ap-lb-area"><img id="ap-lb-img" alt=""></div>
+  <p class="ap-lb-legenda" id="ap-lb-legenda"></p>
+</dialog>
+
+<footer class="ap-rodape">
+  <div class="ap-largura ap-rodape-in"><span>LABCONT-AI · protótipo · Departamento de Contabilidade · FEAAC/UFC</span><a href="/privacidade">Aviso de privacidade</a></div>
+</footer>
+<script>
+(function () {
+  var telas = [{% for arq, nome, desc in telas %}{src: "{{ url_for('static', path='img/apresentacao/' ~ arq) }}", nome: {{ nome|tojson }}, desc: {{ desc|tojson }}}{{ ',' if not loop.last }}{% endfor %}];
+  var dlg = document.getElementById('ap-lightbox'), img = document.getElementById('ap-lb-img'),
+      area = document.getElementById('ap-lb-area'), atual = 0;
+  if (!dlg || !dlg.showModal) return;
+  function mostrar(i) {
+    atual = (i + telas.length) % telas.length;
+    var t = telas[atual];
+    img.src = t.src; img.alt = 'Tela ' + t.nome + ' do LABCONT-AI';
+    document.getElementById('ap-lb-titulo').textContent = t.nome + ' · ' + (atual + 1) + ' de ' + telas.length;
+    document.getElementById('ap-lb-legenda').textContent = t.desc;
+    area.classList.remove('real'); document.getElementById('ap-lb-tam').textContent = 'Ampliar mais';
+    area.scrollTo(0, 0);
+  }
+  function tamanho() {
+    var real = area.classList.toggle('real');
+    document.getElementById('ap-lb-tam').textContent = real ? 'Ajustar à tela' : 'Ampliar mais';
+  }
+  document.querySelectorAll('.ap-zoom').forEach(function (b) {
+    b.addEventListener('click', function () { mostrar(+b.dataset.indice); dlg.showModal(); });
+  });
+  document.getElementById('ap-lb-fechar').addEventListener('click', function () { dlg.close(); });
+  document.getElementById('ap-lb-ant').addEventListener('click', function () { mostrar(atual - 1); });
+  document.getElementById('ap-lb-prox').addEventListener('click', function () { mostrar(atual + 1); });
+  document.getElementById('ap-lb-tam').addEventListener('click', tamanho);
+  img.addEventListener('click', tamanho);
+  dlg.addEventListener('click', function (e) { if (e.target === dlg) dlg.close(); });
+  dlg.addEventListener('keydown', function (e) {
+    if (e.key === 'ArrowLeft') mostrar(atual - 1);
+    if (e.key === 'ArrowRight') mostrar(atual + 1);
+  });
+})();
+</script>
+</body>
+</html>

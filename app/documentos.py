@@ -67,9 +67,9 @@ def gerar_documentos(valores: dict) -> list[dict]:
             itens=[{"descricao": "Água e esgoto", "quantidade": round(tot / tarifa, 3), "unidade": "m³", "unitario": tarifa,
                     "total": tot}], total=tot)
     # J05 telefonia e internet
-    for desc, emit, val, venc in (("Telefone fixo", "Operadora de Telefonia Fixa", p("evento", "J05", "telefone"), "2026-02-24"),
-                                  ("Celulares em comodato", "Cell Telefonia Ltda.", p("contrato", "C08", "mensalidade", 480), "2026-02-08"),
-                                  ("Internet (cable modem em comodato)", "Internet & Comunicação Ltda.", p("contrato", "C07", "mensalidade", 350), "2026-02-10")):
+    for desc, emit, val, venc in (("Telefone fixo", "Operadora de Telefonia Fixa", p("evento", "J05", "telefone"), "2026-01-14"),
+                                  ("Celulares em comodato", "Cell Telefonia Ltda.", p("contrato", "C08", "mensalidade", 580), "2026-02-09"),
+                                  ("Internet (cable modem em comodato)", "Internet & Comunicação Ltda.", p("contrato", "C07", "mensalidade", 410), "2026-02-10")):
         if val:
             add(evento="J05", data="2026-01-06", tipo="fatura", titulo=f"Nota fiscal de serviço de comunicação - {desc.lower()}",
                 numero="", emitente=_parte(emit, "CE", "Fortaleza"), destinatario=empresa, referencia="01/2026", vencimento=venc,
@@ -80,14 +80,14 @@ def gerar_documentos(valores: dict) -> list[dict]:
         valor = r2(q * vu)
         vista = r2(valor * ent / 100)
         parc = r2((valor - vista) / 2)
-        add(evento="J08", data="2026-01-08", tipo="nfe", titulo="NF-e - venda de mercadoria adquirida de terceiros", numero="7.852",
+        add(evento="J08", data="2026-01-05", tipo="nfe", titulo="NF-e - venda de mercadoria adquirida de terceiros", numero="7.852",
             emitente=_parte("Ar Frio Ltda.", "MA"), destinatario=empresa, natureza="Venda de mercadoria", cfop="6.102",
             itens=[{"codigo": "AC-01", "descricao": "Aparelho de ar-condicionado", "ncm": "8415.10.11", "cfop": "6.102", "unidade": "un",
                     "quantidade": q, "unitario": vu, "total": valor, "aliq_icms": 12.0, "aliq_ipi": 0.0}],
             produtos=valor, desconto=0, frete=0, base_icms=valor, icms=r2(valor * ICMS_INTERESTADUAL["MA"]), ipi=0, total=valor,
             duplicatas=[("à vista", "2026-01-08", vista), ("001", "2026-02-07", parc), ("002", "2026-03-07", r2(valor - vista - parc))],
             transporte="Por conta do destinatário (CT-e 322.123 - Rodovia Transportes Ltda.)",
-            obs="Destinação informada pelo comprador: uso na área administrativa.")
+            obs="Data de entrada no estabelecimento: 08/01/2026. Destinação informada pelo comprador: uso na área administrativa.")
     fr = p("evento", "J09", "frete")
     if fr:
         add(evento="J09", data="2026-01-08", tipo="cte", titulo="CT-e - prestação de serviço de transporte", numero="322.123",
@@ -134,13 +134,13 @@ def gerar_documentos(valores: dict) -> list[dict]:
     # J24 contrato de leasing
     vm = p("contrato", "C04", "valor")
     if vm:
-        add(evento="J24", data="2026-01-20", tipo="contrato", titulo="Contrato de arrendamento mercantil financeiro (resumo)",
+        add(evento="J24", data="2026-01-19", tipo="contrato", titulo="Contrato de arrendamento mercantil financeiro (resumo)",
             numero="C04", emitente=_parte("Banco Rico S/A", "CE", "Fortaleza"), destinatario=empresa,
             clausulas=[("Objeto", "Duas máquinas industriais para o parque fabril, com opção de compra ao final"),
                        ("Valor financiado", f"R$ {vm:,.2f}".replace(",", "X").replace(".", ",").replace("X", ".")),
                        ("Taxa de juros", f"{p('contrato', 'C04', 'taxa', 10):.1f}% ao ano, juros compostos, ano civil".replace(".", ",")),
                        ("Prazo", f"{int(p('contrato', 'C04', 'prazo', 18))} parcelas mensais - sistema SAC"),
-                       ("Assinatura e liberação", "19/01/2026 (liberação ao fornecedor em 20/01/2026)"),
+                       ("Assinatura e liberação", "19/01/2026"),
                        ("1º vencimento", "23/02/2026")])
     # J26 NFS-e reforma
     tot, pm = p("contrato", "C12", "valor"), p("contrato", "C12", "material", 40)
@@ -163,7 +163,7 @@ def gerar_documentos(valores: dict) -> list[dict]:
             itens=[{"codigo": "ALPHA", "descricao": "Mercadoria ALPHA (controlador de temperatura)", "ncm": "9032.10.10", "cfop": "5.102",
                     "unidade": "un", "quantidade": q, "unitario": None, "total": None, "aliq_icms": ICMS_INTERNO_CE * 100, "aliq_ipi": 0.0}],
             produtos=None, desconto=0, frete=0, base_icms=None, icms=None, ipi=0, total=None,
-            duplicatas=[("boleto Banco Rico", "2026-01-25", None)], transporte="Sem frete",
+            duplicatas=[("boleto Banco Rico", "2026-01-28", None)], transporte="Sem frete",
             obs="Preço unitário calculado pela dupla com base no mark-up (custo médio ponderado móvel).")
     # J29 auto de infração
     b = p("evento", "J29", "base")
@@ -171,7 +171,7 @@ def gerar_documentos(valores: dict) -> list[dict]:
         aliq = p("evento", "J29", "alíquota", 18)
         icms = r2(b * aliq / 100)
         multa = r2(icms * 0.75)
-        add(evento="J29", data="2026-01-26", tipo="auto", titulo="Auto de infração - ICMS", numero="Termo de início 20230001/00",
+        add(evento="J29", data="2026-01-26", tipo="auto", titulo="Auto de infração - ICMS", numero="Termo de início 20260001/00",
             emitente=_parte("Secretaria da Fazenda do Estado do Ceará (fiscalização)", "CE", "Fortaleza"), destinatario=empresa,
             infracao="Aquisição de mercadorias sem documento fiscal, apurada em levantamento de estoque",
             base=b, aliq=aliq, icms=icms, multa=multa, reducao="70% da multa para pagamento até 05/02/2026",
@@ -185,18 +185,19 @@ def gerar_documentos(valores: dict) -> list[dict]:
         ipi = r2(prod * ALIQ_IPI["9002.11.11"])
         total = r2(prod + ipi)
         d1, d2 = r2(total * 0.25), r2(total * 0.30)
-        add(evento="J30", data="2026-01-26", tipo="nfe", titulo="NF-e - venda de produção do estabelecimento", numero="23.456",
+        add(evento="J30", data="2026-01-24", tipo="nfe", titulo="NF-e - venda de produção do estabelecimento", numero="23.456",
             emitente=_parte("Indústria Sofisticada Ltda.", "MG"), destinatario=empresa, natureza="Venda de produção do estabelecimento", cfop="6.101",
             itens=[{"codigo": "MP-A", "descricao": "Matéria-prima A - elemento óptico", "ncm": "9002.11.11", "cfop": "6.101", "unidade": "un",
                     "quantidade": q, "unitario": cu, "total": prod, "aliq_icms": 7.0, "aliq_ipi": ALIQ_IPI["9002.11.11"] * 100}],
             produtos=prod, desconto=0, frete=0, base_icms=prod, icms=r2(prod * ICMS_INTERESTADUAL["MG"]), ipi=ipi, total=total,
             duplicatas=[("à vista (25%)", "2026-01-26", d1), ("001 (30%)", "2026-02-26", d2), ("002 (45%)", "2026-03-24", r2(total - d1 - d2))],
-            transporte=f"CIF - por conta do emitente (CT-e 423.951 - Frete Confiança Ltda., R$ {fmt(p('evento', 'J30', 'frete', 0), 2)})")
+            transporte=f"CIF - por conta do emitente (CT-e 423.951 - Frete Confiança Ltda., R$ {fmt(p('evento', 'J30', 'frete', 0), 2)})",
+            obs="Data de entrada no estabelecimento: 26/01/2026.")
     # J39 NFS-e contador
     h = p("contrato", "C06", "honorário", 5500)
     if h:
         add(evento="J39", data="2026-01-30", tipo="nfse", titulo="NFS-e - assessoria contábil", numero="023",
-            emitente=_parte("Contador Formado S/S", "CE", "Fortaleza"), destinatario=empresa,
+            emitente=_parte("Contador Formado S/A", "CE", "Fortaleza"), destinatario=empresa,
             servico="Serviços de assessoria contábil - competência janeiro/2026", codigo_servico="17.19 - Contabilidade",
             valor=h, aliq_iss=ISS_FORTALEZA * 100, iss=r2(h * ISS_FORTALEZA), iss_retido=False,
             retencoes=[("IRRF (1,5%)", r2(h * IRRF_SERVICOS)), ("CSRF - PIS/COFINS/CSLL (4,65%)", r2(h * CSRF))],
@@ -222,8 +223,8 @@ def gerar_documentos(valores: dict) -> list[dict]:
                     "total": tot}], total=tot,
             obs="A orientação da dupla traz o consumo das áreas administrativa e comercial; o restante é da área industrial.")
     for desc, emit, val, venc in (("Telefone fixo", "Operadora de Telefonia Fixa", p("evento", "F03", "telefone"), "2026-02-13"),
-                                  ("Celulares em comodato", "Cell Telefonia Ltda.", p("contrato", "C08", "mensalidade", 480), "2026-03-09"),
-                                  ("Internet (cable modem em comodato)", "Internet & Comunicação Ltda.", p("contrato", "C07", "mensalidade", 350), "2026-03-10")):
+                                  ("Celulares em comodato", "Cell Telefonia Ltda.", p("contrato", "C08", "mensalidade", 580), "2026-03-09"),
+                                  ("Internet (cable modem em comodato)", "Internet & Comunicação Ltda.", p("contrato", "C07", "mensalidade", 410), "2026-03-10")):
         if val:
             add(evento="F03", data="2026-02-02", tipo="fatura", titulo=f"Nota fiscal de serviço de comunicação - {desc.lower()}",
                 numero="", emitente=_parte(emit, "CE", "Fortaleza"), destinatario=empresa, referencia="02/2026", vencimento=venc,
@@ -263,19 +264,19 @@ def gerar_documentos(valores: dict) -> list[dict]:
             servico="Recrutamento e seleção de pessoal - contrato de janeiro e fevereiro/2026",
             codigo_servico="17.04 - Recrutamento, agenciamento, seleção e colocação de mão de obra",
             valor=h, aliq_iss=ISS_FORTALEZA * 100, iss=r2(h * ISS_FORTALEZA), iss_retido=False,
-            retencoes=[("IRRF (retenção pelo tomador)", None)], liquido=None, vencimento="2026-02-24",
+            retencoes=[("IRRF (retenção pelo tomador)", None)], liquido=None, vencimento="2026-02-26",
             obs="Honorários contratados para os dois meses (metade por mês). Retenções na fonte a calcular pelo tomador.")
     h0 = p("contrato", "C06", "honorário", 5500)
     if h0:
         reaj = p("contrato", "C06", "reajuste", 25.45)
         h = round(h0 * (1 + reaj / 100) / 100) * 100
         add(evento="F45", data="2026-02-27", tipo="nfse", titulo="NFS-e - assessoria contábil", numero="024",
-            emitente=_parte("Contador Formado S/S", "CE", "Fortaleza"), destinatario=empresa,
+            emitente=_parte("Contador Formado S/A", "CE", "Fortaleza"), destinatario=empresa,
             servico="Serviços de assessoria contábil - competência fevereiro/2026 (honorário reajustado conforme contrato)",
             codigo_servico="17.19 - Contabilidade",
             valor=h, aliq_iss=ISS_FORTALEZA * 100, iss=r2(h * ISS_FORTALEZA), iss_retido=False,
             retencoes=[("IRRF (1,5%)", r2(h * IRRF_SERVICOS)), ("CSRF - PIS/COFINS/CSLL (4,65%)", r2(h * CSRF))],
-            liquido=r2(h - h * IRRF_SERVICOS - h * CSRF), vencimento="2026-03-05")
+            liquido=r2(h - h * IRRF_SERVICOS - h * CSRF), vencimento="2026-03-10")
     # ---------------- 8b: compras de insumos e devolução
     DESC_INS = {"MP-B": "Matéria-prima B", "MS-Z": "Material secundário Z", "MS-Q": "Material secundário Q",
                 "MS-R": "Material secundário R", "MS-K": "Material secundário K", "ME-H": "Material de embalagem H"}
@@ -382,7 +383,7 @@ def gerar_documentos(valores: dict) -> list[dict]:
               "Venda a consumidor final não contribuinte de outro estado: ICMS interestadual de 12% e DIFAL devido ao Maranhão "
               "(alíquota interna de 23%), recolhido pelo remetente. Preço pelo mark-up do exercício (a calcular pela dupla).")
     nfe_saida("F26", "2026-02-19", "003", _parte("Comercial Caribe Ltda.", "CE", "Fortaleza"), "Venda de mercadoria adquirida de terceiros",
-              "5.102", [(*alpha, p("evento", "F26", "quantidade"))], 0.20, False, [("boleto Banco Rico", "2026-02-28", None)],
+              "5.102", [(*alpha, p("evento", "F26", "quantidade"))], 0.20, False, [("boleto Banco Rico", "2026-02-27", None)],
               "Sem frete", "Preço unitário pelo mark-up (custo médio ponderado móvel da data), a calcular pela dupla.")
     vend = {pp["codigo"]: float(pp.get("vendido") or 0) for pp in valores.get("producao", {}).get("produtos", [])}
     rc, dsc = p("evento", "F34", "recebimento", 80), p("evento", "F34", "desconto", 3)
@@ -399,7 +400,7 @@ def gerar_documentos(valores: dict) -> list[dict]:
             cfop="5.202", itens=[{"codigo": "ALPHA", "descricao": alpha[1], "ncm": alpha[2], "cfop": "5.202", "unidade": "un", "quantidade": qd,
                                   "unitario": None, "total": None, "aliq_icms": 20.0, "aliq_ipi": 0.0}],
             produtos=None, desconto=0, frete=0, base_icms=None, icms=None, ipi=0, total=None,
-            duplicatas=[("abatimento no boleto da NF 003", "2026-02-28", None)], transporte="Por conta do emitente",
+            duplicatas=[("abatimento no boleto da NF 003", "2026-02-27", None)], transporte="Por conta do emitente",
             obs="Referente à NF 003 de 19/02/2026: devolução pelo mesmo preço unitário da venda (a calcular pela dupla).")
     docs.sort(key=lambda d: (d["data"], d["evento"]))
     return docs

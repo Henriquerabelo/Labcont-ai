@@ -28,7 +28,7 @@ def ctx():
             r = demo.criar(db)
             tid = r["turma_id"]
             ds = db.query(Dupla).filter_by(turma_id=tid).order_by(Dupla.numero).all()
-            for u in db.query(main.acesso.Usuario).filter(main.acesso.Usuario.login.in_(["avaliador", "professor.demo"])).all():
+            for u in db.query(main.acesso.Usuario).filter(main.acesso.Usuario.login.in_(demo.LOGINS_DEMO)).all():
                 db.delete(u)
             db.commit()
             aluno = r["credenciais"]["aluno"]

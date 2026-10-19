@@ -404,13 +404,14 @@ def _eventos(d: Doc, x: Valores) -> None:
             definir(cels[-1], brl(tot))
         d.trocar("sob o n.º 987321", re.compile(r"consumo de [\d.,]+ kWh"), f"consumo de {fmt(tot / tarifa, 3)} kWh")
         d.trocar("sob o n.º 987321", re.compile(r"total a pagar de R\$ [\d.]+,\d\d"), f"total a pagar de R$ {brl(tot)}")
-    # J03 - água de janeiro (só a área administrativa é detalhada no exercício)
+    # J03 - água de janeiro (administrativa 210 e comercial 380 no exercício-base)
     tot = x.p("evento", "J03", "valor total")
     if tot is not None:
         tarifa = x.p("evento", "J03", "tarifa", 23.62)
         v_adm = round(tot * 210 / 590 / 10) * 10
         linhas = d.tabela_apos("sob o n.º 321654")
         _conta_consumo(d, linhas, "Área Administrativa", v_adm, tarifa, 3)
+        _conta_consumo(d, linhas, "Área Comercial", tot - v_adm, tarifa, 3)
         cels = _linha(linhas, "Totais")
         if cels:
             definir(cels[1], fmt(tot / tarifa, 3))
@@ -421,7 +422,7 @@ def _eventos(d: Doc, x: Valores) -> None:
     if ap is not None:
         d.trocar("Realizada aplicação Financeira", re.compile(r"valor de R\$ [\d.]+,\d\d"), f"valor de R$ {brl(ap)}")
     # J05/F03 - telefonia (fixo sorteado no evento; celular e internet pelos contratos C08 e C07)
-    for ref, ancora in (("J05", "utilizados no mês de janeiro"), ("F03", "utilizados no mês de fevereiro")):
+    for ref, ancora in (("J05", "telefonia e internet utilizados no mês de janeiro"), ("F03", "telefonia e internet utilizados no mês de fevereiro")):
         linhas = d.tabela_apos(ancora)
         fx = x.p("evento", ref, "telefone")
         for rot, val in (("Telefone Fixo", fx), ("Celular", x.p("contrato", "C08", "mensalidade")),
@@ -511,25 +512,30 @@ def _eventos(d: Doc, x: Valores) -> None:
     tot = x.p("evento", "F01", "valor total")
     if tot is not None:
         tarifa = x.p("evento", "F01", "tarifa", 1.432)
+        t_calc = tarifa * 1.4316 / 1.432  # o exercício mostra 1,432 mas calcula o consumo com 1,4316
         base = x.base("evento", "F01", "valor total") or 3400
         linhas = d.tabela_apos("sob o n.º 988.333")
-        for rot, vb in (("Área Comercial", 590), ("Produto X", 1070), ("Produto Y", 1210)):
+        partes = {rot: round(vb * tot / base / 10) * 10 for rot, vb in (("Área Comercial", 590), ("Produto X", 1070), ("Produto Y", 1210))}
+        partes["Área Administrativa"] = round(tot - sum(partes.values()), 2)  # 530 no exercício-base
+        partes["Totais"] = tot
+        for rot, val in partes.items():
             cels = _linha(linhas, rot)
             if cels:
-                val = round(vb * tot / base / 10) * 10
-                definir(cels[1], f"{fmt(val / tarifa, 3)} kWh")
+                definir(cels[1], f"{fmt(val / t_calc, 3)} kWh")
                 definir(cels[3], f"R$ {brl(val)}")
-        d.trocar("sob o n.º 988.333", re.compile(r"consumo de [\d.,]+ kWh"), f"consumo de {fmt(tot / tarifa, 3)} kWh")
+        d.trocar("sob o n.º 988.333", re.compile(r"consumo de [\d.,]+ kWh"), f"consumo de {fmt(tot / t_calc, 3)} kWh")
         d.trocar("sob o n.º 988.333", re.compile(r"total a pagar de R\$ [\d.]+,\d\d"), f"total a pagar de R$ {brl(tot)}")
     tot = x.p("evento", "F02", "valor total")
     if tot is not None:
         tarifa = x.p("evento", "F02", "tarifa", 23.62)
         base = x.base("evento", "F02", "valor total") or 1780
         linhas = d.tabela_apos("sob o n.º 322.666")
-        for rot, vb in (("Área Administrativa", 280), ("Área Comercial", 320)):
+        partes = {rot: round(vb * tot / base / 10) * 10 for rot, vb in (("Área Administrativa", 280), ("Área Comercial", 320), ("Produto X", 610))}
+        partes["Produto Y"] = round(tot - sum(partes.values()), 2)  # 570 no exercício-base
+        partes["Totais"] = tot
+        for rot, val in partes.items():
             cels = _linha(linhas, rot)
             if cels:
-                val = round(vb * tot / base / 10) * 10
                 definir(cels[1], f"{fmt(val / tarifa, 4)} m³")
                 definir(cels[3], f"R$ {brl(val)}")
         d.trocar("sob o n.º 322.666", re.compile(r"consumo de [\d.,]+ m³"), f"consumo de {fmt(tot / tarifa, 4)} m³")

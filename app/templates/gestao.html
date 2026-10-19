@@ -8,11 +8,11 @@
 </div>
 
 <div class="stats stats-7" style="margin-bottom:24px">
-  <div class="stat"><div class="num">{{ kpi.turmas }}</div><div class="lbl">Turmas</div></div>
+  <div class="stat stat-rubelita"><div class="num">{{ kpi.turmas }}</div><div class="lbl">Turmas</div></div>
   <div class="stat"><div class="num">{{ kpi.grupos }}</div><div class="lbl">Grupos com empresa</div></div>
-  <div class="stat"><div class="num">{{ kpi.adesao }}<span class="unid">%</span></div><div class="lbl">Adesão ({{ kpi.contas }}/{{ kpi.alunos }} com senha)</div></div>
-  <div class="stat"><div class="num">{{ kpi.enviados }}<span class="muted unid"> / {{ kpi.grupos }}</span></div><div class="lbl">Janeiro enviado</div></div>
-  <div class="stat"><div class="num">{{ kpi.media if kpi.media is not none else '—' }}{% if kpi.media is not none %}<span class="unid">%</span>{% endif %}</div><div class="lbl">Acerto médio</div></div>
+  <div class="stat stat-turmalina"><div class="num">{{ kpi.adesao }}<span class="unid">%</span></div><div class="lbl">Adesão ({{ kpi.contas }}/{{ kpi.alunos }} com senha)</div></div>
+  <div class="stat{{ ' stat-ok' if kpi.enviados }}"><div class="num">{{ kpi.enviados }}<span class="muted unid"> / {{ kpi.grupos }}</span></div><div class="lbl">Janeiro enviado</div></div>
+  <div class="stat stat-rosa"><div class="num">{{ kpi.media if kpi.media is not none else '—' }}{% if kpi.media is not none %}<span class="unid">%</span>{% endif %}</div><div class="lbl">Acerto médio</div></div>
   <div class="stat"><div class="num">{{ kpi.perguntas }}</div><div class="lbl">Perguntas ao tutor</div></div>
   <div class="stat"><div class="num">{{ kpi.homologadas }}</div><div class="lbl">Notas homologadas</div></div>
 </div>

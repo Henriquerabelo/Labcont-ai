@@ -16,16 +16,16 @@
 {% if fech %}
 {% set c = aud.contagem %}
 <div class="stats" style="margin-bottom:32px">
-  <div class="stat"><div class="num">{{ aud.percentual }}<span style="font-size:24px">%</span></div><div class="lbl">Eventos corretos em {{ nm }}</div></div>
-  <div class="stat"><div class="num" style="color:#1d8a52">{{ c.get('correto', 0) }}</div><div class="lbl">Corretos</div></div>
-  <div class="stat"><div class="num" style="color:#b88400">{{ c.get('valor', 0) }}</div><div class="lbl">Valor divergente</div></div>
-  <div class="stat"><div class="num" style="color:#b4441f">{{ c.get('conta', 0) }}</div><div class="lbl">Conta errada</div></div>
+  <div class="stat stat-rubelita"><div class="num">{{ aud.percentual }}<span style="font-size:24px">%</span></div><div class="lbl">Eventos corretos em {{ nm }}</div></div>
+  <div class="stat{{ ' stat-ok' if c.get('correto') }}"><div class="num">{{ c.get('correto', 0) }}</div><div class="lbl">Corretos</div></div>
+  <div class="stat{{ ' stat-atencao' if c.get('valor') }}"><div class="num">{{ c.get('valor', 0) }}</div><div class="lbl">Valor divergente</div></div>
+  <div class="stat{{ ' stat-alerta' if c.get('conta') }}"><div class="num">{{ c.get('conta', 0) }}</div><div class="lbl">Conta errada</div></div>
   <div class="stat"><div class="num">{{ c.get('pendente', 0) }}</div><div class="lbl">Não lançados</div></div>
 </div>
 {% else %}
 <div class="stats" style="margin-bottom:24px">
-  <div class="stat"><div class="num">{{ lancados }}<span class="muted" style="font-size:24px"> / {{ aud.eventos|length }}</span></div><div class="lbl">Eventos com lançamento</div></div>
-  <div class="stat"><div class="num">{{ pendentes|length }}</div><div class="lbl">Eventos pendentes</div></div>
+  <div class="stat stat-rubelita"><div class="num">{{ lancados }}<span class="muted" style="font-size:24px"> / {{ aud.eventos|length }}</span></div><div class="lbl">Eventos com lançamento</div></div>
+  <div class="stat stat-rosa"><div class="num">{{ pendentes|length }}</div><div class="lbl">Eventos pendentes</div></div>
   <div class="stat"><div class="num">{{ n_lancs }}</div><div class="lbl">Lançamentos registrados</div></div>
 </div>
 <section class="card fechamento" id="fechamento">

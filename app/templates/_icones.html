@@ -1,0 +1,27 @@
+{# Ícones do menu lateral (traço, herdam a cor do link). Uso: {% from "_icones.html" import icone %}{{ icone('painel') }} #}
+{% macro icone(nome) -%}
+{%- set P = {
+  'painel': '<rect x="3" y="3" width="7" height="9" rx="1.5"/><rect x="14" y="3" width="7" height="5" rx="1.5"/><rect x="14" y="12" width="7" height="9" rx="1.5"/><rect x="3" y="16" width="7" height="5" rx="1.5"/>',
+  'disciplinas': '<rect x="3" y="5" width="18" height="15" rx="2"/><path d="M3 10h18M8 3v4M16 3v4"/>',
+  'discentes': '<path d="M3 9l9-5 9 5-9 5z"/><path d="M7 11.5V16c0 1.5 2.2 3 5 3s5-1.5 5-3v-4.5"/>',
+  'grupos': '<circle cx="9" cy="8" r="3.5"/><path d="M2.5 20c.8-3.5 3.4-5.5 6.5-5.5s5.7 2 6.5 5.5"/><circle cx="17" cy="9" r="2.5"/><path d="M17 14.5c2.3 0 4 1.5 4.5 4"/>',
+  'caso': '<path d="M4 21V7l8-4 8 4v14"/><path d="M9 21v-6h6v6"/>',
+  'normas': '<path d="M4 5h7a2 2 0 0 1 2 2v13a2 2 0 0 0-2-2H4z"/><path d="M20 5h-7a2 2 0 0 0-2 2v13a2 2 0 0 1 2-2h7z"/>',
+  'docentes': '<circle cx="12" cy="7" r="3.5"/><path d="M5 21c.8-4 3.5-6 7-6s6.2 2 7 6"/>',
+  'importar': '<path d="M12 3v12M7 10l5 5 5-5"/><path d="M4 17v3h16v-3"/>',
+  'usuarios': '<circle cx="12" cy="8" r="4"/><path d="M4 21c1-4 4-6 8-6s7 2 8 6"/>',
+  'lote': '<rect x="4" y="4" width="16" height="5" rx="1.5"/><rect x="4" y="11" width="16" height="5" rx="1.5"/><path d="M4 20h16"/>',
+  'historico': '<circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/>',
+  'demo': '<rect x="3" y="4" width="18" height="13" rx="2"/><path d="M8 21h8M12 17v4"/>',
+  'documentos': '<path d="M6 3h9l4 4v14H6z"/><path d="M14 3v5h5M9 13h7M9 17h7"/>',
+  'lancar': '<path d="M12 5v14M5 12h14"/>',
+  'diario': '<path d="M5 4h14v16H5z"/><path d="M9 8h6M9 12h6M9 16h4"/>',
+  'razao': '<path d="M12 4v16M4 8h16"/><path d="M6 13h4M14 13h4"/>',
+  'balancete': '<path d="M12 4v16M5 20h14"/><path d="M5 8l-2 6h6zM19 8l-2 6h6z"/><path d="M5 8h14"/>',
+  'demonstracoes': '<path d="M4 20V10M10 20V4M16 20v-7M22 20H2"/>',
+  'tutor': '<path d="M4 5h16v11H9l-5 4z"/><path d="M8 9h8M8 12h5"/>',
+  'fechamento': '<rect x="5" y="10" width="14" height="10" rx="2"/><path d="M8 10V7a4 4 0 0 1 8 0v3"/>',
+  'entrar': '<path d="M10 17l5-5-5-5M15 12H3"/><path d="M14 4h5v16h-5"/>',
+} -%}
+<svg class="ico" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">{{ P.get(nome, '')|safe }}</svg>
+{%- endmacro %}

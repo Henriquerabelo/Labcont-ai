@@ -88,6 +88,11 @@ def test_login_e_senha(ctx):
     c.cookies.clear()
     r = c.get("/disciplinas", follow_redirects=False)
     assert r.status_code == 303 and r.headers["location"] == "/entrar?volta=/disciplinas"
+    # sem login, a página inicial é a apresentação do sistema, com o botão Entrar
+    r = c.get("/", follow_redirects=False)
+    assert r.status_code == 200 and "O problema pedagógico" in r.text and 'href="/entrar"' in r.text
+    assert "Como as soluções foram criadas" in r.text and "img/apresentacao/painel.webp" in r.text
+    assert st(c, "/static/img/apresentacao/painel.webp") == 200 and st(c, "/apresentacao") == 200
     assert "não conferem" in c.post("/entrar", data={"login": "adm@ufc", "senha": "errada"}).text
     r = entrar(c, "ADM@ufc")
     assert r.status_code == 303 and acesso.COOKIE in r.headers["set-cookie"]
@@ -102,7 +107,7 @@ def test_login_e_senha(ctx):
     assert st(c, "/conta/senha", "post", data={"atual": senha, "nova": "minha-senha-9", "nova2": "minha-senha-9"}) == 303
     assert st(c, "/") == 200
     c.get("/sair")
-    assert st(c, "/") == 303
+    assert st(c, "/") == 200 and "O problema pedagógico" in c.get("/").text  # depois de sair: apresentação
 
 
 def test_coordenador(ctx):

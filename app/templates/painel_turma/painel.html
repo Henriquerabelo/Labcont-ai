@@ -8,7 +8,7 @@
 <div class="page-head">
   <div><div class="eyebrow">{{ t.rotulo }} · Learning Analytics</div><h1>Painel da turma</h1>
   <p class="lead">Acompanhamento de {{ mes_info.nome }} a partir dos dados do próprio sistema: progresso de cada grupo, alertas precoces, onde a turma mais erra e mais pergunta, engajamento diário e notas para homologação.</p></div>
-  <div class="acoes"><a class="btn btn-dark" href="/turmas/{{ t.id }}/notas?mes={{ mes }}">Notas de {{ mes_info.nome }}</a><a class="btn" href="/turmas/{{ t.id }}/duplas">Grupos e códigos</a></div>
+  <div class="acoes"><a class="btn btn-primary" href="/turmas/{{ t.id }}/notas?mes={{ mes }}">Notas de {{ mes_info.nome }}</a><a class="btn" href="/turmas/{{ t.id }}/duplas">Grupos e códigos</a></div>
 </div>
 {% include "_mes_abas.html" %}
 
@@ -19,9 +19,9 @@
 
 <div class="stats stats-7" style="margin:24px 0 16px">
   <div class="stat"><div class="num">{{ r.grupos }}</div><div class="lbl">Grupos</div></div>
-  <div class="stat"><div class="num">{{ r.progresso_medio }}<span class="unid">%</span></div><div class="lbl">Progresso médio</div></div>
-  <div class="stat"><div class="num">{{ r.enviados }}<span class="muted unid"> / {{ r.grupos }}</span></div><div class="lbl">{{ mes_info.nome|capitalize }} enviado</div></div>
-  <div class="stat"><div class="num">{{ r.media_oficial if r.media_oficial is not none else '—' }}{% if r.media_oficial is not none %}<span class="unid">%</span>{% endif %}</div><div class="lbl">Acerto médio (enviados)</div></div>
+  <div class="stat stat-rubelita"><div class="num">{{ r.progresso_medio }}<span class="unid">%</span></div><div class="lbl">Progresso médio</div></div>
+  <div class="stat{{ ' stat-ok' if r.enviados }}"><div class="num">{{ r.enviados }}<span class="muted unid"> / {{ r.grupos }}</span></div><div class="lbl">{{ mes_info.nome|capitalize }} enviado</div></div>
+  <div class="stat stat-turmalina"><div class="num">{{ r.media_oficial if r.media_oficial is not none else '—' }}{% if r.media_oficial is not none %}<span class="unid">%</span>{% endif %}</div><div class="lbl">Acerto médio (enviados)</div></div>
   <div class="stat"><div class="num">{{ r.tempo_medio|n(1) if r.tempo_medio is not none else '—' }}{% if r.tempo_medio is not none %}<span class="unid"> d</span>{% endif %}</div><div class="lbl">Tempo médio até o envio</div></div>
   <div class="stat"><div class="num">{{ r.ativos7 }}<span class="muted unid"> / {{ r.grupos }}</span></div><div class="lbl">Ativos em 7 dias</div></div>
   <div class="stat{{ ' stat-alerta' if r.em_risco }}"><div class="num">{{ r.em_risco }}</div><div class="lbl">Grupos em risco</div></div>

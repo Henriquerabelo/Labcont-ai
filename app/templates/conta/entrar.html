@@ -1,6 +1,7 @@
 {% extends "base.html" %}
 {% block titulo %}Entrar{% endblock %}
-{% block nav %}<nav class="nav"><a href="/aluno">Sou aluno</a></nav>{% endblock %}
+{% from "_icones.html" import icone %}
+{% block nav %}<nav class="nav" aria-label="Acesso"><a href="/entrar" class="ativo">{{ icone('usuarios') }}Equipe</a><a href="/aluno">{{ icone('entrar') }}Sou aluno</a></nav>{% endblock %}
 {% block conteudo %}
 <section class="hero" style="max-width:640px;margin:0 auto 40px">
   <div class="eyebrow">Laboratório de Prática Contábil · equipe</div>

@@ -66,7 +66,7 @@ Eventos ligados: J24, F33
 
 ### C05 · Serviço - Recrutamento e seleção
 **Parte:** Recrutamento S/S · **Início:** 2026-01-04  
-Vigência jan-fev/2026; apropriação de 50% por mês; pagamento único em 24/02/2026 (sujeito a retenções).
+Vigência jan-fev/2026; apropriação de 50% por mês; pagamento único em 26/02/2026, na emissão da NFS-e 345 (com retenção de IRRF).
 
 | Parâmetro | Base | Faixa proposta |
 |---|---|---|
@@ -75,7 +75,7 @@ Vigência jan-fev/2026; apropriação de 50% por mês; pagamento único em 24/02
 Eventos ligados: F41
 
 ### C06 · Serviço - Assessoria contábil
-**Parte:** Contador Formado S/S (Fortaleza) · **Início:** 2025-09-01  
+**Parte:** Contador Formado S/A (Fortaleza) · **Início:** 2025-09-01  
 Honorários mensais pagos no dia 10 do mês seguinte, com retenções (IRRF 1,5% + CSRF 4,65%). Reajuste a partir de 01/02/2026.
 
 | Parâmetro | Base | Faixa proposta |
@@ -91,7 +91,7 @@ Mensalidade paga no dia 10 do mês seguinte.
 
 | Parâmetro | Base | Faixa proposta |
 |---|---|---|
-| Mensalidade | 350,00  | R$ 250,00 a R$ 500,00 (passo 10,00) |
+| Mensalidade | 410,00  | R$ 300,00 a R$ 550,00 (passo 10,00) |
 
 Eventos ligados: J05, J13, F03, F18
 
@@ -101,19 +101,19 @@ Mensalidade paga no dia 9 do mês seguinte.
 
 | Parâmetro | Base | Faixa proposta |
 |---|---|---|
-| Mensalidade | 480,00  | R$ 300,00 a R$ 700,00 (passo 10,00) |
+| Mensalidade | 580,00  | R$ 400,00 a R$ 750,00 (passo 10,00) |
 | Quantidade de aparelhos | 5 un | 3 a 8 un (passo 1) |
 
 Eventos ligados: J05, J10, F03, F14
 
 ### C09 · Seguro contra incêndio
 **Parte:** Seguro Verdade Ltda. · **Início:** 2025-10-16  
-Cobertura de 12 meses; prêmio em parcelas mensais (última em 17/01/2026); apropriação mensal pro rata.
+Cobertura de 12 meses a partir de 16/10/2025; prêmio em 3 parcelas (16/11/2025, 16/12/2025 e 17/01/2026); apropriação mensal pro rata.
 
 | Parâmetro | Base | Faixa proposta |
 |---|---|---|
 | Prêmio total | 6.300,00  | R$ 4.800,00 a R$ 8.400,00 (passo 100,00) |
-| Número de parcelas | 4 un | 3 a 4 un (passo 1) |
+| Número de parcelas | 3 un | — |
 
 Eventos ligados: J21
 
@@ -123,7 +123,7 @@ Empréstimo da empresa à sócia; juros compostos apropriados por fração diár
 
 | Parâmetro | Base | Faixa proposta |
 |---|---|---|
-| Valor do mútuo | 20.000,00  | R$ 15.000,00 a R$ 40.000,00 (passo 1.000,00) |
+| Valor do mútuo | 30.000,00  | R$ 20.000,00 a R$ 45.000,00 (passo 1.000,00) |
 | Taxa de juros | 4,00 % a.m. | 2,00 a 5,00 % a.m. (passo 0,50) |
 
 Eventos ligados: F27
@@ -159,7 +159,7 @@ Eventos ligados: J26, F32
 - **vale transporte:** tarifa: 5.4; por_dia: 2; desconto: 6% do salário-base (limitado ao benefício recebido)
 - **vale alimentacao:** valor_dia: 26.0; por_dia: 1; desconto: 5% do benefício
 - **dias uteis:** fev/2026: 18; mar/2026: 20
-- **encargos:** INSS patronal + RAT + Terceiros 27,80%; FGTS 8,00% (sobre folha, férias e 13º)
+- **encargos:** INSS patronal + RAT + Terceiros 28,80% (FPAS 507, RAT 3%); FGTS 8,00% (sobre folha, férias e 13º)
 - **provisoes:** Férias + 1/3 e 13º salário (1/12 por mês), com encargos
 - **tabelas:** INSS, IRRF e salário-família vigentes em 2026
 
@@ -167,16 +167,16 @@ Eventos ligados: J26, F32
 
 | Setor | Empregado | Admissão | Salário jan | Salário fev | HE fev | Comissão fev | Dependentes fev |
 |---|---|---|---|---|---|---|---|
-| Administração | Alves Africano | anterior | 5.920,00 | 5.920,00 | 458,00 | — | 2 (11 e 15 anos) |
-| Administração | Venâncio Australiano | anterior | 1.621,00 | 1.621,00 | — | — | 1 (7 anos) |
-| Administração | Tiago Espanhol | anterior | 4.100,00 | 4.100,00 | 373,00 | — | 1 (8 anos) |
-| Comercial | Ângela Peruana | anterior | 2.100,00 | 1.530,00 | — | 77,00 | 2 (12 e 14 anos) |
-| Comercial | Marena Russa | anterior | 2.500,00 | 5.700,00 | 389,00 | 285,00 | 1 (6 anos) |
+| Administração | Alves Africano | anterior | 5.920,00 | 5.920,00 | 458,00 | — | 2 (20 e 16 anos) |
+| Administração | Venâncio Australiano | anterior | 1.621,00 | 1.621,00 | — | — | 1 (9 anos) |
+| Administração | Tiago Espanhol | anterior | 4.100,00 | 4.100,00 | 373,00 | — | 1 (7 anos) |
+| Comercial | Ângela Peruana | anterior | 2.100,00 | 1.621,00 | — | 77,00 | 2 (10 e 14 anos) |
+| Comercial | Marena Russa | anterior | 2.500,00 | 5.700,00 | 389,00 | 285,00 | 1 (9 anos) |
 | Comercial | Vitor Canadense | 2026-02-01 | — | 4.000,00 | 273,00 | — | 1 (16 anos) |
 | Industrial - MOD Produto X | Eurico Canadense | 2026-02-01 | — | 3.600,00 | 246,00 | — | 1 (3 anos) |
 | Industrial - MOD Produto X | Pedro Algarve | 2026-02-01 | — | 6.200,00 | — | — | 2 (12 e 9 anos) |
 | Industrial - MOD Produto X | Regina Italiana | 2026-02-01 | — | 1.680,00 | 115,00 | — | 2 (7 e 8 anos) |
-| Industrial - MOD Produto X | Renato Português | 2026-02-01 | — | **sem valor** | — | — | 2 (8 e 10 anos) |
+| Industrial - MOD Produto X | Renato Português | 2026-02-01 | — | 2.120,00 | — | — | 2 (8 e 10 anos) |
 | Industrial - MOD Produto Y | Gustavo Equatoriano | 2026-02-01 | — | 5.450,00 | 372,00 | — | 1 (5 anos) |
 | Industrial - MOD Produto Y | Rubens Irlandês | 2026-02-01 | — | 1.720,00 | — | — | 1 (3 anos) |
 | Industrial - MOD Produto Y | Vitor Veneza | 2026-02-01 | — | 2.500,00 | 171,00 | — | 0 |
@@ -211,7 +211,7 @@ Eventos ligados: J26, F32
 |---|---|---|---|---|---|
 | MP-A | Matéria-prima A | Matéria-prima | 9002.11.11 | 9,0867 | R$ 7,70 a R$ 10,50 |
 | MP-B | Matéria-prima B | Matéria-prima | 9007.20.20 | 11,2986 | R$ 9,60 a R$ 13,00 |
-| MS-Z | Material secundário Z | Material secundário | 9002.20.10 | 10,06 | R$ 8,50 a R$ 11,60 |
+| MS-Z | Material secundário Z | Material secundário | 9002.20.10 | 10,0600 | R$ 8,50 a R$ 11,60 |
 | MS-Q | Material secundário Q | Material secundário | 9008.50.00 | 11,5536 | R$ 9,80 a R$ 13,30 |
 | MS-R | Material secundário R | Material secundário | 9013.20.00 | 12,5751 | R$ 10,70 a R$ 14,50 |
 | MS-K | Material secundário K | Material secundário | 9011.20.20 | 13,2894 | R$ 11,30 a R$ 15,30 |
@@ -251,8 +251,8 @@ Natureza: **V** = possui valores sorteados por dupla; **D** = derivado (calculad
 | ID | Data | Grupo | Evento | Nat. | Parâmetros variáveis (base → faixa) |
 |---|---|---|---|---|---|
 | J01 | 02/01 | Societário | Destinação do resultado do exercício de 2025 (participações, reserva legal, dividendos, reserva estatutária) | D | — |
-| J02 | 02/01 | Utilidades | NF Energia Enel n.º 987321 - consumo jan; vencimento 14/01 | V | Valor total: 2.520,00 → R$ 2.200,00 a R$ 2.900,00 (passo 10,00); Parcela da área administrativa: 46,40 → 40,00 a 55,00 % (passo 0,10); Tarifa: 1,4316 → fixa; consumo (kWh) = valor ÷ tarifa |
-| J03 | 05/01 | Utilidades | Fatura de água CAGECE n.º 321654 - consumo jan; vencimento 14/01 | V | Valor total: 590,00 → R$ 500,00 a R$ 700,00 (passo 10,00); Tarifa: 23,62 → fixa; m³ = valor ÷ tarifa · *Tabela original só informa a área administrativa (R$ 210,00); faltam R$ 380,00 sem área.* |
+| J02 | 02/01 | Utilidades | NF Energia Luz do Sertão n.º 987321 - consumo jan; vencimento 14/01 | V | Valor total: 2.520,00 → R$ 2.200,00 a R$ 2.900,00 (passo 10,00); Parcela da área administrativa: 46,40 → 40,00 a 55,00 % (passo 0,10); Tarifa: 1,4316 → fixa; consumo (kWh) = valor ÷ tarifa |
+| J03 | 05/01 | Utilidades | Fatura de água Águas do Litoral n.º 321654 - consumo jan; vencimento 14/01 | V | Valor total: 590,00 → R$ 500,00 a R$ 700,00 (passo 10,00); Tarifa: 23,62 → fixa; m³ = valor ÷ tarifa · *Rateio da fatura: área administrativa R$ 210,00 e comercial R$ 380,00.* |
 | J04 | 05/01 | Financeiro | Aplicação no INVEST LIQUID (Banco Rico) | V | Valor aplicado: 18.000,00 → R$ 15.000,00 a R$ 25.000,00 (passo 500,00) |
 | J05 | 06/01 | Utilidades | NFs de telefonia fixa, celular e internet - competência jan | V | Telefone fixo: 687,00 → R$ 600,00 a R$ 800,00 (passo 1,00) · *Celular e internet seguem os contratos C08 e C07.* |
 | J06 | 06/01 | Pagamento | Pagamento da folha e do pró-labore de 12/2025 | D | — |
@@ -270,13 +270,13 @@ Natureza: **V** = possui valores sorteados por dupla; **D** = derivado (calculad
 | J18 | 15/01 | Folha | Processamento da folha e pró-labore de janeiro + provisões | D | — |
 | J19 | 15/01 | Depreciação | Depreciação de janeiro | D | — |
 | J20 | 16/01 | Societário | Integralização de capital - Marcela Soares | D | — |
-| J21 | 19/01 | Pagamento | Pagamento da 4ª parcela do seguro (Seguro Verdade) | D | ver contrato C09 |
+| J21 | 19/01 | Pagamento | Pagamento da 3ª e última parcela do seguro (Seguro Verdade) | D | ver contrato C09 |
 | J22 | 19/01 | Pagamento | Pagamento do CT-e 423.765 | D | — |
+| J24 | 19/01 | Financeiro | Liberação do leasing para aquisição de 2 máquinas industriais | V | ver contrato C04 |
 | J23 | 20/01 | Serviço tomado | Contratação de arquiteto autônomo (RPA) - pagamento em 17/02 | V | ver contrato C11 |
-| J24 | 20/01 | Financeiro | Liberação do leasing para aquisição de 2 máquinas industriais | V | ver contrato C04 |
 | J25 | 21/01 | Recebimento | Recebimento da comissão (NFS-e 002) | D | — |
 | J26 | 22/01 | Serviço tomado | NFS-e 6.300 Construtor Express - 1ª parcela (50%) da reforma do galpão | V | ver contrato C12 |
-| J27 | 23/01 | Venda - mercadoria | NF 001 Comercial Caribe (CE, CFOP 5.102) - venda de ALPHA, preço pelo mark-up, boleto em 25/01 | V | Quantidade vendida: 8.200 → 7.000 a 9.500 un (passo 50) |
+| J27 | 23/01 | Venda - mercadoria | NF 001 Comercial Caribe (CE, CFOP 5.102) - venda de ALPHA, preço pelo mark-up, boleto em 28/01 | V | Quantidade vendida: 8.200 → 7.000 a 9.500 un (passo 50) |
 | J28 | 23/01 | Tributos | Pagamento da GPS (INSS) de 12/2025 | D | — |
 | J29 | 26/01 | Tributos - infração | Auto de infração SEFAZ-CE (mercadorias sem nota) - pagamento em 05/02 com redução de multa | V | Base de cálculo: 70.000,00 → R$ 50.000,00 a R$ 90.000,00 (passo 1.000,00); Alíquota aplicada: 18,00 → ICMS = base × alíquota; multa = 75% do ICMS (conforme o caso) |
 | J30 | 26/01 | Compra - insumo | NF 23.456 Indústria Sofisticada (MG, CFOP 6.101) - MP-A; 25% à vista, 30% em 26/02 e 45% em 24/03; CT-e 423.951 frete CIF | V | Quantidade: 133.900 → derivada: necessidade de MP-A + sobra + devolução (F28); Custo unitário: 9,0867 → R$ 7,70 a R$ 10,50 (passo 0,0001); Frete: 2.050,00 → R$ 1.700,00 a R$ 2.400,00 (passo 10,00) |
@@ -295,23 +295,23 @@ Natureza: **V** = possui valores sorteados por dupla; **D** = derivado (calculad
 
 | ID | Data | Grupo | Evento | Nat. | Parâmetros variáveis (base → faixa) |
 |---|---|---|---|---|---|
-| F01 | 02/02 | Utilidades | NF Energia Enel n.º 988.333 - consumo fev; vencimento 12/02 | V | Valor total: 3.400,00 → R$ 3.000,00 a R$ 3.900,00 (passo 10,00); Rateio Adm/Com/Ind X/Ind Y: 15,6/17,4/31,5/35,6 → percentuais sorteados ±5 p.p., soma 100%; Tarifa: 1,4320 → fixa · *Tabela original não traz a área administrativa (R$ 530,00 faltantes).* |
-| F02 | 02/02 | Utilidades | Fatura de água CAGECE n.º 322.666 - consumo fev; vencimento 12/02 | V | Valor total: 1.780,00 → R$ 1.500,00 a R$ 2.100,00 (passo 10,00); Tarifa: 23,62 → fixa · *Tabela original só traz administrativa (280) e comercial (320); faltam R$ 1.180,00 da área industrial.* |
+| F01 | 02/02 | Utilidades | NF Energia Luz do Sertão n.º 988.333 - consumo fev; vencimento 12/02 | V | Valor total: 3.400,00 → R$ 3.000,00 a R$ 3.900,00 (passo 10,00); Rateio Adm/Com/Ind X/Ind Y: 15,6/17,4/31,5/35,6 → percentuais sorteados ±5 p.p., soma 100%; Tarifa: 1,4320 → fixa · *Rateio da fatura: administrativa R$ 530,00, comercial R$ 590,00, Produto X R$ 1.070,00 e Produto Y R$ 1.210,00.* |
+| F02 | 02/02 | Utilidades | Fatura de água Águas do Litoral n.º 322.666 - consumo fev; vencimento 12/02 | V | Valor total: 1.780,00 → R$ 1.500,00 a R$ 2.100,00 (passo 10,00); Tarifa: 23,62 → fixa · *Rateio da fatura: administrativa R$ 280,00, comercial R$ 320,00, Produto X R$ 610,00 e Produto Y R$ 570,00.* |
 | F03 | 02/02 | Utilidades | NFs de telefonia fixa, celular e internet - competência fev | V | Telefone fixo: 690,00 → R$ 600,00 a R$ 800,00 (passo 1,00) |
 | F04 | 03/02 | Venda - mercadoria | NF 337 - venda de ALPHA a consumidor final em São Luís-MA, PIX, preço pelo mark-up (DIFAL) | V | Quantidade: 40 → 20 a 80 un (passo 5) |
 | F05 | 04/02 | Compra - insumo | NF 12.380 Indústria Zalego (TO) - MP-B; 35% à vista, saldo em 03/03; desconto financeiro condicional; CT-e 424.110 (venc. 13/02) | V | Quantidade: 132.310 → derivada: necessidade de MP-B + sobra; Custo unitário: 11,2986 → R$ 9,60 a R$ 13,00 (passo 0,0001); Desconto financeiro condicional: 4,00 → 3,00 a 5,00 % (passo 0,50); Frete: 1.980,00 → R$ 1.600,00 a R$ 2.300,00 (passo 10,00) |
-| F06 | 04/02 | Tributos - infração | Pagamento do auto de infração | D | — |
+| F06 | 05/02 | Tributos - infração | Pagamento do auto de infração (com redução de 70% da multa) | D | — |
 | F07 | 05/02 | Financeiro | Apropriação do rendimento do CDB Renda Mais | D | ver contrato C03 |
 | F08 | 06/02 | Receita - serviço | NFS-e 003 para Algodão Doce - comissão de representação (Beta); recebimento 08/02 | V | Valor da comissão: 82.000,00 → R$ 70.000,00 a R$ 100.000,00 (passo 500,00) |
 | F09 | 06/02 | Pagamento | Pagamento da folha e pró-labore de 01/2026 | D | — |
 | F10 | 09/02 | Compra - insumo | NF 9.147 Distribuidor Verde Oliva (RJ) - materiais secundários Z, Q, R e K; 15% à vista e 2 parcelas (07/03, 07/04); frete CIF | V | Quantidades: 134.130 / 19.440 / 37.560 / 132.870 → derivadas: necessidade + sobra; Custos unitários: 10,06 / 11,55 / 12,58 / 13,29 → faixas na tabela de itens |
-| F11 | 09/02 | Pagamento | Pagamento parcial da NF 7.852 (Ar Frio) | D | — |
+| F11 | 09/02 | Pagamento | Pagamento parcial (40%) da NF 7.852 (Ar Frio) | D | — |
 | F12 | 10/02 | Tributos | Pagamento do FGTS de 01/2026 | D | — |
 | F13 | 10/02 | Recebimento | Recebimento da comissão (NFS-e 003) | D | — |
+| F17 | 10/02 | Pagamento | Pagamento da NFS-e 023 (contabilidade de janeiro) | D | ver contrato C06 |
 | F14 | 11/02 | Pagamento | Pagamento Cell Telefonia - janeiro | D | ver contrato C08 |
 | F15 | 11/02 | Societário | Integralização de capital - Marconde Sobreira | D | — |
 | F16 | 12/02 | Tributos | Pagamento do ISSQN de 01/2026 | D | — |
-| F17 | 12/02 | Pagamento | Pagamento da NFS-e 023 (contabilidade de janeiro) | D | ver contrato C06 |
 | F18 | 13/02 | Pagamento | Pagamento Internet & Comunicação - janeiro | D | ver contrato C07 |
 | F19 | 13/02 | Pagamento | Pagamento de água, energia e telefone - competência 02/2026 | D | — |
 | F20 | 13/02 | Folha | Processamento da folha e pró-labore de fevereiro + provisões | D | — |
@@ -320,9 +320,9 @@ Natureza: **V** = possui valores sorteados por dupla; **D** = derivado (calculad
 | F23 | 18/02 | Pagamento | Pagamento do CT-e 424.110 | D | — |
 | F24 | 18/02 | Pagamento | Pagamento do saldo da NF 3.369 (Comercial Elegante) | D | — |
 | F25 | 19/02 | Societário | Integralização de capital - Adalberto Cantareira | D | — |
-| F26 | 19/02 | Venda - mercadoria | NF 003 Comercial Caribe (CE, CFOP 5.102) - venda de ALPHA pelo mark-up; boleto em 28/02 | V | Quantidade vendida: 10.400 → 9.000 a 11.000 un (passo 50) |
+| F26 | 19/02 | Venda - mercadoria | NF 003 Comercial Caribe (CE, CFOP 5.102) - venda de ALPHA pelo mark-up; boleto em 27/02 | V | Quantidade vendida: 10.400 → 9.000 a 11.000 un (passo 50) |
 | P01 | 19/02 | Produção | Requisição de materiais e início da produção de X e Y (dia útil seguinte à compra do ME-H) | D | *Evento implícito nas regras do caso; não aparece na lista original.* |
-| F27 | 20/02 | Financeiro | Cessão de mútuo à sócia Cassilda Apedeuta | V | ver contrato C10 |
+| F27 | 20/02 | Financeiro | Cessão de mútuo à sócia Cassilda Apedeuta (valor disponibilizado à sócia, conforme o contrato C10) | V | ver contrato C10 |
 | F28 | 20/02 | Devolução de compra | NF 004 (CFOP 6.201) - devolução de MP-A com defeito à Indústria Sofisticada | V | Quantidade devolvida: 320 → 150 a 500 un (passo 10) |
 | F29 | 20/02 | Tributos | Pagamento do IRRF de 01/2026 | D | — |
 | F30 | 23/02 | Pagamento | Quitação do arquiteto (RPA) | D | ver contrato C11 |
@@ -337,7 +337,7 @@ Natureza: **V** = possui valores sorteados por dupla; **D** = derivado (calculad
 | F38 | 25/02 | Folha - benefício | Compra de vale-transporte para março (Sindiônibus 15.520) | D | — |
 | F39 | 25/02 | Folha - benefício | Compra de vale-alimentação para março (Ticket 5.410) | D | — |
 | F40 | 26/02 | Tributos | Pagamento de ICMS (normal, antecipado, DIFAL) de 01/2026 | D | — |
-| F41 | 26/02 | Serviço tomado | NFS-e 345 Recrutamento S/S - seleção de pessoal (jan-fev) | D | ver contrato C05 |
+| F41 | 26/02 | Serviço tomado | NFS-e 345 Recrutamento S/S - seleção de pessoal (jan-fev); pagamento na emissão | D | ver contrato C05 |
 | F42 | 26/02 | Tributos | Pagamento de PIS e COFINS de 01/2026 | D | — |
 | F43 | 27/02 | Tributos | Pagamento das CSRF de 01/2026 | D | — |
 | F44 | 27/02 | Recebimento | Recebimento de Comercial Caribe (NF 003, líquido da devolução) | D | — |
@@ -363,22 +363,26 @@ Foram encontradas no texto do exercício. Precisam de decisão docente antes de 
 | # | Onde | Descrição |
 |---|---|---|
 | 1 | Conta garantida (C01) | Limite escrito como "R$ 970.000,00 (novecentos mil reais)"; número e extenso divergem. |
-| 2 | Leasing (C04, J24, F33) | Contrato "assinado e liberado em 19/01"; o evento de liberação é 20/01. A tabela de bens não traz as 2 máquinas arrendadas. |
-| 3 | Arquiteto (C11, J23, F30) | Contratado em 20/01 com pagamento em 17/02; a quitação (23/02) diz "contratado em 19/01". |
-| 4 | Recrutamento (C05, F41) | Honorários pagos em 24/02, mas a NFS-e 345 só é emitida em 26/02. Não há evento de pagamento. |
-| 5 | Mútuo (C10, F27) | Contrato de 18/02 de R$ 30.000,00; o evento de 20/02 cede R$ 20.000,00. O título diz "com os sócios", mas a empresa é a credora. |
-| 6 | Seguro (C09, J21) | Prêmio de R$ 6.300,00 em 4 parcelas (R$ 1.575,00); o balanço mostra R$ 2.100,00 a pagar (equivale a 3 parcelas). Última parcela em 17/01 vs. pagamento em 19/01. |
-| 7 | Contabilidade (C06) | Razão social "Contador Formado S/S" e "S/A" (J39). Contrato prevê pagamento no dia 10; NFS-e 024 indica 05/03. |
+| 2 | Leasing (C04, J24, F33) | Contrato "assinado e liberado em 19/01"; o evento de liberação era 20/01. |
+| 3 | Arquiteto (C11, J23, F30) | Contratado em 20/01; a quitação (23/02) diz "contratado em 19/01". |
+| 4 | Recrutamento (C05, F41) | Honorários pagos em 24/02, mas a NFS-e 345 só é emitida em 26/02; não havia evento de pagamento. |
+| 5 | Mútuo (C10, F27) | Contrato de R$ 30.000,00; o evento cedia R$ 20.000,00. O título diz "com os sócios". |
+| 6 | Seguro (C09, J21) | Última parcela vence em 17/01 (sábado) e o pagamento ocorre em 19/01. |
+| 7 | Contabilidade (C06) | Razão social "S/S" e "S/A"; contrato prevê pagamento no dia 10, mas a NFS-e 024 indicava 05/03 e o pagamento da NFS-e 023 era em 12/02. |
 | 8 | Comodatos (C07, C08) | Contratos de R$ 350,00 e R$ 480,00, mas o balanço registra R$ 410,00 (internet) e R$ 580,00 (celular) a pagar. |
-| 9 | Frete MP-A (J30) | Frete CIF (pago pelo vendedor), mas há CT-e cobrado da empresa; vencimento "24.02.2025" (ano errado). |
+| 9 | Frete MP-A (J30) | Frete CIF, mas há CT-e na NF 23.456; vencimento "24.02.2025". |
 | 10 | NF 23.456 (J30, F37) | Evento em 26/01; o pagamento de 25/02 diz "emitida em 24/01/2026". |
-| 11 | Auto de infração (J29, F06) | TIF n.º 20230001/00 no auto e 20220001/00 "de 12/01/2026" no pagamento; pagamento previsto em 05/02 e evento em 04/02; multa digitada "9,450,00"; ICMS de 18% (alíquota interna do CE é 20% desde 2024); não fica claro se a redução de 70% já está no valor. |
-| 12 | Aplicações (J04, J14, F07, F47) | CDB "realizado em 11/01" vs. evento em 12/01; resgate de "aplicação realizada em 03/01" vs. INVEST LIQUID em 05/01. |
-| 13 | Ar Frio (J08, F11) | Evento em 08/01; pagamento de 09/02 cita "emitida em 05/01" e paga 45%, enquanto o contrato prevê 2 parcelas iguais de 40% (07/02 e 07/03). |
+| 11 | Auto de infração (J29, F06) | TIF n.º 20230001/00 e 20220001/00; pagamento previsto em 05/02 e evento em 04/02; multa "9,450,00"; ICMS de 18%; redução de 70%. |
+| 12 | Aplicações (J14, F07) | CDB "realizado em 11/01" (domingo) e evento em 12/01. |
+| 13 | Ar Frio (J08, F11) | Pagamento de 09/02 cita NF "emitida em 05/01" e pagava 45%, enquanto o contrato prevê 2 parcelas iguais de 40%. |
 | 14 | Vendas ALPHA (J27, J33, F26, F36, F44) | Boleto da NF 001 em 25/01 e recebimento em 28/01; NF 003 emitida em 19/02 mas citada como "de 15/02"; vencimento 28/02 vs. "27/02". |
 | 15 | Comissões (J16, J25, F08, F13) | Recebimentos previstos em 20/01 e 08/02; eventos de recebimento em 21/01 e 10/02. |
-| 16 | Folha (funcionários) | Idades dos dependentes diminuem de janeiro para fevereiro (ex.: 20 e 16 → 11 e 15 anos); salários de Ângela (2.100 → 1.530) e Marena (2.500 → 5.700) mudam sem evento; Renato Português sem salário; valor digitado "2.500.00". |
-| 17 | Energia e água (J03, F01, F02) | Tabelas de rateio incompletas: água/jan sem R$ 380,00; energia/fev sem a área administrativa (R$ 530,00); água/fev sem R$ 1.180,00 (área industrial). |
-| 18 | Encargos (FPAS) | Texto usa 27,80%; a planilha de apoio traz FPAS 507 com RAT 3% (= 28,80%). |
-| 19 | Imobilizado | Balanço: Máquinas R$ 262.000,00; tabela de bens: máquina de R$ 62.000,00. |
-| 20 | Materiais secundários (F10) | Total digitado "3.812.0,4537"; planilha de apoio cita "MP-Z" e "MS-W", inexistentes na ficha técnica. |
+| 16 | Folha (funcionários) | Idades dos dependentes diminuíam de janeiro para fevereiro; salários de Ângela (2.100 → 1.530) e Marena (2.500 → 5.700) mudam sem evento; valor digitado "2.500.00". |
+| 17 | Telefonia (J05, F03) | Celular com vencimento em 08/02 e 08/03 (contrato: dia 9); telefone fixo com vencimento em 24/02 e 24/03, mas pago em 14/01 e 13/02. |
+| 18 | CT-e 424.110 (F05, F23) | O pagamento de 18/02 diz CT-e "emitido em 05.02.2026"; a NF 12.380 e o CT-e são de 04/02. |
+| 19 | Quadro de prazos | Turma 01A – 15/11/2026 marcada como sexta (é domingo e feriado); "Janeiro / 2026.1" e "Fevereiro / 2026.1". |
+| 20 | Energia e água (J03, F01, F02) | Tabelas de rateio incompletas: água/jan sem R$ 380,00; energia/fev sem a área administrativa (R$ 530,00); água/fev sem R$ 1.180,00 (área industrial). |
+| 21 | Encargos (FPAS) | Texto usa 27,80%; a planilha de apoio traz FPAS 507 com RAT 3% (= 28,80%). |
+| 22 | Imobilizado | Balanço: Máquinas R$ 262.000,00; tabela de bens: máquina de R$ 62.000,00. |
+| 23 | Materiais secundários (F10) | Planilha de apoio cita "MP-Z" e "MS-W", inexistentes na ficha técnica. (Corrigido em 07/10: total da NF 9.147 = R$ 3.812.043,57.) |
+| 24 | Balanço de 31/12/2025 (versão de 07/10) | Após o ajuste de centavos, os subtotais Obrigações Fiscais (138.994,12; soma 138.994,11) e Ativo não Circulante/Imobilizado (821.591,67; correto 821.591,66) não foram atualizados; a despesa de depreciação na DRE de 2025 segue 10.408,33. |

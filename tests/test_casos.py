@@ -34,7 +34,7 @@ def test_caso_base_carregado(client):
     with SessionLocal() as db:
         c = db.get(Caso, cid)
         assert len(c.contratos) == 12 and len(c.eventos) == 90 and len(c.funcionarios) == 15
-        assert len(c.socios) == 4 and len(c.inconsistencias) == 20
+        assert len(c.socios) == 4 and len(c.inconsistencias) == 24  # 21 conferidas + 3 da análise completa de 11/10
         assert {(f.produto, f.insumo): f.quantidade for f in c.ficha}[("X", "MP-A")] == 4
         leasing = {p.nome: p for p in c.params("contrato", "C04")}
         assert leasing["Valor das máquinas"].minimo == 250000 and leasing["Valor das máquinas"].maximo == 400000

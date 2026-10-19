@@ -10,6 +10,8 @@ services:
       POSTGRES_USER: labcont
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
       POSTGRES_DB: labcont
+      TZ: America/Fortaleza
+      PGTZ: America/Fortaleza
     volumes:
       - pgdata:/var/lib/postgresql/data
     networks:
@@ -26,6 +28,9 @@ services:
     restart: unless-stopped
     environment:
       DATABASE_URL: postgresql+psycopg://labcont:${POSTGRES_PASSWORD}@db:5432/labcont
+      # Horário de Brasília. CORRIGIR_FUSO_UTC ajusta uma única vez as horas gravadas em UTC antes de 06/10/2026.
+      TZ: America/Fortaleza
+      CORRIGIR_FUSO_UTC: "1"
       APP_USUARIO: ${APP_USUARIO}
       APP_SENHA: ${APP_SENHA}
       # Tutor (Etapa 6): IA local do VPS. Configure com deploy/configurar-ia.sh; vazio = modo roteiro.

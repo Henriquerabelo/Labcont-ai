@@ -1,19 +1,32 @@
 {% extends "base.html" %}
+{% from "_icones.html" import icone %}
 {% block home %}/aluno{% endblock %}
-{% block nav %}
-<nav class="nav">
-  {% if d %}
-  <a href="/aluno" class="{{ 'ativo' if menu == 'painel' }}">Painel</a>
-  <a href="/aluno/documentos" class="{{ 'ativo' if menu == 'documentos' }}">Documentos</a>
-  {% if not visualizacao %}<a href="/aluno/lancar" class="{{ 'ativo' if menu == 'lancar' }}">Lançar</a>{% endif %}
-  <a href="/aluno/diario" class="{{ 'ativo' if menu == 'diario' }}">Diário</a>
-  <a href="/aluno/razao" class="{{ 'ativo' if menu == 'razao' }}">Razão</a>
-  <a href="/aluno/balancete" class="{{ 'ativo' if menu == 'balancete' }}">Balancete</a>
-  <a href="/aluno/demonstracoes" class="{{ 'ativo' if menu == 'demonstracoes' }}">DRE e BP</a>
-  <a href="/aluno/tutor" class="{{ 'ativo' if menu == 'tutor' }}">Tutor</a>
-  <a href="/aluno/normas" class="{{ 'ativo' if menu == 'normas' }}">Normas</a>
+{% block lateral_info %}
+{% if d %}<div class="lateral-info">
+  <span class="rotulo">Área do grupo</span>
+  <strong>{{ d.rotulo }}</strong>
+  {% if aluno_nome %}<small>{{ aluno_nome.split(' ')[0]|title }}</small>{% endif %}
   {% if meses %}<span class="mes-sel" role="group" aria-label="Mês de trabalho">{% for m, i in meses.items() %}<a href="/aluno/mes/{{ m }}?volta={{ request.url.path }}" class="{{ 'ativo' if m == mes }}" {{ 'aria-current=true' if m == mes }}>{{ i.curto }}</a>{% endfor %}</span>{% endif %}
-  <span class="nav-usuario">{% if not visualizacao %}<a href="/aluno/senha" class="{{ 'ativo' if menu == 'senha' }}">Senha</a>{% endif %}<a href="/aluno/sair">{{ 'Sair da visualização' if visualizacao else 'Sair' }}</a></span>
+</div>{% endif %}
+{% endblock %}
+{% block nav %}
+<nav class="nav" aria-label="Área do grupo">
+  {% if d %}
+  <a href="/aluno" class="{{ 'ativo' if menu == 'painel' }}">{{ icone('painel') }}Painel</a>
+  <a href="/aluno/documentos" class="{{ 'ativo' if menu == 'documentos' }}">{{ icone('documentos') }}Documentos</a>
+  {% if not visualizacao %}<a href="/aluno/lancar" class="{{ 'ativo' if menu == 'lancar' }}">{{ icone('lancar') }}Lançar</a>{% endif %}
+  <span class="nav-secao">Livros</span>
+  <a href="/aluno/diario" class="{{ 'ativo' if menu == 'diario' }}">{{ icone('diario') }}Diário</a>
+  <a href="/aluno/razao" class="{{ 'ativo' if menu == 'razao' }}">{{ icone('razao') }}Razão</a>
+  <a href="/aluno/balancete" class="{{ 'ativo' if menu == 'balancete' }}">{{ icone('balancete') }}Balancete</a>
+  <a href="/aluno/demonstracoes" class="{{ 'ativo' if menu == 'demonstracoes' }}">{{ icone('demonstracoes') }}DRE e BP</a>
+  <span class="nav-secao">Apoio</span>
+  <a href="/aluno/tutor" class="{{ 'ativo' if menu == 'tutor' }}">{{ icone('tutor') }}Tutor</a>
+  <a href="/aluno/normas" class="{{ 'ativo' if menu == 'normas' }}">{{ icone('normas') }}Base normativa</a>
+  <div class="nav-usuario"><span class="acoes-usuario">{% if not visualizacao %}<a href="/aluno/senha" class="{{ 'ativo' if menu == 'senha' }}">Senha</a>{% endif %}<a href="/aluno/sair">{{ 'Sair da visualização' if visualizacao else 'Sair' }}</a></span></div>
+  {% else %}
+  <a href="/aluno" class="ativo">{{ icone('entrar') }}Área do grupo</a>
+  <a href="/entrar">{{ icone('usuarios') }}Equipe</a>
   {% endif %}
 </nav>
 {% endblock %}

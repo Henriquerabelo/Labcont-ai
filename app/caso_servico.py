@@ -35,6 +35,13 @@ def num(v) -> float | None:
         return None
 
 
+def fmt_unit(v) -> str:
+    """Valor unitário: no mínimo 4 casas e até 8 (custos do caso-base com a precisão do exercício)."""
+    if v is None or v == "" or isinstance(v, str):
+        return fmt(v)
+    return fmt(v, next((c for c in (4, 5, 6, 7, 8) if abs(round(v, c) - v) < 1e-9), 8))
+
+
 def fmt(v, casas: int | None = None) -> str:
     """Formata número no padrão brasileiro; mantém texto como está."""
     if v is None or v == "":
@@ -45,7 +52,7 @@ def fmt(v, casas: int | None = None) -> str:
         if float(v).is_integer():
             casas = 0 if abs(v) < 1000 or isinstance(v, int) else 2
         else:
-            casas = 4 if abs(round(v, 2) - v) > 1e-9 else 2
+            casas = next((c for c in (2, 4, 5, 6, 7, 8) if abs(round(v, c) - v) < 1e-9), 4)
     s = f"{v:,.{casas}f}"
     return s.replace(",", "X").replace(".", ",").replace("X", ".")
 

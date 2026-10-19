@@ -19,6 +19,22 @@ def _carregar_env() -> None:
 
 _carregar_env()
 
+# Fuso horário do sistema: horas gravadas e exibidas no horário de Brasília (UTC-3, sem horário de verão).
+# O servidor (VPS/Docker) roda em UTC; sem isto, "agora" sairia 3 horas adiantado.
+FUSO = os.getenv("APP_FUSO", "America/Fortaleza")
+
+
+def _aplicar_fuso() -> None:
+    if not hasattr(__import__("time"), "tzset"):  # Windows: já usa a hora local do computador
+        return
+    import time
+    zona = Path("/usr/share/zoneinfo") / FUSO
+    os.environ["TZ"] = FUSO if zona.exists() else "<-03>3"  # sem a base de fusos: UTC-3 fixo
+    time.tzset()
+
+
+_aplicar_fuso()
+
 DATABASE_URL = os.getenv(
     "DATABASE_URL", "postgresql+psycopg://labcont:labcont@localhost:5432/labcont"
 )

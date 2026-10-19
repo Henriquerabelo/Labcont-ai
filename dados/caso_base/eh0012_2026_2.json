@@ -1,6 +1,6 @@
 {
   "caso": "EH0012 - Laboratório de Prática Contábil - 2026.2",
-  "fonte": "Exercício EH-0012 2026.2 (docx)",
+  "fonte": "Exercício EH-0012 2026.2 (PDF revisado de 07/10/2026)",
   "empresa": {
     "nome": "Empresa LAB",
     "cnae_principal": "2670-1/02 - Fabricação de equipamentos e instrumentos ópticos, fotográficos e cinematográficos",
@@ -33,10 +33,10 @@
       },
       "dividendos_pct": {
         "nome": "Dividendos (% do lucro líquido ajustado)",
-        "base": 60.0,
+        "base": 50.0,
         "unidade": "%",
         "min": 25.0,
-        "max": 60.0,
+        "max": 50.0,
         "passo": 5.0
       },
       "reserva_estatutaria": "saldo remanescente"
@@ -170,14 +170,13 @@
         "valor": 125000.0
       },
       "Máquinas e equipamentos industriais": {
-        "valor": 262000.0,
-        "obs": "diverge da tabela de bens (R$ 62.000,00) - ver inconsistências"
+        "valor": 262000.0
       },
       "Veículos": {
         "valor": 135000.0
       },
       "(-) Depreciação acumulada": {
-        "valor": -10408.33
+        "valor": -10408.34
       }
     },
     "passivo": {
@@ -190,7 +189,7 @@
       "INSS a recolher": 12822.74,
       "FGTS a recolher": 1552.64,
       "Salários a pagar": 15760.64,
-      "ICMS a recolher": 43361.81,
+      "ICMS a recolher": 43361.8,
       "ISS a recolher": 7615.0,
       "PIS a recolher": 5045.29,
       "COFINS a recolher": 23238.9,
@@ -486,7 +485,7 @@
       "tipo": "Serviço - Recrutamento e seleção",
       "parte": "Recrutamento S/S",
       "inicio": "2026-01-04",
-      "descricao": "Vigência jan-fev/2026; apropriação de 50% por mês; pagamento único em 24/02/2026 (sujeito a retenções).",
+      "descricao": "Vigência jan-fev/2026; apropriação de 50% por mês; pagamento único em 26/02/2026, na emissão da NFS-e 345 (com retenção de IRRF).",
       "parametros": [
         {
           "nome": "Honorários brutos",
@@ -504,7 +503,7 @@
     {
       "id": "C06",
       "tipo": "Serviço - Assessoria contábil",
-      "parte": "Contador Formado S/S (Fortaleza)",
+      "parte": "Contador Formado S/A (Fortaleza)",
       "inicio": "2025-09-01",
       "descricao": "Honorários mensais pagos no dia 10 do mês seguinte, com retenções (IRRF 1,5% + CSRF 4,65%). Reajuste a partir de 01/02/2026.",
       "parametros": [
@@ -542,10 +541,10 @@
       "parametros": [
         {
           "nome": "Mensalidade",
-          "base": 350.0,
+          "base": 410.0,
           "unidade": "R$",
-          "min": 250.0,
-          "max": 500.0,
+          "min": 300.0,
+          "max": 550.0,
           "passo": 10.0
         }
       ],
@@ -565,10 +564,10 @@
       "parametros": [
         {
           "nome": "Mensalidade",
-          "base": 480.0,
+          "base": 580.0,
           "unidade": "R$",
-          "min": 300.0,
-          "max": 700.0,
+          "min": 400.0,
+          "max": 750.0,
           "passo": 10.0
         },
         {
@@ -592,7 +591,7 @@
       "tipo": "Seguro contra incêndio",
       "parte": "Seguro Verdade Ltda.",
       "inicio": "2025-10-16",
-      "descricao": "Cobertura de 12 meses; prêmio em parcelas mensais (última em 17/01/2026); apropriação mensal pro rata.",
+      "descricao": "Cobertura de 12 meses a partir de 16/10/2025; prêmio em 3 parcelas (16/11/2025, 16/12/2025 e 17/01/2026); apropriação mensal pro rata.",
       "parametros": [
         {
           "nome": "Prêmio total",
@@ -604,11 +603,8 @@
         },
         {
           "nome": "Número de parcelas",
-          "base": 4,
-          "unidade": "un",
-          "min": 3,
-          "max": 4,
-          "passo": 1
+          "base": 3,
+          "unidade": "un"
         }
       ],
       "eventos": [
@@ -624,10 +620,10 @@
       "parametros": [
         {
           "nome": "Valor do mútuo",
-          "base": 20000.0,
+          "base": 30000.0,
           "unidade": "R$",
-          "min": 15000.0,
-          "max": 40000.0,
+          "min": 20000.0,
+          "max": 45000.0,
           "passo": 1000.0
         },
         {
@@ -715,7 +711,7 @@
       "fev/2026": 18,
       "mar/2026": 20
     },
-    "encargos": "INSS patronal + RAT + Terceiros 27,80%; FGTS 8,00% (sobre folha, férias e 13º)",
+    "encargos": "INSS patronal + RAT + Terceiros 28,80% (FPAS 507, RAT 3%); FGTS 8,00% (sobre folha, férias e 13º)",
     "provisoes": "Férias + 1/3 e 13º salário (1/12 por mês), com encargos",
     "tabelas": "INSS, IRRF e salário-família vigentes em 2026"
   },
@@ -774,7 +770,7 @@
       "salario_fev": 5920.0,
       "he_fev": 458.0,
       "comissao_fev": null,
-      "dependentes_fev": "2 (11 e 15 anos)"
+      "dependentes_fev": "2 (20 e 16 anos)"
     },
     {
       "setor": "Administração",
@@ -787,7 +783,7 @@
       "salario_fev": 1621.0,
       "he_fev": null,
       "comissao_fev": null,
-      "dependentes_fev": "1 (7 anos)"
+      "dependentes_fev": "1 (9 anos)"
     },
     {
       "setor": "Administração",
@@ -800,7 +796,7 @@
       "salario_fev": 4100.0,
       "he_fev": 373.0,
       "comissao_fev": null,
-      "dependentes_fev": "1 (8 anos)"
+      "dependentes_fev": "1 (7 anos)"
     },
     {
       "setor": "Comercial",
@@ -810,10 +806,10 @@
       "he_jan": 100.0,
       "comissao_jan": 400.0,
       "dependentes_jan": "2 (10 e 14 anos)",
-      "salario_fev": 1530.0,
+      "salario_fev": 1621.0,
       "he_fev": null,
       "comissao_fev": 77.0,
-      "dependentes_fev": "2 (12 e 14 anos)"
+      "dependentes_fev": "2 (10 e 14 anos)"
     },
     {
       "setor": "Comercial",
@@ -826,7 +822,7 @@
       "salario_fev": 5700.0,
       "he_fev": 389.0,
       "comissao_fev": 285.0,
-      "dependentes_fev": "1 (6 anos)"
+      "dependentes_fev": "1 (9 anos)"
     },
     {
       "setor": "Comercial",
@@ -888,7 +884,7 @@
       "he_jan": null,
       "comissao_jan": null,
       "dependentes_jan": null,
-      "salario_fev": null,
+      "salario_fev": 2120.0,
       "he_fev": null,
       "comissao_fev": null,
       "dependentes_fev": "2 (8 e 10 anos)"
@@ -965,7 +961,7 @@
       "descricao": "Matéria-prima A",
       "tipo": "Matéria-prima",
       "ncm": "9002.11.11",
-      "custo_base": 9.0867,
+      "custo_base": 9.0867112,
       "custo_min": 7.7,
       "custo_max": 10.5
     },
@@ -974,7 +970,7 @@
       "descricao": "Matéria-prima B",
       "tipo": "Matéria-prima",
       "ncm": "9007.20.20",
-      "custo_base": 11.2986,
+      "custo_base": 11.2986347,
       "custo_min": 9.6,
       "custo_max": 13.0
     },
@@ -983,7 +979,7 @@
       "descricao": "Material secundário Z",
       "tipo": "Material secundário",
       "ncm": "9002.20.10",
-      "custo_base": 10.06,
+      "custo_base": 10.0600459,
       "custo_min": 8.5,
       "custo_max": 11.6
     },
@@ -992,7 +988,7 @@
       "descricao": "Material secundário Q",
       "tipo": "Material secundário",
       "ncm": "9008.50.00",
-      "custo_base": 11.5536,
+      "custo_base": 11.553644,
       "custo_min": 9.8,
       "custo_max": 13.3
     },
@@ -1001,7 +997,7 @@
       "descricao": "Material secundário R",
       "tipo": "Material secundário",
       "ncm": "9013.20.00",
-      "custo_base": 12.5751,
+      "custo_base": 12.5750572,
       "custo_min": 10.7,
       "custo_max": 14.5
     },
@@ -1010,7 +1006,7 @@
       "descricao": "Material secundário K",
       "tipo": "Material secundário",
       "ncm": "9011.20.20",
-      "custo_base": 13.2894,
+      "custo_base": 13.28943795,
       "custo_min": 11.3,
       "custo_max": 15.3
     },
@@ -1019,7 +1015,7 @@
       "descricao": "Material de embalagem H",
       "tipo": "Embalagem",
       "ncm": "3923.21.10",
-      "custo_base": 5.6589,
+      "custo_base": 5.65893,
       "custo_min": 4.8,
       "custo_max": 6.5
     },
@@ -1046,7 +1042,7 @@
       "descricao": "Mercadoria para revenda ALPHA",
       "tipo": "Mercadoria",
       "ncm": "9032.10.10",
-      "custo_base": 19.6703,
+      "custo_base": 19.6703463,
       "custo_min": 17.5,
       "custo_max": 22.0
     }
@@ -1207,7 +1203,7 @@
           "regra": "fixa; m³ = valor ÷ tarifa"
         }
       ],
-      "obs": "Tabela original só informa a área administrativa (R$ 210,00); faltam R$ 380,00 sem área."
+      "obs": "Rateio da fatura: área administrativa R$ 210,00 e comercial R$ 380,00."
     },
     {
       "id": "J04",
@@ -1367,7 +1363,7 @@
         },
         {
           "nome": "Custo unitário",
-          "base": 19.6703,
+          "base": 19.6703463,
           "unidade": "R$",
           "min": 17.5,
           "max": 22.0,
@@ -1440,7 +1436,7 @@
       "id": "J21",
       "data": "2026-01-19",
       "grupo": "Pagamento",
-      "descricao": "Pagamento da 4ª parcela do seguro (Seguro Verdade)",
+      "descricao": "Pagamento da 3ª e última parcela do seguro (Seguro Verdade)",
       "natureza": "D",
       "contrato": "C09"
     },
@@ -1461,7 +1457,7 @@
     },
     {
       "id": "J24",
-      "data": "2026-01-20",
+      "data": "2026-01-19",
       "grupo": "Financeiro",
       "descricao": "Liberação do leasing para aquisição de 2 máquinas industriais",
       "natureza": "V",
@@ -1486,7 +1482,7 @@
       "id": "J27",
       "data": "2026-01-23",
       "grupo": "Venda - mercadoria",
-      "descricao": "NF 001 Comercial Caribe (CE, CFOP 5.102) - venda de ALPHA, preço pelo mark-up, boleto em 25/01",
+      "descricao": "NF 001 Comercial Caribe (CE, CFOP 5.102) - venda de ALPHA, preço pelo mark-up, boleto em 28/01",
       "natureza": "V",
       "parametros": [
         {
@@ -1545,7 +1541,7 @@
         },
         {
           "nome": "Custo unitário",
-          "base": 9.0867,
+          "base": 9.0867112,
           "unidade": "R$",
           "min": 7.7,
           "max": 10.5,
@@ -1660,7 +1656,7 @@
           "regra": "fixa"
         }
       ],
-      "obs": "Tabela original não traz a área administrativa (R$ 530,00 faltantes)."
+      "obs": "Rateio da fatura: administrativa R$ 530,00, comercial R$ 590,00, Produto X R$ 1.070,00 e Produto Y R$ 1.210,00."
     },
     {
       "id": "F02",
@@ -1684,7 +1680,7 @@
           "regra": "fixa"
         }
       ],
-      "obs": "Tabela original só traz administrativa (280) e comercial (320); faltam R$ 1.180,00 da área industrial."
+      "obs": "Rateio da fatura: administrativa R$ 280,00, comercial R$ 320,00, Produto X R$ 610,00 e Produto Y R$ 570,00."
     },
     {
       "id": "F03",
@@ -1736,7 +1732,7 @@
         },
         {
           "nome": "Custo unitário",
-          "base": 11.2986,
+          "base": 11.2986347,
           "unidade": "R$",
           "min": 9.6,
           "max": 13.0,
@@ -1762,9 +1758,9 @@
     },
     {
       "id": "F06",
-      "data": "2026-02-04",
+      "data": "2026-02-05",
       "grupo": "Tributos - infração",
-      "descricao": "Pagamento do auto de infração",
+      "descricao": "Pagamento do auto de infração (com redução de 70% da multa)",
       "natureza": "D"
     },
     {
@@ -1824,7 +1820,7 @@
       "id": "F11",
       "data": "2026-02-09",
       "grupo": "Pagamento",
-      "descricao": "Pagamento parcial da NF 7.852 (Ar Frio)",
+      "descricao": "Pagamento parcial (40%) da NF 7.852 (Ar Frio)",
       "natureza": "D"
     },
     {
@@ -1865,7 +1861,7 @@
     },
     {
       "id": "F17",
-      "data": "2026-02-12",
+      "data": "2026-02-10",
       "grupo": "Pagamento",
       "descricao": "Pagamento da NFS-e 023 (contabilidade de janeiro)",
       "natureza": "D",
@@ -1915,7 +1911,7 @@
         },
         {
           "nome": "Custo unitário",
-          "base": 5.6589,
+          "base": 5.65893,
           "unidade": "R$",
           "min": 4.8,
           "max": 6.5,
@@ -1956,7 +1952,7 @@
       "id": "F26",
       "data": "2026-02-19",
       "grupo": "Venda - mercadoria",
-      "descricao": "NF 003 Comercial Caribe (CE, CFOP 5.102) - venda de ALPHA pelo mark-up; boleto em 28/02",
+      "descricao": "NF 003 Comercial Caribe (CE, CFOP 5.102) - venda de ALPHA pelo mark-up; boleto em 27/02",
       "natureza": "V",
       "parametros": [
         {
@@ -1974,7 +1970,7 @@
       "id": "F27",
       "data": "2026-02-20",
       "grupo": "Financeiro",
-      "descricao": "Cessão de mútuo à sócia Cassilda Apedeuta",
+      "descricao": "Cessão de mútuo à sócia Cassilda Apedeuta (valor disponibilizado à sócia, conforme o contrato C10)",
       "natureza": "V",
       "contrato": "C10"
     },
@@ -2142,7 +2138,7 @@
       "id": "F41",
       "data": "2026-02-26",
       "grupo": "Serviço tomado",
-      "descricao": "NFS-e 345 Recrutamento S/S - seleção de pessoal (jan-fev)",
+      "descricao": "NFS-e 345 Recrutamento S/S - seleção de pessoal (jan-fev); pagamento na emissão",
       "natureza": "D",
       "contrato": "C05"
     },
@@ -2201,83 +2197,146 @@
   "inconsistencias": [
     {
       "onde": "Conta garantida (C01)",
-      "descricao": "Limite escrito como \"R$ 970.000,00 (novecentos mil reais)\"; número e extenso divergem."
+      "descricao": "Limite escrito como \"R$ 970.000,00 (novecentos mil reais)\"; número e extenso divergem.",
+      "status": "RESOLVIDA",
+      "decisao": "Decisão do professor (11/10/2026): novecentos e setenta mil reais."
     },
     {
       "onde": "Leasing (C04, J24, F33)",
-      "descricao": "Contrato \"assinado e liberado em 19/01\"; o evento de liberação é 20/01. A tabela de bens não traz as 2 máquinas arrendadas."
+      "descricao": "Contrato \"assinado e liberado em 19/01\"; o evento de liberação era 20/01.",
+      "status": "RESOLVIDA",
+      "decisao": "Decisão do professor (11/10/2026): liberação em 19/01, data do contrato."
     },
     {
       "onde": "Arquiteto (C11, J23, F30)",
-      "descricao": "Contratado em 20/01 com pagamento em 17/02; a quitação (23/02) diz \"contratado em 19/01\"."
+      "descricao": "Contratado em 20/01; a quitação (23/02) diz \"contratado em 19/01\".",
+      "status": "RESOLVIDA",
+      "decisao": "Decisão do professor (11/10/2026): contratação em 20/01."
     },
     {
       "onde": "Recrutamento (C05, F41)",
-      "descricao": "Honorários pagos em 24/02, mas a NFS-e 345 só é emitida em 26/02. Não há evento de pagamento."
+      "descricao": "Honorários pagos em 24/02, mas a NFS-e 345 só é emitida em 26/02; não havia evento de pagamento.",
+      "status": "RESOLVIDA",
+      "decisao": "Decisão do professor (11/10/2026): pagamento somente em 26/02, na emissão da NFS-e 345."
     },
     {
       "onde": "Mútuo (C10, F27)",
-      "descricao": "Contrato de 18/02 de R$ 30.000,00; o evento de 20/02 cede R$ 20.000,00. O título diz \"com os sócios\", mas a empresa é a credora."
+      "descricao": "Contrato de R$ 30.000,00; o evento cedia R$ 20.000,00. O título diz \"com os sócios\".",
+      "status": "RESOLVIDA",
+      "decisao": "Decisão do professor (11/10/2026): cessão de R$ 30.000,00 no caso-base (o valor da dupla está no contrato C10); texto do contrato mantido."
     },
     {
       "onde": "Seguro (C09, J21)",
-      "descricao": "Prêmio de R$ 6.300,00 em 4 parcelas (R$ 1.575,00); o balanço mostra R$ 2.100,00 a pagar (equivale a 3 parcelas). Última parcela em 17/01 vs. pagamento em 19/01."
+      "descricao": "Última parcela vence em 17/01 (sábado) e o pagamento ocorre em 19/01.",
+      "status": "RESOLVIDA",
+      "decisao": "Decisão do professor (11/10/2026): 3ª e última parcela; vencimento em fim de semana é pago no próximo dia útil (19/01)."
     },
     {
       "onde": "Contabilidade (C06)",
-      "descricao": "Razão social \"Contador Formado S/S\" e \"S/A\" (J39). Contrato prevê pagamento no dia 10; NFS-e 024 indica 05/03."
+      "descricao": "Razão social \"S/S\" e \"S/A\"; contrato prevê pagamento no dia 10, mas a NFS-e 024 indicava 05/03 e o pagamento da NFS-e 023 era em 12/02.",
+      "status": "RESOLVIDA",
+      "decisao": "Decisão do professor (11/10/2026): Contador Formado S/A; pagamento no dia 10 do mês seguinte (NFS-e 023 em 10/02; NFS-e 024 em 10/03)."
     },
     {
       "onde": "Comodatos (C07, C08)",
-      "descricao": "Contratos de R$ 350,00 e R$ 480,00, mas o balanço registra R$ 410,00 (internet) e R$ 580,00 (celular) a pagar."
+      "descricao": "Contratos de R$ 350,00 e R$ 480,00, mas o balanço registra R$ 410,00 (internet) e R$ 580,00 (celular) a pagar.",
+      "status": "RESOLVIDA",
+      "decisao": "Decisão do professor (11/10/2026): contratos de R$ 410,00 (internet) e R$ 580,00 (celulares); as notas de telefonia de janeiro e fevereiro acompanham."
     },
     {
       "onde": "Frete MP-A (J30)",
-      "descricao": "Frete CIF (pago pelo vendedor), mas há CT-e cobrado da empresa; vencimento \"24.02.2025\" (ano errado)."
+      "descricao": "Frete CIF, mas há CT-e na NF 23.456; vencimento \"24.02.2025\".",
+      "status": "MANTIDA",
+      "decisao": "Decisão do professor (11/10/2026): frete CIF, a cargo do fornecedor; o CT-e não tem evento de pagamento (sem lançamento). Correção de 11/10/2026 (análise completa): texto sem o vencimento do CT-e."
     },
     {
       "onde": "NF 23.456 (J30, F37)",
-      "descricao": "Evento em 26/01; o pagamento de 25/02 diz \"emitida em 24/01/2026\"."
+      "descricao": "Evento em 26/01; o pagamento de 25/02 diz \"emitida em 24/01/2026\".",
+      "status": "MANTIDA",
+      "decisao": "Decisão do professor (11/10/2026): emissão em 24/01 e entrada em 26/01."
     },
     {
       "onde": "Auto de infração (J29, F06)",
-      "descricao": "TIF n.º 20230001/00 no auto e 20220001/00 \"de 12/01/2026\" no pagamento; pagamento previsto em 05/02 e evento em 04/02; multa digitada \"9,450,00\"; ICMS de 18% (alíquota interna do CE é 20% desde 2024); não fica claro se a redução de 70% já está no valor."
+      "descricao": "TIF n.º 20230001/00 e 20220001/00; pagamento previsto em 05/02 e evento em 04/02; multa \"9,450,00\"; ICMS de 18%; redução de 70%.",
+      "status": "RESOLVIDA",
+      "decisao": "Decisão do professor (11/10/2026): pagamento em 05/02; redução de 70% da multa por pagamento no prazo, sem recurso; alíquota de 18%. Correção de 11/10/2026 (análise completa): TIF n.º 20260001/00, de 12/01/2026, nos dois eventos."
     },
     {
-      "onde": "Aplicações (J04, J14, F07, F47)",
-      "descricao": "CDB \"realizado em 11/01\" vs. evento em 12/01; resgate de \"aplicação realizada em 03/01\" vs. INVEST LIQUID em 05/01."
+      "onde": "Aplicações (J14, F07)",
+      "descricao": "CDB \"realizado em 11/01\" (domingo) e evento em 12/01.",
+      "status": "RESOLVIDA",
+      "decisao": "Decisão do professor (11/10/2026): renda fixa (05/01) e CDB são aplicações diferentes; data em fim de semana vai para o próximo dia útil (12/01). Correção de 11/10/2026 (análise completa): o texto de 05/02 passa a \"realizada no dia 12/01/2026\"."
     },
     {
       "onde": "Ar Frio (J08, F11)",
-      "descricao": "Evento em 08/01; pagamento de 09/02 cita \"emitida em 05/01\" e paga 45%, enquanto o contrato prevê 2 parcelas iguais de 40% (07/02 e 07/03)."
+      "descricao": "Pagamento de 09/02 cita NF \"emitida em 05/01\" e pagava 45%, enquanto o contrato prevê 2 parcelas iguais de 40%.",
+      "status": "RESOLVIDA",
+      "decisao": "Decisão do professor (11/10/2026): emissão em 05/01 e entrada em 08/01; pagamento de 40% em 09/02."
     },
     {
       "onde": "Vendas ALPHA (J27, J33, F26, F36, F44)",
-      "descricao": "Boleto da NF 001 em 25/01 e recebimento em 28/01; NF 003 emitida em 19/02 mas citada como \"de 15/02\"; vencimento 28/02 vs. \"27/02\"."
+      "descricao": "Boleto da NF 001 em 25/01 e recebimento em 28/01; NF 003 emitida em 19/02 mas citada como \"de 15/02\"; vencimento 28/02 vs. \"27/02\".",
+      "status": "RESOLVIDA",
+      "decisao": "Correção de 11/10/2026 (análise completa): boleto da NF 001 com vencimento em 28/01 (data do recebimento); NF 003 citada como de 19/02; boleto da NF 003 com vencimento em 27/02 (28/02 é sábado), data do recebimento."
     },
     {
       "onde": "Comissões (J16, J25, F08, F13)",
-      "descricao": "Recebimentos previstos em 20/01 e 08/02; eventos de recebimento em 21/01 e 10/02."
+      "descricao": "Recebimentos previstos em 20/01 e 08/02; eventos de recebimento em 21/01 e 10/02.",
+      "status": "MANTIDA",
+      "decisao": "Decisão do professor (11/10/2026): recebimentos em atraso, sem juros e multa."
     },
     {
       "onde": "Folha (funcionários)",
-      "descricao": "Idades dos dependentes diminuem de janeiro para fevereiro (ex.: 20 e 16 → 11 e 15 anos); salários de Ângela (2.100 → 1.530) e Marena (2.500 → 5.700) mudam sem evento; Renato Português sem salário; valor digitado \"2.500.00\"."
+      "descricao": "Idades dos dependentes diminuíam de janeiro para fevereiro; salários de Ângela (2.100 → 1.530) e Marena (2.500 → 5.700) mudam sem evento; valor digitado \"2.500.00\".",
+      "status": "RESOLVIDA",
+      "decisao": "Decisão do professor (11/10/2026): idades de fevereiro iguais às de janeiro; salário de R$ 2.500,00 em janeiro (Marena). Correção de 11/10/2026 (análise completa): salário de fevereiro da Ângela igual ao salário mínimo de 2026 (R$ 1.621,00)."
+    },
+    {
+      "onde": "Telefonia (J05, F03)",
+      "descricao": "Celular com vencimento em 08/02 e 08/03 (contrato: dia 9); telefone fixo com vencimento em 24/02 e 24/03, mas pago em 14/01 e 13/02.",
+      "status": "RESOLVIDA",
+      "decisao": "Correção de 11/10/2026 (análise completa): celular com vencimento em 09/02 e 09/03; telefone fixo com vencimento na data do pagamento (14/01 e 13/02)."
+    },
+    {
+      "onde": "CT-e 424.110 (F05, F23)",
+      "descricao": "O pagamento de 18/02 diz CT-e \"emitido em 05.02.2026\"; a NF 12.380 e o CT-e são de 04/02.",
+      "status": "RESOLVIDA",
+      "decisao": "Correção de 11/10/2026 (análise completa): CT-e emitido em 04/02/2026."
+    },
+    {
+      "onde": "Quadro de prazos",
+      "descricao": "Turma 01A – 15/11/2026 marcada como sexta (é domingo e feriado); \"Janeiro / 2026.1\" e \"Fevereiro / 2026.1\".",
+      "status": "RESOLVIDA",
+      "decisao": "Correção de 11/10/2026 (análise completa): 2ª parte da Turma 01A em 06/11/2026 (sexta, uma semana antes da prova); períodos Janeiro/2026 e Fevereiro/2026."
     },
     {
       "onde": "Energia e água (J03, F01, F02)",
-      "descricao": "Tabelas de rateio incompletas: água/jan sem R$ 380,00; energia/fev sem a área administrativa (R$ 530,00); água/fev sem R$ 1.180,00 (área industrial)."
+      "descricao": "Tabelas de rateio incompletas: água/jan sem R$ 380,00; energia/fev sem a área administrativa (R$ 530,00); água/fev sem R$ 1.180,00 (área industrial).",
+      "status": "RESOLVIDA",
+      "decisao": "Corrigido pelo professor no exercício revisado de 07/10/2026."
     },
     {
       "onde": "Encargos (FPAS)",
-      "descricao": "Texto usa 27,80%; a planilha de apoio traz FPAS 507 com RAT 3% (= 28,80%)."
+      "descricao": "Texto usa 27,80%; a planilha de apoio traz FPAS 507 com RAT 3% (= 28,80%).",
+      "status": "RESOLVIDA",
+      "decisao": "Decisão do professor (11/10/2026): encargos de 28,80% (INSS + RAT 3% + Terceiros)."
     },
     {
       "onde": "Imobilizado",
-      "descricao": "Balanço: Máquinas R$ 262.000,00; tabela de bens: máquina de R$ 62.000,00."
+      "descricao": "Balanço: Máquinas R$ 262.000,00; tabela de bens: máquina de R$ 62.000,00.",
+      "status": "RESOLVIDA",
+      "decisao": "Corrigido pelo professor no exercício revisado de 07/10/2026."
     },
     {
       "onde": "Materiais secundários (F10)",
-      "descricao": "Total digitado \"3.812.0,4537\"; planilha de apoio cita \"MP-Z\" e \"MS-W\", inexistentes na ficha técnica."
+      "descricao": "Planilha de apoio cita \"MP-Z\" e \"MS-W\", inexistentes na ficha técnica. (Corrigido em 07/10: total da NF 9.147 = R$ 3.812.043,57.)",
+      "status": "PENDENTE"
+    },
+    {
+      "onde": "Balanço de 31/12/2025 (versão de 07/10)",
+      "descricao": "Após o ajuste de centavos, os subtotais Obrigações Fiscais (138.994,12; soma 138.994,11) e Ativo não Circulante/Imobilizado (821.591,67; correto 821.591,66) não foram atualizados; a despesa de depreciação na DRE de 2025 segue 10.408,33.",
+      "status": "MANTIDA",
+      "decisao": "Decisão do professor (11/10/2026): ajustar os subtotais do Balanço; manter a depreciação de 10.408,33 na DRE."
     }
   ]
 }

@@ -29,7 +29,7 @@ IRRF_FAIXAS = [(2428.80, 0.0, 0.0), (2826.65, 0.075, 182.16), (3751.05, 0.15, 39
                (4664.68, 0.225, 675.49), (math.inf, 0.275, 908.73)]
 DEDUCAO_DEPENDENTE, DESCONTO_SIMPLIFICADO = 189.59, 607.20
 SALARIO_FAMILIA_COTA, SALARIO_FAMILIA_LIMITE = 67.54, 1980.38
-ENCARGOS_INSS_FOLHA, FGTS, INSS_PATRONAL_CI = 0.278, 0.08, 0.20
+ENCARGOS_INSS_FOLHA, FGTS, INSS_PATRONAL_CI = 0.288, 0.08, 0.20
 ICMS_INTERNO_CE = 0.20
 ICMS_INTERESTADUAL = {"MA": 0.12, "PB": 0.12, "MG": 0.07}
 PIS, COFINS = 0.0165, 0.076
@@ -62,26 +62,26 @@ PREMISSAS = {
     "P13": "Arrendamento financeiro (CPC 06): máquinas reconhecidas no imobilizado em contrapartida da obrigação, separada em curto prazo (parcelas dos próximos 12 meses, SAC) e longo prazo. Juros compostos pelo ano civil (365 dias) apropriados no fim do mês; depreciação a partir de fevereiro (bem recebido após o processamento de 15/01).",
     "P14": "Aplicações: INVEST LIQUID e CDB rendem juros compostos com capitalização diária (taxa mensal, mês de 30 dias), apropriados no fim do mês e no resgate. No resgate, IR de 22,5% (até 180 dias) vai para IRRF a recuperar; IOF desconsiderado.",
     "P15": "Tesouraria diária: ao fim de cada dia, se o Banco Rico ficar negativo, resgata-se primeiro o INVEST LIQUID e depois usa-se a conta garantida (juros compostos de capitalização diária a partir do dia seguinte). A conta garantida é quitada integralmente no primeiro dia em que o saldo bancário for suficiente.",
-    "P16": "Folha de janeiro: salário + horas extras + comissões; INSS e IRRF do empregado pelas tabelas de 2026 (dependentes até 21 anos); salário-família para filhos até 14 anos; encargos de 27,80% (INSS + RAT + Terceiros) e FGTS 8%. Pró-labore: INSS 11% (teto) e patronal de 20%, IRRF pela tabela.",
+    "P16": "Folha de janeiro: salário + horas extras + comissões; INSS e IRRF do empregado pelas tabelas de 2026 (dependentes até 21 anos); salário-família para filhos até 14 anos; encargos de 28,80% (INSS 20% + RAT 3% + Terceiros 5,8%; FPAS 507) e FGTS 8%. Pró-labore: INSS 11% (teto) e patronal de 20%, IRRF pela tabela.",
     "P17": "Vale-transporte e vale-alimentação de janeiro são os adiantamentos do balanço de 2025 (R$ 172,80 e R$ 1.773,00), divididos igualmente entre os empregados de janeiro; descontos de 6% do salário-base (limitado ao benefício) e 5% do benefício. Compras para fevereiro: 18 dias úteis × empregados de fevereiro.",
-    "P18": "Provisões mensais: férias = remuneração ÷ 12 × 4/3; 13º = remuneração ÷ 12; encargos de 27,80% e FGTS 8% sobre as provisões.",
-    "P19": "Em janeiro não há produção: os itens da área industrial são despesa administrativa (regra do exercício). Despesas rateadas pela tabela de alocação (internet 40/50/10; telefone 20/60/20; energia conforme a fatura).",
-    "P20": "Depreciação de 15/01 (método linear, vida útil e residual da tabela do exercício) para os bens existentes na data, inclusive os ar-condicionados de 08/01. Máquinas pelo saldo contábil de R$ 262.000,00 (ver inconsistências do caso).",
+    "P18": "Provisões mensais: férias = remuneração ÷ 12 × 4/3; 13º = remuneração ÷ 12; encargos de 28,80% e FGTS 8% sobre as provisões.",
+    "P19": "Em janeiro não há produção: os itens da área industrial são despesa administrativa (regra do exercício). Despesas rateadas pela tabela de alocação (internet 40/50/10; telefone 20/60/20; energia e água conforme a fatura).",
+    "P20": "Depreciação de 15/01 (método linear, vida útil e residual da tabela do exercício) para os bens existentes na data, inclusive os ar-condicionados de 08/01. Máquinas pelo saldo contábil de R$ 262.000,00.",
     "P21": "Auto de infração: ICMS de 18% sobre a base e multa de 75% do ICMS com redução de 70% (pagamento em 05/02), provisionados em 26/01 como despesa tributária e multa indedutível.",
     "P22": "IRPJ e CSLL por estimativa (receita bruta): presunção de 8%/12% na revenda e 32%/32% nos serviços, mais as receitas financeiras; IRPJ 15% + adicional de 10% sobre o que exceder R$ 20.000,00; CSLL 9%. O IRRF retido sobre receitas do mês é deduzido.",
     "P23": "Apuração mensal: créditos de ICMS, PIS e COFINS compensados com os débitos do mês; saldo credor permanece em Impostos a Recuperar.",
     "P24": "Destinação de 2025 (02/01): participações sobre o lucro após IR/CS, reserva legal de 5%, dividendos sobre o lucro líquido ajustado e o saldo em reserva estatutária.",
     "P25": "Seguro: apropriação mensal de 1/12 do prêmio. Recrutamento: metade dos honorários apropriada em janeiro (serviço a faturar).",
-    "P26": "Pagamento de 14/01 (água, energia e telefone de janeiro) inclui o telefone fixo, como descrito no evento, mesmo com vencimento posterior na tabela de telefonia.",
+    "P26": "Telefone fixo: a fatura vence na data do pagamento da competência (14/01 em janeiro e 13/02 em fevereiro) e é paga junto com água e energia, como descrito nos eventos.",
     # ---------------- fevereiro (Etapa 8)
     "P27": "Obrigações da competência 01/2026 pagas em fevereiro pelos saldos do gabarito em 31/01 (folha, encargos, tributos e fornecedores). O IRRF (R$ 348,93) e a CSRF (R$ 255,75) de 12/2025 não têm evento de pagamento no exercício e continuam a recolher; os pagamentos de fevereiro recolhem só a competência 01/2026.",
     "P28": "Em fevereiro há produção: a parcela industrial das utilidades e dos itens do quadro de alocação é custo indireto de fabricação (CIF), acumulada em contas de CIF a apropriar e rateada entre X e Y pelo custo dos materiais diretos. A energia dos setores do Produto X e do Produto Y é tratada como CIF (não há medição por ordem de produção).",
-    "P29": "Utilidades de fevereiro: energia pela fatura (comercial, Produto X e Produto Y; administrativa = diferença), com crédito de PIS 1,65% e COFINS 7,6% sobre o total, deduzido proporcionalmente de cada área; água sem crédito, administrativa e comercial pela fatura e industrial = diferença; telefone fixo e celulares 20/60/20 e internet 40/50/10 (adm./vendas/industrial).",
-    "P30": "Ar Frio: pagamento de 45% do valor da NF 7.852 em 09/02, como descrito no evento (o contrato previa parcelas de 40%). Indústria Sofisticada: 30% do total da NF 23.456 (com IPI) em 25/02.",
+    "P29": "Utilidades de fevereiro: energia pela fatura (administrativa, comercial, Produto X e Produto Y), com crédito de PIS 1,65% e COFINS 7,6% sobre o total, deduzido proporcionalmente de cada área; água sem crédito, pela fatura (administrativa, comercial e industrial: Produtos X e Y); telefone fixo e celulares 20/60/20 e internet 40/50/10 (adm./vendas/industrial).",
+    "P30": "Ar Frio: pagamento de 40% do valor da NF 7.852 em 09/02, conforme as condições da compra (decisão do professor, 11/10/2026). Indústria Sofisticada: 30% do total da NF 23.456 (com IPI) em 25/02.",
     "P31": "Reforma: 2ª parcela (50%) com as mesmas retenções da 1ª (INSS 11% e ISS 3% sobre a mão de obra). Concluída em 23/02, o imobilizado em andamento (projeto, encargo e parcelas) é transferido para Edifícios e Construções; a depreciação começa em março (a de fevereiro é processada em 13/02).",
-    "P32": "Leasing (SAC): 1ª parcela em 23/02 = amortização (valor ÷ prazo) + juros compostos pelo ano civil desde 20/01. Os juros de janeiro já apropriados saem do passivo e os de fevereiro até o pagamento vão para despesa; depois do pagamento, uma parcela passa do longo para o curto prazo (o circulante mantém as próximas 12).",
+    "P32": "Leasing (SAC): 1ª parcela em 23/02 = amortização (valor ÷ prazo) + juros compostos pelo ano civil desde 19/01 (liberação do leasing). Os juros de janeiro já apropriados saem do passivo e os de fevereiro até o pagamento vão para despesa; depois do pagamento, uma parcela passa do longo para o curto prazo (o circulante mantém as próximas 12).",
     "P33": "Mútuo à sócia (parte relacionada, sem vencimento): Realizável a Longo Prazo (Lei 6.404/76, art. 179, II), pelo valor do evento; juros compostos pela taxa do contrato, por fração diária (mês de 30 dias), apropriados no fim do mês como receita financeira. IOF desconsiderado.",
-    "P34": "Recrutamento: a NFS-e 345 (26/02) reconhece a metade de fevereiro (a de janeiro já estava apropriada) e retém IRRF de 1,5% sobre o total (RIR/2018, art. 714); sem CSRF, porque o serviço não está na lista da Lei 10.833/2003, art. 30 (SC Disit/SRRF08 nº 8.048/2018). Não há evento de pagamento no exercício.",
+    "P34": "Recrutamento: a NFS-e 345 (26/02) reconhece a metade de fevereiro (a de janeiro já estava apropriada) e retém IRRF de 1,5% sobre o total (RIR/2018, art. 714); sem CSRF, porque o serviço não está na lista da Lei 10.833/2003, art. 30 (SC Disit/SRRF08 nº 8.048/2018). O pagamento é único, em 26/02, na emissão da NFS-e: liquida a metade de janeiro, a de fevereiro e deduz o IRRF retido (decisão do professor, 11/10/2026).",
     "P35": "Contabilidade de fevereiro: honorário reajustado pelo percentual do contrato (C06), arredondado a R$ 100, com IRRF 1,5% e CSRF 4,65%.",
     "P36": "Vale-transporte e vale-alimentação de março: 20 dias úteis × empregados de fevereiro (não há admissões previstas para março).",
     "P38": "IPI pela TIPI 2022 (ADE RFB nº 1/2026): MP-B 13% (NCM 9007.20.20). Só o fornecedor industrial (Indústria Zalego) destaca IPI; o Distribuidor Verde Oliva e a Embalagens Comerciais vendem como comerciantes (CFOP 6.102), sem IPI. O IPI destacado na compra de insumo é crédito do estabelecimento industrial (RIPI, art. 226, I) e não integra o custo.",
@@ -89,7 +89,7 @@ PREMISSAS = {
     "P40": "Desconto financeiro condicional da NF 12.380: não reduz o custo da MP-B nem a base dos tributos (CPC 16, item 11, trata só dos descontos comerciais); é receita financeira quando obtido. Em 04/02 ele é obtido sobre a parcela paga à vista (35% do total da nota); o do saldo será reconhecido no pagamento de 03/03.",
     "P41": "Fretes FOB das compras de insumos (CT-e 424.110 e 425.130): integram o custo do insumo, com crédito de ICMS 12% e de PIS/COFINS; pagos em 18/02 e 24/02 pelo valor do CT-e (sem juros pelo atraso do 424.110, vencido em 13/02). Frete CIF da NF 9.147: sem lançamento.",
     "P42": "Estoques pelo custo médio ponderado móvel, um estoque por insumo. Devolução de compra (NF 004, CFOP 6.201) pelo custo da compra devolvida: baixa do estoque, estorno dos créditos de ICMS, IPI, PIS e COFINS e abatimento do saldo do fornecedor pelo valor da nota (produtos + IPI).",
-    "P43": "Folha de fevereiro (processada em 13/02) pelos critérios de P16 a P18, com 15 empregados (os admitidos em 01/02 trabalham o mês inteiro). Vale-transporte e vale-alimentação consumidos = compras de 30/01 divididas igualmente. A mão de obra direta (setores dos Produtos X e Y), com encargos, provisões e benefícios, acumula em \"Mão de Obra Direta a Apropriar\" de cada produto; a mão de obra indireta vai para CIF. Renato Português (MOD do Produto X) não tem salário no exercício: o gabarito usa o salário mínimo até a decisão do professor.",
+    "P43": "Folha de fevereiro (processada em 13/02) pelos critérios de P16 a P18, com 15 empregados (os admitidos em 01/02 trabalham o mês inteiro). Vale-transporte e vale-alimentação consumidos = compras de 30/01 divididas igualmente. A mão de obra direta (setores dos Produtos X e Y), com encargos, provisões e benefícios, acumula em \"Mão de Obra Direta a Apropriar\" de cada produto; a mão de obra indireta vai para CIF.",
     "P44": "Pró-labore de fevereiro: Marconde Sobreira, sócio industrial, passa a receber; como dirige a produção, o pró-labore e o INSS patronal de 20% são CIF. Adalberto Cantareira (administração) e Marcela Soares (comercial) seguem como em janeiro.",
     "P45": "Depreciação de fevereiro (13/02): mesmos métodos de P20 e rateio do quadro de alocação (prédio 10/25/65, máquinas 100% industrial, veículo utilitário 70/30, móveis 45/35/20). As máquinas arrendadas depreciam desde fevereiro (100% industrial); a reforma, concluída em 23/02, deprecia a partir de março. A parcela industrial é CIF.",
     "P46": "Produção de fevereiro: começa em 19/02 (dia seguinte à compra do ME-H) e termina em 23/02 (três dias úteis: 19, 20 e 23/02). A requisição de 19/02 baixa os insumos pelo custo médio do dia, nas quantidades da ficha técnica × produção do mês. Todos os itens da ficha técnica (matérias-primas, materiais secundários e embalagem) são materiais diretos.",
@@ -102,6 +102,7 @@ PREMISSAS = {
     "P53": "Apuração de fevereiro (28/02) pelos critérios de P23: débitos e créditos de ICMS, IPI, PIS e COFINS compensados; saldo credor permanece a recuperar. O ICMS antecipado de 01/2026, pago em 26/02, vira crédito em fevereiro (P03). O DIFAL devido ao Maranhão é recolhido à parte (GNRE), sem compensação. Créditos de PIS/COFINS limitados a insumos, fretes, energia e devoluções, como em janeiro: sem créditos sobre depreciação de máquinas e contraprestações de leasing e sem PIS/COFINS sobre receitas financeiras (simplificação didática).",
     "P54": "IRPJ e CSLL por estimativa de fevereiro (P22): revenda (líquida de devoluções) e venda de produtos com presunção de 8% (IRPJ) e 12% (CSLL); serviços 32%; receitas financeiras integrais (rendimentos, juros do mútuo e descontos obtidos). IRPJ 15% + adicional de 10% sobre o que exceder R$ 20.000,00 no mês; CSLL 9%; IRRF retido sobre receitas compensado com o IRPJ.",
     "P55": "Conta garantida sem trava de limite: em fevereiro as compras de insumos (04/02 a 18/02) acontecem antes do recebimento da venda de X e Y (24/02), e o saldo devedor passa do limite contratado. O gabarito registra o uso necessário para o caixa não ficar negativo e sinaliza o excesso na memória de cálculo. Cabe ao professor decidir se mantém, se amplia o limite ou se muda as datas do caso.",
+    "P56": "Comissões de representação (NFS-e 002 e 003) recebidas depois do vencimento, pelo valor líquido do IRRF, sem juros nem multa (decisão do professor, 11/10/2026).",
     "P37": "Aplicações em fevereiro: CDB apropriado até 05/02 (F07) e no fim do mês; o resgate de 27/02 retira só o rendimento acumulado do INVEST LIQUID (saldo menos o valor aplicado remanescente), com IR de 22,5% a recuperar.",
 }
 
@@ -333,7 +334,7 @@ class Gabarito:
     def j01(self, d):
         lucro = 94923.97
         part_pct = self.p("empresa", "", "participação de empregados", 8.0)
-        div_pct = self.p("empresa", "", "dividendos", 60.0)
+        div_pct = self.p("empresa", "", "dividendos", 50.0)
         part = r2(lucro * part_pct / 100)
         ll = r2(lucro - part)
         rl = r2(ll * 0.05)
@@ -364,8 +365,13 @@ class Gabarito:
 
     def j03(self, d):
         tot = self.p("evento", "J03", "valor total")
-        self.L.memo("J03", "Fatura de água (área administrativa; industrial e não alocado vão para adm. em janeiro)", tot)
-        self.L.lanc(d, "J03", "Fatura de água Águas do Litoral 321654 - janeiro", [(pc.AGUA, tot)], [(pc.AGUA_PAGAR, tot)], {"P19"})
+        base = self.x.base("evento", "J03", "valor total") or 590
+        adm = round(210 * tot / base / 10) * 10  # rateio da fatura: administrativa 210 e comercial 380 (exercício-base)
+        com = r2(tot - adm)
+        for t, val in (("Fatura de água (total)", tot), ("Área administrativa", adm), ("Área comercial", com)):
+            self.L.memo("J03", t, val)
+        self.L.lanc(d, "J03", "Fatura de água Águas do Litoral 321654 - janeiro",
+                    [(pc.POR_AREA["agua"][0], adm), (pc.POR_AREA["agua"][1], com)], [(pc.AGUA_PAGAR, tot)], {"P19"})
         self.agua_jan = tot
 
     def j04(self, d):
@@ -377,8 +383,8 @@ class Gabarito:
 
     def j05(self, d):
         fixo = self.p("evento", "J05", "telefone")
-        cel = self.p("contrato", "C08", "mensalidade", 480)
-        net = self.p("contrato", "C07", "mensalidade", 350)
+        cel = self.p("contrato", "C08", "mensalidade", 580)
+        net = self.p("contrato", "C07", "mensalidade", 410)
         tel = fixo + cel
         adm = r2(tel * 0.40 + net * 0.50)
         ven = r2(tel + net - adm)
@@ -556,7 +562,7 @@ class Gabarito:
         for nome, rem, inss, ir, sf, dvt, dva, liq, nota in linhas:
             self.L.memo(ev, f"{nome}: remuneração {fmt(rem)}; INSS {fmt(inss)}; IRRF {fmt(ir)} ({nota}); "
                             f"sal.-família {fmt(sf)}; desc. VT {fmt(dvt)} / VA {fmt(dva)}", liq, "líquido")
-        self.L.memo(ev, "Encargos INSS 27,80% sobre a folha", tot["enc"])
+        self.L.memo(ev, "Encargos INSS 28,80% sobre a folha", tot["enc"])
         self.L.memo(ev, "FGTS 8%", tot["fgts"])
         # pró-labore
         pl_deb, pl_cred = defaultdict(float), defaultdict(float)
@@ -620,7 +626,7 @@ class Gabarito:
         self.integralizar(d, "J20", "Marcela Soares")
 
     def j21(self, d):
-        self.pagar(d, "J21", "Pagamento da 4ª parcela do seguro", [(pc.F_SEGURO, 2100.00)])
+        self.pagar(d, "J21", "Pagamento da 3ª e última parcela do seguro", [(pc.F_SEGURO, 2100.00)])
 
     def j22(self, d):
         self.pagar(d, "J22", "Pagamento do CT-e 423.765", [(pc.F_FRETE, self.frete_j15)])
@@ -654,7 +660,7 @@ class Gabarito:
 
     def j25(self, d):
         self.L.memo("J25", "Recebimento da comissão (líquida de IRRF)", self.comissao_liq)
-        self.L.lanc(d, "J25", "Recebimento da NFS-e 002", [(pc.BANCO, self.comissao_liq)], [(pc.COMISSOES_REC, self.comissao_liq)])
+        self.L.lanc(d, "J25", "Recebimento da NFS-e 002", [(pc.BANCO, self.comissao_liq)], [(pc.COMISSOES_REC, self.comissao_liq)], {"P56"})
 
     def j26(self, d):
         ev = "J26"
@@ -749,7 +755,7 @@ class Gabarito:
 
     def j35(self, d):
         self.pagar(d, "J35", "Pagamento de ICMS normal e antecipado de 12/2025",
-                   [(pc.ICMS_RECOL, 43361.81), (pc.ICMS_ANT_RECOL, 13258.52)])
+                   [(pc.ICMS_RECOL, 43361.80), (pc.ICMS_ANT_RECOL, 13258.52)])
 
     def _func_fev(self) -> int:
         return sum(1 for f in self.v.get("folha", []) if f.get("salario_fev") or f.get("pendente"))
@@ -866,10 +872,10 @@ class Gabarito:
         tot = self.p("evento", "F01", "valor total", 3400)
         base = self.x.base("evento", "F01", "valor total") or 3400
         com, px, py = (round(vb * tot / base / 10) * 10 for vb in (590, 1070, 1210))
-        adm = r2(tot - com - px - py)
+        adm = r2(tot - com - px - py)  # administrativa 530 no exercício-base (fecha o total)
         pis, cof = r2(tot * PIS), r2(tot * COFINS)
         liq = self._repartir(r2(tot - pis - cof), [adm, com, px + py])
-        for t, val in (("Conta de energia (total)", tot), ("Área administrativa (diferença)", adm), ("Área comercial", com),
+        for t, val in (("Conta de energia (total)", tot), ("Área administrativa", adm), ("Área comercial", com),
                        ("Setor do Produto X (CIF)", px), ("Setor do Produto Y (CIF)", py),
                        ("Crédito de PIS 1,65% + COFINS 7,6% (sobre o total)", pis + cof),
                        ("Custo líquido: adm. / vendas / CIF", None)):
@@ -887,8 +893,10 @@ class Gabarito:
         base = self.x.base("evento", "F02", "valor total") or 1780
         adm, com = (round(vb * tot / base / 10) * 10 for vb in (280, 320))
         ind = r2(tot - adm - com)
+        ix = round(610 * tot / base / 10) * 10  # Produto X 610 e Produto Y 570 no exercício-base
+        iy = r2(ind - ix)
         for t, val in (("Fatura de água (total)", tot), ("Área administrativa", adm), ("Área comercial", com),
-                       ("Área industrial (diferença, CIF)", ind)):
+                       ("Área industrial (CIF)", ind), ("  Produto X", ix), ("  Produto Y", iy)):
             self.L.memo(ev, t, val)
         self.L.lanc(d, ev, "Fatura de água Águas do Litoral 322.666 - fevereiro",
                     [(pc.POR_AREA["agua"][0], adm), (pc.POR_AREA["agua"][1], com), (pc.CIF_AGUA, ind)],
@@ -898,8 +906,8 @@ class Gabarito:
     def f03(self, d):
         ev = "F03"
         fixo = self.p("evento", "F03", "telefone", 690)
-        cel = self.p("contrato", "C08", "mensalidade", 480)
-        net = self.p("contrato", "C07", "mensalidade", 350)
+        cel = self.p("contrato", "C08", "mensalidade", 580)
+        net = self.p("contrato", "C07", "mensalidade", 410)
         tel = fixo + cel
         adm, ven, ind = r2(tel * 0.20 + net * 0.40), r2(tel * 0.60 + net * 0.50), r2(tel * 0.20 + net * 0.10)
         ind = r2(tel + net - adm - ven)
@@ -943,9 +951,9 @@ class Gabarito:
 
     def f11(self, d):
         ev = "F11"
-        v = r2(getattr(self, "ar_valor", 0.0) * 0.45)
-        self.L.memo(ev, "45% do valor da NF 7.852", v)
-        self.L.lanc(d, ev, "Pagamento parcial (45%) da NF 7.852 - Ar Frio", [(pc.F_ARFRIO, v)], [(pc.BANCO, v)], {"P30"})
+        v = r2(getattr(self, "ar_valor", 0.0) * 0.40)
+        self.L.memo(ev, "40% do valor da NF 7.852", v)
+        self.L.lanc(d, ev, "Pagamento parcial (40%) da NF 7.852 - Ar Frio", [(pc.F_ARFRIO, v)], [(pc.BANCO, v)], {"P30"})
 
     def f12(self, d):
         self.pagar_ab(d, "F12", "Pagamento do FGTS de 01/2026", [pc.FGTS_REC])
@@ -953,7 +961,7 @@ class Gabarito:
     def f13(self, d):
         v = getattr(self, "comissao_fev", 0.0)
         self.L.memo("F13", "Recebimento da comissão (líquida de IRRF)", v)
-        self.L.lanc(d, "F13", "Recebimento da NFS-e 003", [(pc.BANCO, v)], [(pc.COMISSOES_REC, v)])
+        self.L.lanc(d, "F13", "Recebimento da NFS-e 003", [(pc.BANCO, v)], [(pc.COMISSOES_REC, v)], {"P56"})
 
     def f14(self, d):
         self.pagar_ab(d, "F14", "Pagamento Cell Telefonia - 01/2026", [pc.F_CELL])
@@ -985,7 +993,7 @@ class Gabarito:
 
     def f27(self, d):
         ev = "F27"
-        v = self.p("evento", "F27", "valor") or 20000.0
+        v = self.p("evento", "F27", "valor") or self.p("contrato", "C10", "valor", 30000.0)
         taxa = self.p("contrato", "C10", "taxa", 4.0)
         self.mutuo = {"saldo": v, "custo": v, "data": d, "taxa": taxa}
         self.L.memo(ev, f"Mútuo cedido à sócia Cassilda Apedeuta ({fmt(taxa)}% a.m.)", v)
@@ -1068,11 +1076,15 @@ class Gabarito:
         metade = r2(h / 2)
         ir = r2(h * IRRF_SERVICOS)
         for t, val in (("Honorários totais (jan-fev)", h), ("Metade de fevereiro (despesa)", metade), ("IRRF 1,5% retido", ir),
-                       ("Líquido a pagar", h - ir)):
+                       ("Líquido pago em 26/02", h - ir)):
             self.L.memo(ev, t, val)
         self.L.lanc(d, ev, "NFS-e 345 Recrutamento S/S - seleção de pessoal (fevereiro)", [(pc.SERV_PJ, metade)],
                     [(pc.F_RECRUT, metade)], {"P25", "P34"})
         self.L.lanc(d, ev, "Retenção de IRRF - NFS-e 345", [(pc.F_RECRUT, ir)], [(pc.IRRF_RECOL, ir)], {"P34"})
+        pago = r2(self.ab(pc.F_RECRUT) + metade - ir)
+        if pago > 0.004:
+            self.L.memo(ev, "Pagamento na emissão (janeiro + fevereiro - IRRF)", pago)
+            self.L.lanc(d, ev, "Pagamento da NFS-e 345 - Recrutamento S/S", [(pc.F_RECRUT, pago)], [(pc.BANCO, pago)], {"P34"})
 
     def f42(self, d):
         self.pagar_ab(d, "F42", "Pagamento de PIS e COFINS de 01/2026", [pc.PIS_RECOL, pc.COFINS_RECOL])
@@ -1087,7 +1099,7 @@ class Gabarito:
         h = round(h0 * (1 + reaj / 100) / 100) * 100
         ir, cs = r2(h * IRRF_SERVICOS), r2(h * CSRF)
         for t, val in ((f"Honorário reajustado ({fmt(h0)} + {fmt(reaj)}%, arredondado a R$ 100)", h), ("IRRF 1,5%", ir),
-                       ("CSRF 4,65%", cs), ("Líquido a pagar em 05/03", h - ir - cs)):
+                       ("CSRF 4,65%", cs), ("Líquido a pagar em 10/03", h - ir - cs)):
             self.L.memo(ev, t, val)
         self.L.lanc(d, ev, "NFS-e 024 Contador Formado - fevereiro", [(pc.ASSESSORIA, h)],
                     [(pc.F_CONTADOR, h - ir - cs), (pc.IRRF_RECOL, ir), (pc.CSRF_RECOL, cs)], {"P10", "P35"})
@@ -1290,7 +1302,7 @@ class Gabarito:
                             f"remuneração {fmt(rem)}; INSS {fmt(inss)}; IRRF {fmt(ir)} ({nota}); sal.-família {fmt(sf)}; "
                             f"desc. VT {fmt(dvt)} / VA {fmt(dva)}", liq, "líquido")
         self.L.memo(ev, f"VT e VA consumidos por empregado ({n} empregados)", vt_ind + va_ind)
-        self.L.memo(ev, "Encargos INSS 27,80% sobre a folha", tot["enc"])
+        self.L.memo(ev, "Encargos INSS 28,80% sobre a folha", tot["enc"])
         self.L.memo(ev, "FGTS 8%", tot["fgts"])
         for dest, rot in (("adm", "Despesas administrativas"), ("vendas", "Despesas de vendas"), ("modx", "MOD a apropriar - Produto X"),
                           ("mody", "MOD a apropriar - Produto Y"), ("moi", "Mão de obra indireta (CIF)")):
@@ -1602,9 +1614,9 @@ class Gabarito:
 
     # eventos de fevereiro: dia e método (None = gabarito em preparação nas etapas 8b a 8e)
     EVENTOS_FEV = {
-        "F01": (2, "f01"), "F02": (2, "f02"), "F03": (2, "f03"), "F04": (3, "f04"), "F05": (4, "f05"), "F06": (4, "f06"),
+        "F01": (2, "f01"), "F02": (2, "f02"), "F03": (2, "f03"), "F04": (3, "f04"), "F05": (4, "f05"), "F06": (5, "f06"),
         "F07": (5, "f07"), "F08": (6, "f08"), "F09": (6, "f09"), "F10": (9, "f10"), "F11": (9, "f11"), "F12": (10, "f12"),
-        "F13": (10, "f13"), "F14": (11, "f14"), "F15": (11, "f15"), "F16": (12, "f16"), "F17": (12, "f17"),
+        "F13": (10, "f13"), "F14": (11, "f14"), "F15": (11, "f15"), "F16": (12, "f16"), "F17": (10, "f17"),
         "F18": (13, "f18"), "F19": (13, "f19"), "F20": (13, "f20"), "F21": (13, "f21"), "F22": (18, "f22"), "F23": (18, "f23"),
         "F24": (18, "f24"), "F25": (19, "f25"), "F26": (19, "f26"), "F27": (20, "f27"), "F28": (20, "f28"), "F29": (20, "f29"),
         "F30": (23, "f30"), "F31": (23, "f31"), "F32": (23, "f32"), "F33": (23, "f33"), "F34": (24, "f34"), "F35": (24, "f35"),
@@ -1642,7 +1654,7 @@ class Gabarito:
         "J07": (7, "j07"), "J08": (8, "j08"), "J09": (8, "j09"), "J10": (9, "j10"), "J11": (9, "j11"), "J12": (9, "j12"),
         "J13": (9, "j13"), "J14": (12, "j14"), "J15": (12, "j15"), "J16": (13, "j16"), "J17": (14, "j17"),
         "J18": (15, "j18"), "J19": (15, "j19"), "J20": (16, "j20"), "J21": (19, "j21"), "J22": (19, "j22"),
-        "J23": (20, "j23"), "J24": (20, "j24"), "J25": (21, "j25"), "J26": (22, "j26"), "J27": (23, "j27"),
+        "J23": (20, "j23"), "J24": (19, "j24"), "J25": (21, "j25"), "J26": (22, "j26"), "J27": (23, "j27"),
         "J28": (23, "j28"), "J29": (26, "j29"), "J30": (26, "j30"), "J31": (27, "j31"), "J32": (27, "j32"),
         "J33": (28, "j33"), "J34": (28, "j34"), "J35": (29, "j35"), "J36": (30, "j36"), "J37": (30, "j37"),
         "J38": (30, "j38"), "J39": (30, "j39"),

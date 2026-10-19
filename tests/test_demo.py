@@ -23,14 +23,18 @@ def c():
 
 
 def test_criar_pela_tela_e_dados(c):
-    assert "ainda não existe" in c.get("/admin/demonstracao").text
+    assert "ainda não existem" in c.get("/admin/demonstracao").text
     r = c.post("/admin/demonstracao", data={"acao": "criar"})
     assert "Acessos de demonstração" in r.text
     senha_vis = re.search(r"avaliador · <span class=\"mono\">([^<]+)</span>", r.text).group(1)
     senha_alu = re.search(r"(9000\d+) · <span class=\"mono\">([^<]+)</span>", r.text)
     with SessionLocal() as db:
-        t = demo._turma_demo(db)
-        assert len(t.matriculas) == 20 and all(m.discente.matricula.startswith("9000") for m in t.matriculas)
+        ts = demo._turmas_demo(db)
+        assert [x.codigo for x in ts] == ["DEMO-01A", "DEMO-02A", "DEMO-03A"]
+        assert [x.docentes[0].docente.nome for x in ts] == [c["docente"] for c in demo.TURMAS]
+        assert all(len(x.matriculas) == 20 for x in ts)
+        t = ts[0]
+        assert all(m.discente.matricula.startswith("9000") for m in t.matriculas)
         an = analytics.analisar_turma(db, t.id)
         titulos = {a[1] for g in an["grupos"] for a in g["alertas"]}
         assert {"Sem acesso", "Inativo", "Travado em J24", "Participação desigual", "Busca respostas prontas", "Prévia baixa"} <= titulos
@@ -42,7 +46,7 @@ def test_criar_pela_tela_e_dados(c):
     c.cookies.clear()
     c.post("/entrar", data={"login": "avaliador", "senha": senha_vis})
     home = c.get("/").text
-    assert "DEMO" in home
+    assert "DEMO-01A" in home and "DEMO-03A" in home
     assert "Matriz de calor" in c.get(f"/turmas/{tid}/painel").text
     assert c.post(f"/turmas/{tid}/duplas/codigos", follow_redirects=False).status_code == 403
     # aluno de demonstração entra com matrícula e senha
@@ -58,8 +62,22 @@ def test_recriar_e_apagar(c):
         r1 = demo.criar(db)
         r2 = demo.criar(db)  # idempotente: substitui a anterior
         assert r1["turma_id"] != r2["turma_id"]
-        assert db.query(Discente).filter(Discente.matricula.like("9000%")).count() == 20
+        assert db.query(Discente).filter(Discente.matricula.like("9000%")).count() == 60
         demo.apagar(db)
         db.commit()
-        assert demo._turma_demo(db) is None
+        assert demo._turma_demo(db) is None and demo._turmas_demo(db) == []
         assert db.query(Discente).filter(Discente.matricula.like("9000%")).count() == 0
+
+
+def test_cada_professor_ve_a_sua_turma(c):
+    with SessionLocal() as db:
+        r = demo.criar(db)
+    profs = r["credenciais"]["professores"]
+    assert [p["login"] for p in profs] == ["danival.demo", "eduardo.demo", "rosangela.demo"]
+    ids = {t["codigo"]: t["id"] for t in r["turmas"]}
+    c.cookies.clear()
+    c.post("/entrar", data={"login": profs[1]["login"], "senha": profs[1]["senha"]})
+    assert c.get(f"/turmas/{ids['DEMO-02A']}/painel").status_code == 200
+    assert c.get(f"/turmas/{ids['DEMO-01A']}/painel", follow_redirects=False).status_code in (303, 403)
+    c.cookies.clear()
+    assert len(r["credenciais"]["alunos"]) == 3 and r["grupos"] == 30 and r["alunos"] == 60

@@ -31,7 +31,7 @@ def ctx():
             ds = db.query(Dupla).filter_by(turma_id=tid).order_by(Dupla.numero).all()
             cod3 = db.query(DuplaAcesso).filter_by(dupla_id=ds[2].id).one().codigo
             # sem usuários de equipe, os testes entram nas telas do professor em modo local
-            for u in db.query(main.acesso.Usuario).filter(main.acesso.Usuario.login.in_(["avaliador", "professor.demo"])).all():
+            for u in db.query(main.acesso.Usuario).filter(main.acesso.Usuario.login.in_(demo.LOGINS_DEMO)).all():
                 db.delete(u)
             db.commit()
         yield {"c": c, "tid": tid, "d": [d.id for d in ds], "cod3": cod3, "aluno": r["credenciais"]["aluno"]}

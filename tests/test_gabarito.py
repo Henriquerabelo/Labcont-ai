@@ -50,7 +50,7 @@ def test_gabarito_caso_base(client):
     assert _memo(g, "J39", "CSRF") == 255.75  # confere com o saldo de dezembro (5.500 → 5.161,75)
     assert _memo(g, "J16", "IRRF") == 1470.00
     assert _memo(g, "J29", "Total a pagar") == 15435.00
-    assert _memo(g, "J15", "valor líquido") == 337763.64
+    assert _memo(g, "J15", "valor líquido") == 337764.43  # NF 3.369: 355.541,51 − 5% (valor exato do exercício)
     bal = {x["conta"]: x["final"] for x in g["balancete"]}
     assert bal["2.07.07.01.01.0001-7"] == 0  # lucro de 2025 destinado
     assert all(k in g["premissas"] for k in ("P01", "P15", "P22"))

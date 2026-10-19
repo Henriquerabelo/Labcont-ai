@@ -406,3 +406,136 @@ A folha (F20) e a depreciação (F21) passaram para esta etapa porque são proce
 - **Premissas P53–P55** (a validar).
 - **Base normativa:** fichas de apuração, tesouraria e ajustes ligadas aos eventos F48, FTES e FAJ.
 - **Testes:** 69 passando. Janeiro conferido sem alterações nos 6 cenários; fevereiro fecha em todos.
+
+---
+
+## Exercício revisado pelo professor (PDF de 07/10/2026)
+
+Conferência completa em `Inconsistencias do Exercicio EH0012 - conferencia 07-10.docx`. Das 20 inconsistências, 3 foram corrigidas, 3 em parte, 13 seguem e 1 depende da planilha de apoio. O protótipo foi alinhado ao que foi corrigido:
+
+- **Dividendos:** 50% do lucro líquido ajustado; antes eram 60%. A faixa de sorteio vai de 25% a 50%. Afeta a J01 (P24).
+- **Balanço de abertura:**
+  - ICMS a recolher passa a 43.361,80 e a depreciação acumulada a 10.408,34;
+  - o gabarito deixa de ter a diferença de R$ 0,01 e fecha em zero nos dois meses (caso-base e 20 sementes).
+- **Seguro:** 3 parcelas (16/11, 16/12 e 17/01). A J21 passa a "3ª e última parcela"; o valor não muda (R$ 2.100,00).
+- **Renato Português:** salário de R$ 2.120,00 em fevereiro, no lugar do salário mínimo provisório (P43). Muda a folha (F20), a MOD e o custo do Produto X.
+- **Água e energia:**
+  - água de janeiro rateada entre administrativa (210) e comercial (380); antes ia toda para a administrativa;
+  - energia de fevereiro com a área administrativa (530);
+  - água de fevereiro com a industrial: Produto X 610 e Produto Y 570 (P19, P29).
+- **Orientação .docx (modelo):**
+  - tabelas de água e energia completas;
+  - tabela de bens com R$ 262.000,00;
+  - total da NF 9.147, seguro em 3 parcelas, resgate da aplicação de 05/01 e salário do Renato;
+  - Balanço com os subtotais acertados (o PDF ainda traz dois subtotais com R$ 0,01 de diferença).
+- **Inconsistências do caso:** "Energia e água" e "Imobilizado" ficam como RESOLVIDA. "Seguro", "Aplicações", "Folha" e "Materiais secundários" são atualizadas. Entra a nova "Balanço de 31/12/2025 (versão de 07/10)".
+- **Bancos já existentes** (`app/ajuste_exercicio.py`):
+  - na primeira subida, os casos cadastrados recebem as mesmas correções, só onde o valor ainda é o antigo;
+  - as empresas das duplas desses casos são recalculadas com a mesma semente;
+  - a turma de demonstração deve ser recriada.
+- **Testes:** 76 passando (novo `tests/test_exercicio_revisado.py`).
+
+---
+
+## Página inicial de apresentação (07/10/2026)
+
+- **Quem vê:**
+  - quem chega a `/` sem login vê a apresentação do sistema (`app/templates/apresentacao.html`), também disponível em `/apresentacao`;
+  - a equipe logada continua indo ao Painel de Gestão, e o aluno à área do grupo.
+- **Conteúdo, aprovado a partir do memorial:**
+  - o problema pedagógico (cinco limitações do formato tradicional);
+  - benefícios para aluno, professor e curso;
+  - como as soluções foram criadas (problema → solução → como funciona);
+  - como o sistema foi desenvolvido;
+  - telas de exemplo.
+- **Acesso:** apenas o botão **Entrar**, no canto superior direito, que leva à tela de entrada (Equipe / Sou aluno).
+- **Telas:** capturas reais da turma de demonstração em `app/static/img/apresentacao/` (área do grupo, documento, tutor, painel da turma; .webp). O aviso de "tutor em modo roteiro" do ambiente de testes foi retirado da captura do painel.
+- **Estilo:** bloco "Página inicial" no fim do `style.css` (classes `ap-*`, paleta Rubelita). Funciona no celular, sem rolagem lateral.
+
+---
+
+## Decisões do professor sobre as inconsistências (11/10/2026)
+
+Aplicadas a partir da coluna "Correção" da conferência e das respostas aos pontos em aberto.
+
+- **Caso-base (JSON, `gerar_caso_base.py`):**
+  - comodatos: internet R$ 410,00 e celulares R$ 580,00 (C07, C08);
+  - mútuo à sócia de R$ 30.000,00, faixa de 20.000 a 45.000 (C10, F27);
+  - Contador Formado **S/A**, honorários pagos no dia 10;
+  - recrutamento com pagamento único em 26/02, na emissão da NFS-e 345;
+  - datas dos eventos: leasing 19/01 (J24), auto de infração 05/02 com redução de 70% da multa (F06), contabilidade 10/02 (F17);
+  - eventos em fim de semana passam para o dia útil seguinte (seguro 19/01; CDB 12/01, já assim no caso);
+  - Ar Frio: pagamento de 40% (F11);
+  - encargos de 28,80% (FPAS 507, RAT 3%);
+  - dependentes de fevereiro iguais aos de janeiro;
+  - 21 inconsistências: 15 RESOLVIDA, 4 MANTIDA (frete MP-A, NF 23.456, comissões, Balanço) e 2 PENDENTE (vendas ALPHA, materiais secundários).
+- **Gabarito:**
+  - encargos 28,80% (P16, P18);
+  - F11 com 40% (P30);
+  - F27 pelo valor do contrato C10;
+  - F41 paga a NFS-e 345 na emissão (janeiro + fevereiro − IRRF; P34);
+  - NFS-e 024 com vencimento em 10/03;
+  - nova premissa P56: comissões recebidas com atraso, sem juros nem multa (J25, F13).
+- **Documentos:**
+  - NF 7.852 emitida em 05/01 (entrada em 08/01);
+  - NF 23.456 emitida em 24/01 (entrada em 26/01);
+  - NFS-e 345 com vencimento em 26/02;
+  - Contador S/A;
+  - leasing liberado em 19/01.
+- **Orientação .docx (modelo):** as mesmas correções. As linhas do leasing, do auto e da NFS-e 023 foram movidas para a nova data.
+- **Bancos existentes:**
+  - `ajuste_exercicio.aplicar_1110` roda uma vez e só troca valores ainda antigos;
+  - inconsistências em PENDENTE recebem a decisão;
+  - as decisões que o professor já tenha registrado no sistema são mantidas;
+  - as empresas das duplas são recalculadas.
+- **Conferência:**
+  - caso-base e 20 duplas sorteadas fecham em janeiro e fevereiro com diferença 0;
+  - resultado do caso-base em jan–fev: R$ 11.255.742,78.
+- **Testes:** 80 passando (novo `tests/test_correcoes_1110.py`).
+
+---
+
+## Correções da análise completa do exercício (11/10/2026)
+
+Itens 5 e 6 do relatório "Analise Completa do Exercicio EH0012 - 11-10.docx".
+
+- **Sistema (item 5):**
+  - **S1:** a orientação passa a atualizar a tabela de telefonia de fevereiro com os valores da dupla. A âncora antiga pegava a linha do vale-transporte de 30/01.
+  - **S2:** o contrato de leasing (documento J24-1) fica datado de 19/01.
+  - **S3:** custos unitários do caso-base com a precisão do exercício (até 8 casas). As NF 3.369, 23.456, 12.380, 9.147 e 1.747 reproduzem os totais do PDF. Nas notas, o valor unitário aparece com 4 a 8 casas (filtro `nu`).
+  - **S4:** salário de fevereiro da Ângela igual ao salário mínimo de 2026 (R$ 1.621,00).
+  - **S5:** valor do mútuo formatado nos casos atualizados.
+- **Texto do exercício (item 6, modelo da orientação e caso):**
+  - **T1:** CDB realizado em 12/01.
+  - **T2:** TIF n.º 20260001/00 nos dois eventos.
+  - **T3:** CT-e 423.951 sem vencimento (frete CIF pago pelo fornecedor).
+  - **T4:** CT-e 424.110 emitido em 04/02.
+  - **T5:** celular com vencimento em 09/02 e 09/03.
+  - **T6:** telefone fixo com vencimento em 14/01 e 13/02, as datas de pagamento (P26).
+  - **T7:** um parágrafo por evento em 27/02.
+  - **T8:** quadro de prazos com a Turma 01A em 06/11/2026 e períodos "Janeiro/2026" e "Fevereiro/2026".
+  - **T9:** boleto da NF 001 em 28/01; NF 003 citada como de 19/02, com boleto em 27/02.
+- **Inconsistências:** 24 itens: 19 RESOLVIDA, 4 MANTIDA e 1 PENDENTE (materiais secundários). Entraram três itens novos: Telefonia, CT-e 424.110 e Quadro de prazos.
+- **Bancos existentes:** `ajuste_exercicio.aplicar_1110b` roda uma vez, só troca valores ainda antigos e recalcula as empresas.
+- **Conferência:**
+  - 51 empresas fecham com diferença 0;
+  - a turma de demonstração mantém os perfis;
+  - 86 testes passando (novo `tests/test_analise_1110.py`).
+
+---
+
+## Fechamento: três turmas de demonstração (19/10/2026)
+
+- **Turmas:** a demonstração passa a ter três turmas da EH0012, uma por professor da disciplina em 2026.2 (horários do SIGAA):
+  - DEMO-01A, Danival Sousa Cavalcante;
+  - DEMO-02A, Eduardo Rodrigues Linhares;
+  - DEMO-03A, Rosângela Venâncio Nunes.
+- **Grupos:** cada turma tem 20 alunos fictícios (matrículas 9000101 a 9000320) em 10 grupos, com os mesmos perfis de antes. A DEMO-01A reproduz a turma anterior (sementes 900–909).
+- **Acessos:**
+  - visitante `avaliador`, que vê as três turmas;
+  - professores `danival.demo`, `eduardo.demo` e `rosangela.demo`, cada um com a sua turma;
+  - um aluno por turma (grupo 03).
+- **Docentes:** se o professor já está cadastrado, a turma usa o cadastro existente.
+- **Onde fica:** Gestão → Demonstração, ou `python -m app.demo` no servidor.
+- **Limpeza dos dados atuais:** fica para quando o responsável confirmar o que será apagado.
+- **Testes:** 87 passando.

@@ -14,17 +14,21 @@ from sqlalchemy.orm import Session
 from .config import APP_NOME, BASE_DIR
 from .db import Base, SessionLocal, engine, get_db
 from .models import Disciplina, Discente, Docente, Importacao, Matricula, Turma
-from . import acesso, analytics, models_caso, models_dupla, models_escrita, normas as _normas  # noqa: F401  (registra as tabelas)
-from .caso_servico import fmt as _fmt_num
+from . import acesso, ajuste_exercicio, analytics, fuso, models_caso, models_dupla, models_escrita, normas as _normas  # noqa: F401  (registra as tabelas)
+from .caso_servico import fmt as _fmt_num, fmt_unit as _fmt_unit
 
 
 @asynccontextmanager
 async def lifespan(_app: FastAPI):
     Base.metadata.create_all(bind=engine)
     with SessionLocal() as db:
+        fuso.corrigir_registros_utc(db)  # uma vez só, em produção: horas antigas gravadas em UTC
         _normas.semear(db)  # fichas padrão da base normativa que ainda não existem
         acesso.garantir_admin(db)  # primeiro administrador a partir de APP_USUARIO/APP_SENHA
         _sem_marcas_reais(db)
+        ajuste_exercicio.aplicar(db)  # uma vez: exercício revisado pelo professor (07/10/2026)
+        ajuste_exercicio.aplicar_1110(db)  # uma vez: decisões do professor sobre as inconsistências (11/10/2026)
+        ajuste_exercicio.aplicar_1110b(db)  # uma vez: correções da análise completa (11/10/2026)
     yield
 
 
@@ -56,9 +60,10 @@ def _fmt_data(d):
 
 templates.env.filters["data"] = _fmt_data
 templates.env.filters["n"] = _fmt_num
+templates.env.filters["nu"] = _fmt_unit
 
 
-_PUBLICOS = ("/static", "/saude", "/entrar", "/sair", "/aluno", "/privacidade")
+_PUBLICOS = ("/static", "/saude", "/entrar", "/sair", "/aluno", "/privacidade", "/apresentacao")
 
 
 def _negado(request: Request, motivo: str):
@@ -80,7 +85,9 @@ async def _acesso(request: Request, call_next):
         if ctx is None and acesso.modo_aberto(db):
             ctx = acesso.ctx_dev()
         request.state.usuario = ctx
-        if not caminho.startswith(_PUBLICOS) or caminho.startswith("/aluno/ver/"):
+        if caminho == "/" and ctx is None:
+            pass  # visitante sem login: página de apresentação
+        elif not caminho.startswith(_PUBLICOS) or caminho.startswith("/aluno/ver/"):
             if ctx is None:
                 destino = "/entrar" + (("?volta=" + quote(caminho)) if request.method == "GET" and caminho != "/" else "")
                 return RedirectResponse(destino, status_code=303)
@@ -134,12 +141,20 @@ def saude(db: Session = Depends(get_db)):
     return {"status": "ok"}
 
 
+@app.get("/apresentacao")
+def apresentacao(request: Request):
+    """Página inicial pública: contexto educacional, benefícios e como as soluções foram criadas."""
+    return render(request, "apresentacao.html")
+
+
 @app.get("/")
 async def painel(request: Request, db: Session = Depends(get_db)):
-    """Painel de Gestão (Módulo 5): visão de todas as turmas do escopo do usuário, com indicadores de acompanhamento."""
+    """Sem login: apresentação do sistema. Equipe: Painel de Gestão (Módulo 5) com as turmas do seu escopo."""
     from datetime import datetime, timedelta
     from . import tutor as tutor_ia
     c = request.state.usuario
+    if c is None:
+        return render(request, "apresentacao.html")
     turmas = db.scalars(select(Turma).order_by(Turma.periodo.desc(), Turma.codigo)).all()
     if c and not c.gestor:
         turmas = [t for t in turmas if t.id in c.turmas]
